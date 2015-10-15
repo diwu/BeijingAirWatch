@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     private var concentration: Double = -1.0
     private var session: NSURLSession?
     private let TIME_OUT_LIMIT: Double = 10.0;
-    private var wcSession: WCSession?
+    var wcSession: WCSession?
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -45,7 +45,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         print("called... complication enabled = \(wcSession?.complicationEnabled)");
         if wcSession?.complicationEnabled == true {
-            sendLocalNotif("刚唤醒，尝试获取数据", badge: -1)
             test(completionHandler)
         } else {
             completionHandler(.NewData)
@@ -116,6 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     }
     
     func test(completionHandler: (UIBackgroundFetchResult) -> Void) {
+        sendLocalNotif("尝试获取数据", badge: -1)
         let request = NSMutableURLRequest(URL: NSURL(string: "http://www.stateair.net/web/post/1/1.html")!)
         httpGet(request){
             (data, error) -> Void in
