@@ -46,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         if wcSession?.complicationEnabled == true {
             test(completionHandler)
         } else {
-            completionHandler(.NewData)
+            completionHandler(.NoData)
         }
     }
     
@@ -98,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                 }
             }
             self.isLoadingData = false
-            completionHandler(.NewData)
+            completionHandler(.NoData)
         }
     }
     
