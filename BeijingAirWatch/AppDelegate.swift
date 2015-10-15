@@ -35,6 +35,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         if NSUserDefaults.standardUserDefaults().doubleForKey("c") > 1.0 {
             concentration = NSUserDefaults.standardUserDefaults().doubleForKey("c")
         }
+        
+        let settings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Alert, UIUserNotificationType.Badge,UIUserNotificationType.Sound], categories: nil)
+        application.registerUserNotificationSettings(settings)
 
         return true
     }
@@ -42,6 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         print("called... complication enabled = \(wcSession?.complicationEnabled)");
         if wcSession?.complicationEnabled == true {
+            sendLocalNotif("刚唤醒，尝试获取数据", badge: -1)
             test(completionHandler)
         } else {
             completionHandler(.NewData)
@@ -99,12 +103,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         return -1.0
     }
     
+    func sendLocalNotif(text: String, badge: Int) {
+        let notif = UILocalNotification()
+        notif.fireDate = NSDate.init(timeIntervalSinceNow: 1)
+        notif.alertBody = text
+        notif.timeZone = NSTimeZone.defaultTimeZone()
+        notif.soundName = UILocalNotificationDefaultSoundName
+        if badge > 0 {
+            notif.applicationIconBadgeNumber = badge
+        }
+        UIApplication.sharedApplication().scheduleLocalNotification(notif)
+    }
+    
     func test(completionHandler: (UIBackgroundFetchResult) -> Void) {
         let request = NSMutableURLRequest(URL: NSURL(string: "http://www.stateair.net/web/post/1/1.html")!)
         httpGet(request){
             (data, error) -> Void in
             if error != nil {
                 print(error)
+                self.sendLocalNotif("获取数据出错", badge: -1)
             } else {
                 let tmpAQI = self.parseAQI(data)
                 let tmpConcentration = self.parseConcentration(data)
@@ -118,8 +135,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                     if self.wcSession?.complicationEnabled == true {
                         self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration])
                     }
+                    self.sendLocalNotif("解析得到新数据，刷新手表", badge: tmpAQI)
                     completionHandler(.NewData)
                     return
+                }
+                if tmpAQI < 1 || tmpConcentration < 1 {
+                    self.sendLocalNotif("解析数据出错", badge: -1)
+                }
+                if tmpAQI == self.aqi && tmpConcentration == self.concentration {
+                    self.sendLocalNotif("数据未变", badge: -1)
                 }
             }
             self.isLoadingData = false
