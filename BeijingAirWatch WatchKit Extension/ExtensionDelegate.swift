@@ -8,15 +8,28 @@
 
 import WatchKit
 import WatchConnectivity
+import ClockKit
 
 class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
 
     var wcSession: WCSession?
     var wcUserInfo: [String: AnyObject]?
+    var myOwnComplication: CLKComplication?
     
     func session(session: WCSession, didReceiveUserInfo userInfo: [String : AnyObject]) {
         print("did receive info: \(userInfo)")
-        wcUserInfo = userInfo
+        if userInfo["a"] != nil {
+            wcUserInfo = userInfo
+            if myOwnComplication == nil {
+                let complicationServer = CLKComplicationServer.sharedInstance()
+                for complication in complicationServer.activeComplications {
+                    complicationServer.reloadTimelineForComplication(complication)
+                }
+            } else {
+                let complicationServer = CLKComplicationServer.sharedInstance()
+                complicationServer.reloadTimelineForComplication(myOwnComplication)
+            }
+        }
     }
     
     func applicationDidFinishLaunching() {

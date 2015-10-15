@@ -115,7 +115,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                     NSUserDefaults.standardUserDefaults().setDouble(self.concentration, forKey: "c")
                     NSUserDefaults.standardUserDefaults().synchronize()
                     print("data loaded: api = \(self.aqi), concentration = \(self.concentration)")
-                    self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration])
+                    if self.wcSession?.complicationEnabled == true {
+                        self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration])
+                    }
                     completionHandler(.NewData)
                     return
                 }

@@ -12,35 +12,31 @@ import WatchKit
 class ComplicationController: NSObject, CLKComplicationDataSource {
     
     // MARK: - Timeline Configuration
-    private var myOwnComplication: CLKComplication?
     private var currentAQI: Int = -1
     private var currentConcentration: Double = -1.0
     
+    func rememberMyOwnComplication(complication: CLKComplication) {
+        let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+        delegate.myOwnComplication = complication
+    }
+    
     func getSupportedTimeTravelDirectionsForComplication(complication: CLKComplication, withHandler handler: (CLKComplicationTimeTravelDirections) -> Void) {
-        if myOwnComplication == nil {
-            myOwnComplication = complication
-        }
+        rememberMyOwnComplication(complication)
         handler([.None])
     }
     
     func getTimelineStartDateForComplication(complication: CLKComplication, withHandler handler: (NSDate?) -> Void) {
-        if myOwnComplication == nil {
-            myOwnComplication = complication
-        }
+        rememberMyOwnComplication(complication)
         handler(nil)
     }
     
     func getTimelineEndDateForComplication(complication: CLKComplication, withHandler handler: (NSDate?) -> Void) {
-        if myOwnComplication == nil {
-            myOwnComplication = complication
-        }
+        rememberMyOwnComplication(complication)
         handler(nil)
     }
     
     func getPrivacyBehaviorForComplication(complication: CLKComplication, withHandler handler: (CLKComplicationPrivacyBehavior) -> Void) {
-        if myOwnComplication == nil {
-            myOwnComplication = complication
-        }
+        rememberMyOwnComplication(complication)
         handler(.ShowOnLockScreen)
     }
     
@@ -57,9 +53,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     func getCurrentTimelineEntryForComplication(complication: CLKComplication, withHandler handler: ((CLKComplicationTimelineEntry?) -> Void)) {
         // Call the handler with the current timeline entry
-        if myOwnComplication == nil {
-            myOwnComplication = complication
-        }
+        rememberMyOwnComplication(complication)
         print(" - 2 -")
         if complication.family == .ModularSmall {
             if currentAQI > 1 && currentConcentration > 1 {
@@ -76,17 +70,13 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     func getTimelineEntriesForComplication(complication: CLKComplication, beforeDate date: NSDate, limit: Int, withHandler handler: (([CLKComplicationTimelineEntry]?) -> Void)) {
         // Call the handler with the timeline entries prior to the given date
-        if myOwnComplication == nil {
-            myOwnComplication = complication
-        }
+        rememberMyOwnComplication(complication)
         handler(nil)
     }
     
     func getTimelineEntriesForComplication(complication: CLKComplication, afterDate date: NSDate, limit: Int, withHandler handler: (([CLKComplicationTimelineEntry]?) -> Void)) {
         // Call the handler with the timeline entries after to the given date
-        if myOwnComplication == nil {
-            myOwnComplication = complication
-        }
+        rememberMyOwnComplication(complication)
         handler(nil)
     }
     
@@ -102,9 +92,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     func getPlaceholderTemplateForComplication(complication: CLKComplication, withHandler handler: (CLKComplicationTemplate?) -> Void) {
         // This method will be called once per supported complication, and the results will be cached
-        if myOwnComplication == nil {
-            myOwnComplication = complication
-        }
+        rememberMyOwnComplication(complication)
         let template = CLKComplicationTemplateModularSmallStackText()
         template.line1TextProvider = CLKSimpleTextProvider(text: "AQI")
         template.line2TextProvider = CLKSimpleTextProvider(text: "PM2.5")
@@ -122,12 +110,12 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                 currentAQI = tmpA
                 currentConcentration = tmpC
                 let complicationServer = CLKComplicationServer.sharedInstance()
-                if myOwnComplication == nil {
+                if delegate.myOwnComplication == nil {
                     for complication in complicationServer.activeComplications {
                         complicationServer.reloadTimelineForComplication(complication)
                     }
                 } else {
-                    complicationServer.reloadTimelineForComplication(myOwnComplication!)
+                    complicationServer.reloadTimelineForComplication(delegate.myOwnComplication)
                 }
             }
         }
