@@ -34,7 +34,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     
     func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         print("called... complication enabled = \(wcSession?.complicationEnabled)");
-        test(completionHandler)
+        if wcSession?.complicationEnabled == true {
+            test(completionHandler)
+        } else {
+            completionHandler(.NoData)
+        }
     }
     
     func httpGet(request: NSURLRequest!, callback: (String, String?) -> Void) {
@@ -97,7 +101,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             } else {
                 let tmpAQI = self.parseAQI(data)
                 let tmpConcentration = self.parseConcentration(data)
-                if tmpAQI > 1 && tmpConcentration > 1.0 {
+                if tmpAQI > 1 && tmpConcentration > 1.0 && tmpAQI != self.aqi && tmpConcentration != self.concentration {
                     self.aqi = tmpAQI
                     self.concentration = tmpConcentration
                     print("data loaded: api = \(self.aqi), concentration = \(self.concentration)")
@@ -107,8 +111,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                 }
             }
             self.isLoadingData = false
-            print("failed...")
-            completionHandler(.Failed)
+            completionHandler(.NoData)
         }
     }
     
