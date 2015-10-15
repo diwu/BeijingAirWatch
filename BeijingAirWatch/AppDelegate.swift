@@ -17,9 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     private var isLoadingData: Bool = false
     private var aqi: Int = -1
     private var concentration: Double = -1.0
-    private var session: NSURLSession?
-    private let TIME_OUT_LIMIT: Double = 10.0;
     var wcSession: WCSession?
+    private var session: NSURLSession?
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -51,57 +50,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         }
     }
     
-    func httpGet(request: NSURLRequest!, callback: (String, String?) -> Void) {
-        if session == nil {
-            session = NSURLSession.sharedSession()
-            session?.configuration.timeoutIntervalForRequest = TIME_OUT_LIMIT
-            session?.configuration.timeoutIntervalForResource = TIME_OUT_LIMIT
-        }
-        let task = session?.dataTaskWithRequest(request){
-            (data, response, error) -> Void in
-            if error != nil {
-                callback("", error!.localizedDescription)
-            } else {
-                let result = NSString(data: data!, encoding:
-                    NSASCIIStringEncoding)!
-                callback(result as String, nil)
-            }
-        }
-        task?.resume()
-    }
-    
-    func parseAQI(data: String) -> Int {
-        let escapedString: String? = data.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
-        if let unwrapped = escapedString {
-            let arr = unwrapped.componentsSeparatedByString("%20AQI%0D%0A")
-            for s in arr {
-                let subArr = s.componentsSeparatedByString("%09%09%09%09%09%09%09%09%09")
-                if let tmp = subArr.last {
-                    if Int(tmp) > 1 {
-                        return Int(tmp)!
-                    }
-                }
-            }
-        }
-        return -1
-    }
-    
-    func parseConcentration(data: String) -> Double {
-        let escapedString: String? = data.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
-        if let unwrapped = escapedString {
-            let arr = unwrapped.componentsSeparatedByString("%20%C3%82%C2%B5g%2Fm%C3%82%C2%B3%20%0D%0A%09%09%09%09%09%09%09%09")
-            for s in arr {
-                let subArr = s.componentsSeparatedByString("%09%09%09%09%09%09%09%09%09")
-                if let tmp = subArr.last {
-                    if Double(tmp) > 1 {
-                        return Double(tmp)!
-                    }
-                }
-            }
-        }
-        return -1.0
-    }
-    
     func sendLocalNotif(text: String, badge: Int) {
         let notif = UILocalNotification()
         notif.fireDate = NSDate.init(timeIntervalSinceNow: 5)
@@ -117,14 +65,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     func test(completionHandler: (UIBackgroundFetchResult) -> Void) {
         sendLocalNotif("尝试获取数据", badge: -1)
         let request = NSMutableURLRequest(URL: NSURL(string: "http://www.stateair.net/web/post/1/1.html")!)
-        httpGet(request){
+        if session == nil {
+            session = sharedSession()
+        }
+        httpGet(session, request: request){
             (data, error) -> Void in
             if error != nil {
                 print(error)
                 self.sendLocalNotif("获取数据出错", badge: -1)
             } else {
-                let tmpAQI = self.parseAQI(data)
-                let tmpConcentration = self.parseConcentration(data)
+                let tmpAQI = parseAQI(data)
+                let tmpConcentration = parseConcentration(data)
                 if tmpAQI > 1 && tmpConcentration > 1.0 && (tmpAQI != self.aqi || tmpConcentration != self.concentration) {
                     self.aqi = tmpAQI
                     self.concentration = tmpConcentration

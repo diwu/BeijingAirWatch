@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		50A775A51BCFE73E00FD19BA /* CommonUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A775A41BCFE73E00FD19BA /* CommonUtil.swift */; };
+		50A775A61BCFE73E00FD19BA /* CommonUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A775A41BCFE73E00FD19BA /* CommonUtil.swift */; };
 		50D0BCA61BCF479700B2DEC4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D0BCA51BCF479700B2DEC4 /* AppDelegate.swift */; };
 		50D0BCA81BCF479700B2DEC4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D0BCA71BCF479700B2DEC4 /* ViewController.swift */; };
 		50D0BCAB1BCF479700B2DEC4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50D0BCA91BCF479700B2DEC4 /* Main.storyboard */; };
@@ -65,6 +67,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		50A775A41BCFE73E00FD19BA /* CommonUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CommonUtil.swift; path = CommonUtil/CommonUtil.swift; sourceTree = "<group>"; };
 		50D0BCA21BCF479700B2DEC4 /* BeijingAirWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeijingAirWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50D0BCA51BCF479700B2DEC4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		50D0BCA71BCF479700B2DEC4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -102,9 +105,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		50A775A31BCFE71B00FD19BA /* CommonUtil */ = {
+			isa = PBXGroup;
+			children = (
+				50A775A41BCFE73E00FD19BA /* CommonUtil.swift */,
+			);
+			name = CommonUtil;
+			sourceTree = "<group>";
+		};
 		50D0BC991BCF479700B2DEC4 = {
 			isa = PBXGroup;
 			children = (
+				50A775A31BCFE71B00FD19BA /* CommonUtil */,
 				50D0BCA41BCF479700B2DEC4 /* BeijingAirWatch */,
 				50D0BCB81BCF479700B2DEC4 /* BeijingAirWatch WatchKit App */,
 				50D0BCC71BCF479700B2DEC4 /* BeijingAirWatch WatchKit Extension */,
@@ -296,6 +308,7 @@
 			files = (
 				50D0BCA81BCF479700B2DEC4 /* ViewController.swift in Sources */,
 				50D0BCA61BCF479700B2DEC4 /* AppDelegate.swift in Sources */,
+				50A775A51BCFE73E00FD19BA /* CommonUtil.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,6 +318,7 @@
 			files = (
 				50D0BCCB1BCF479700B2DEC4 /* ExtensionDelegate.swift in Sources */,
 				50D0BCC91BCF479700B2DEC4 /* InterfaceController.swift in Sources */,
+				50A775A61BCFE73E00FD19BA /* CommonUtil.swift in Sources */,
 				50D0BCCD1BCF479700B2DEC4 /* ComplicationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
