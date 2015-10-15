@@ -13,12 +13,97 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
+    private var isLoadingData: Bool = false
+    private var aqi: Int = -1
+    private var concentration: Double = -1.0
+    private var session: NSURLSession?
+    private let TIME_OUT_LIMIT: Double = 10.0;
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        UIApplication.sharedApplication().setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         return true
     }
-
+    
+    func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        print("called...");
+        test(completionHandler)
+    }
+    
+    func httpGet(request: NSURLRequest!, callback: (String, String?) -> Void) {
+        if session == nil {
+            session = NSURLSession.sharedSession()
+            session?.configuration.timeoutIntervalForRequest = TIME_OUT_LIMIT
+            session?.configuration.timeoutIntervalForResource = TIME_OUT_LIMIT
+        }
+        let task = session?.dataTaskWithRequest(request){
+            (data, response, error) -> Void in
+            if error != nil {
+                callback("", error!.localizedDescription)
+            } else {
+                let result = NSString(data: data!, encoding:
+                    NSASCIIStringEncoding)!
+                callback(result as String, nil)
+            }
+        }
+        task?.resume()
+    }
+    
+    func parseAQI(data: String) -> Int {
+        let escapedString: String? = data.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
+        if let unwrapped = escapedString {
+            let arr = unwrapped.componentsSeparatedByString("%20AQI%0D%0A")
+            for s in arr {
+                let subArr = s.componentsSeparatedByString("%09%09%09%09%09%09%09%09%09")
+                if let tmp = subArr.last {
+                    if Int(tmp) > 1 {
+                        return Int(tmp)!
+                    }
+                }
+            }
+        }
+        return -1
+    }
+    
+    func parseConcentration(data: String) -> Double {
+        let escapedString: String? = data.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
+        if let unwrapped = escapedString {
+            let arr = unwrapped.componentsSeparatedByString("%20%C3%82%C2%B5g%2Fm%C3%82%C2%B3%20%0D%0A%09%09%09%09%09%09%09%09")
+            for s in arr {
+                let subArr = s.componentsSeparatedByString("%09%09%09%09%09%09%09%09%09")
+                if let tmp = subArr.last {
+                    if Double(tmp) > 1 {
+                        return Double(tmp)!
+                    }
+                }
+            }
+        }
+        return -1.0
+    }
+    
+    func test(completionHandler: (UIBackgroundFetchResult) -> Void) {
+        let request = NSMutableURLRequest(URL: NSURL(string: "http://www.stateair.net/web/post/1/1.html")!)
+        httpGet(request){
+            (data, error) -> Void in
+            if error != nil {
+                print(error)
+            } else {
+                let tmpAQI = self.parseAQI(data)
+                let tmpConcentration = self.parseConcentration(data)
+                if tmpAQI > 1 && tmpConcentration > 1.0 {
+                    self.aqi = tmpAQI
+                    self.concentration = tmpConcentration
+                    print("data loaded: api = \(self.aqi), concentration = \(self.concentration)")
+                    completionHandler(.NewData)
+                    return
+                }
+            }
+            self.isLoadingData = false
+            print("failed...")
+            completionHandler(.Failed)
+        }
+    }
+    
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
