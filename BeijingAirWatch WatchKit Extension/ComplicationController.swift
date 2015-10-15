@@ -14,7 +14,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     // MARK: - Timeline Configuration
     
     func getSupportedTimeTravelDirectionsForComplication(complication: CLKComplication, withHandler handler: (CLKComplicationTimeTravelDirections) -> Void) {
-        handler([.Forward, .Backward])
+        handler([.None])
     }
     
     func getTimelineStartDateForComplication(complication: CLKComplication, withHandler handler: (NSDate?) -> Void) {
@@ -31,9 +31,23 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     // MARK: - Timeline Population
     
+    func createTimeLineEntry(firstLine firstLine: String, secondLine: String, date: NSDate) -> CLKComplicationTimelineEntry {
+        let template = CLKComplicationTemplateModularSmallStackText()
+        template.line1TextProvider = CLKSimpleTextProvider(text: firstLine)
+        template.line2TextProvider = CLKSimpleTextProvider(text: secondLine)
+        template.highlightLine2 = true
+        let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
+        return(entry)
+    }
+    
     func getCurrentTimelineEntryForComplication(complication: CLKComplication, withHandler handler: ((CLKComplicationTimelineEntry?) -> Void)) {
         // Call the handler with the current timeline entry
-        handler(nil)
+        if complication.family == .ModularSmall {
+            let entry = createTimeLineEntry(firstLine: "--", secondLine: "--", date: NSDate())
+            handler(entry)
+        } else {
+            handler(nil)
+        }
     }
     
     func getTimelineEntriesForComplication(complication: CLKComplication, beforeDate date: NSDate, limit: Int, withHandler handler: (([CLKComplicationTimelineEntry]?) -> Void)) {
@@ -57,7 +71,11 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     func getPlaceholderTemplateForComplication(complication: CLKComplication, withHandler handler: (CLKComplicationTemplate?) -> Void) {
         // This method will be called once per supported complication, and the results will be cached
-        handler(nil)
+        let template = CLKComplicationTemplateModularSmallStackText()
+        template.line1TextProvider = CLKSimpleTextProvider(text: "AQI")
+        template.line2TextProvider = CLKSimpleTextProvider(text: "PM2.5")
+        template.highlightLine2 = true
+        handler(template)
     }
     
 }
