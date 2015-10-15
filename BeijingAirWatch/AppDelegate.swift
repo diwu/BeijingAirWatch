@@ -29,6 +29,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             wcSession?.delegate = self
             wcSession?.activateSession()
         }
+        if NSUserDefaults.standardUserDefaults().integerForKey("a") > 1 {
+            aqi = NSUserDefaults.standardUserDefaults().integerForKey("a")
+        }
+        if NSUserDefaults.standardUserDefaults().doubleForKey("c") > 1.0 {
+            concentration = NSUserDefaults.standardUserDefaults().doubleForKey("c")
+        }
+
         return true
     }
     
@@ -37,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         if wcSession?.complicationEnabled == true {
             test(completionHandler)
         } else {
-            completionHandler(.NoData)
+            completionHandler(.NewData)
         }
     }
     
@@ -104,6 +111,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                 if tmpAQI > 1 && tmpConcentration > 1.0 && tmpAQI != self.aqi && tmpConcentration != self.concentration {
                     self.aqi = tmpAQI
                     self.concentration = tmpConcentration
+                    NSUserDefaults.standardUserDefaults().setInteger(self.aqi, forKey: "a")
+                    NSUserDefaults.standardUserDefaults().setDouble(self.concentration, forKey: "c")
+                    NSUserDefaults.standardUserDefaults().synchronize()
                     print("data loaded: api = \(self.aqi), concentration = \(self.concentration)")
                     self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration])
                     completionHandler(.NewData)
@@ -111,7 +121,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                 }
             }
             self.isLoadingData = false
-            completionHandler(.NoData)
+            completionHandler(.NewData)
         }
     }
     
