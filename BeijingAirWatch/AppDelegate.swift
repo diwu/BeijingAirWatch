@@ -108,7 +108,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             } else {
                 let tmpAQI = self.parseAQI(data)
                 let tmpConcentration = self.parseConcentration(data)
-                if tmpAQI > 1 && tmpConcentration > 1.0 && tmpAQI != self.aqi && tmpConcentration != self.concentration {
+                if tmpAQI > 1 && tmpConcentration > 1.0 && (tmpAQI != self.aqi || tmpConcentration != self.concentration) {
                     self.aqi = tmpAQI
                     self.concentration = tmpConcentration
                     NSUserDefaults.standardUserDefaults().setInteger(self.aqi, forKey: "a")

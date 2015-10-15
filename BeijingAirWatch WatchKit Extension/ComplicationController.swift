@@ -106,7 +106,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         if let unwrappedInfo = delegate.wcUserInfo {
             let tmpA: Int = unwrappedInfo["a"] as! Int
             let tmpC: Double = unwrappedInfo["c"] as! Double
-            if tmpA > 1 && tmpC > 1 && tmpA != currentAQI && tmpC != currentConcentration {
+            if tmpA > 1 && tmpC > 1 && (tmpA != currentAQI || tmpC != currentConcentration) {
                 currentAQI = tmpA
                 currentConcentration = tmpC
                 let complicationServer = CLKComplicationServer.sharedInstance()
