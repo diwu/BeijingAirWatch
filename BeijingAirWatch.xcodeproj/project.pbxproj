@@ -1,0 +1,554 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		50D0BCA61BCF479700B2DEC4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D0BCA51BCF479700B2DEC4 /* AppDelegate.swift */; };
+		50D0BCA81BCF479700B2DEC4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D0BCA71BCF479700B2DEC4 /* ViewController.swift */; };
+		50D0BCAB1BCF479700B2DEC4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50D0BCA91BCF479700B2DEC4 /* Main.storyboard */; };
+		50D0BCAD1BCF479700B2DEC4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50D0BCAC1BCF479700B2DEC4 /* Assets.xcassets */; };
+		50D0BCB01BCF479700B2DEC4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50D0BCAE1BCF479700B2DEC4 /* LaunchScreen.storyboard */; };
+		50D0BCB51BCF479700B2DEC4 /* BeijingAirWatch WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 50D0BCB41BCF479700B2DEC4 /* BeijingAirWatch WatchKit App.app */; };
+		50D0BCBB1BCF479700B2DEC4 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50D0BCB91BCF479700B2DEC4 /* Interface.storyboard */; };
+		50D0BCBD1BCF479700B2DEC4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50D0BCBC1BCF479700B2DEC4 /* Assets.xcassets */; };
+		50D0BCC41BCF479700B2DEC4 /* BeijingAirWatch WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 50D0BCC31BCF479700B2DEC4 /* BeijingAirWatch WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		50D0BCC91BCF479700B2DEC4 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D0BCC81BCF479700B2DEC4 /* InterfaceController.swift */; };
+		50D0BCCB1BCF479700B2DEC4 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D0BCCA1BCF479700B2DEC4 /* ExtensionDelegate.swift */; };
+		50D0BCCD1BCF479700B2DEC4 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D0BCCC1BCF479700B2DEC4 /* ComplicationController.swift */; };
+		50D0BCCF1BCF479700B2DEC4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50D0BCCE1BCF479700B2DEC4 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		50D0BCB61BCF479700B2DEC4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 50D0BC9A1BCF479700B2DEC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 50D0BCB31BCF479700B2DEC4;
+			remoteInfo = "BeijingAirWatch WatchKit App";
+		};
+		50D0BCC51BCF479700B2DEC4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 50D0BC9A1BCF479700B2DEC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 50D0BCC21BCF479700B2DEC4;
+			remoteInfo = "BeijingAirWatch WatchKit Extension";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		50D0BCD61BCF479700B2DEC4 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				50D0BCC41BCF479700B2DEC4 /* BeijingAirWatch WatchKit Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50D0BCDA1BCF479700B2DEC4 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				50D0BCB51BCF479700B2DEC4 /* BeijingAirWatch WatchKit App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		50D0BCA21BCF479700B2DEC4 /* BeijingAirWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeijingAirWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		50D0BCA51BCF479700B2DEC4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		50D0BCA71BCF479700B2DEC4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		50D0BCAA1BCF479700B2DEC4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		50D0BCAC1BCF479700B2DEC4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		50D0BCAF1BCF479700B2DEC4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		50D0BCB11BCF479700B2DEC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		50D0BCB41BCF479700B2DEC4 /* BeijingAirWatch WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BeijingAirWatch WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		50D0BCBA1BCF479700B2DEC4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		50D0BCBC1BCF479700B2DEC4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		50D0BCBE1BCF479700B2DEC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		50D0BCC31BCF479700B2DEC4 /* BeijingAirWatch WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "BeijingAirWatch WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		50D0BCC81BCF479700B2DEC4 /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
+		50D0BCCA1BCF479700B2DEC4 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
+		50D0BCCC1BCF479700B2DEC4 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
+		50D0BCCE1BCF479700B2DEC4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		50D0BCD01BCF479700B2DEC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		50D0BC9F1BCF479700B2DEC4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50D0BCC01BCF479700B2DEC4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		50D0BC991BCF479700B2DEC4 = {
+			isa = PBXGroup;
+			children = (
+				50D0BCA41BCF479700B2DEC4 /* BeijingAirWatch */,
+				50D0BCB81BCF479700B2DEC4 /* BeijingAirWatch WatchKit App */,
+				50D0BCC71BCF479700B2DEC4 /* BeijingAirWatch WatchKit Extension */,
+				50D0BCA31BCF479700B2DEC4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		50D0BCA31BCF479700B2DEC4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				50D0BCA21BCF479700B2DEC4 /* BeijingAirWatch.app */,
+				50D0BCB41BCF479700B2DEC4 /* BeijingAirWatch WatchKit App.app */,
+				50D0BCC31BCF479700B2DEC4 /* BeijingAirWatch WatchKit Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		50D0BCA41BCF479700B2DEC4 /* BeijingAirWatch */ = {
+			isa = PBXGroup;
+			children = (
+				50D0BCA51BCF479700B2DEC4 /* AppDelegate.swift */,
+				50D0BCA71BCF479700B2DEC4 /* ViewController.swift */,
+				50D0BCA91BCF479700B2DEC4 /* Main.storyboard */,
+				50D0BCAC1BCF479700B2DEC4 /* Assets.xcassets */,
+				50D0BCAE1BCF479700B2DEC4 /* LaunchScreen.storyboard */,
+				50D0BCB11BCF479700B2DEC4 /* Info.plist */,
+			);
+			path = BeijingAirWatch;
+			sourceTree = "<group>";
+		};
+		50D0BCB81BCF479700B2DEC4 /* BeijingAirWatch WatchKit App */ = {
+			isa = PBXGroup;
+			children = (
+				50D0BCB91BCF479700B2DEC4 /* Interface.storyboard */,
+				50D0BCBC1BCF479700B2DEC4 /* Assets.xcassets */,
+				50D0BCBE1BCF479700B2DEC4 /* Info.plist */,
+			);
+			path = "BeijingAirWatch WatchKit App";
+			sourceTree = "<group>";
+		};
+		50D0BCC71BCF479700B2DEC4 /* BeijingAirWatch WatchKit Extension */ = {
+			isa = PBXGroup;
+			children = (
+				50D0BCC81BCF479700B2DEC4 /* InterfaceController.swift */,
+				50D0BCCA1BCF479700B2DEC4 /* ExtensionDelegate.swift */,
+				50D0BCCC1BCF479700B2DEC4 /* ComplicationController.swift */,
+				50D0BCCE1BCF479700B2DEC4 /* Assets.xcassets */,
+				50D0BCD01BCF479700B2DEC4 /* Info.plist */,
+			);
+			path = "BeijingAirWatch WatchKit Extension";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		50D0BCA11BCF479700B2DEC4 /* BeijingAirWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50D0BCDB1BCF479700B2DEC4 /* Build configuration list for PBXNativeTarget "BeijingAirWatch" */;
+			buildPhases = (
+				50D0BC9E1BCF479700B2DEC4 /* Sources */,
+				50D0BC9F1BCF479700B2DEC4 /* Frameworks */,
+				50D0BCA01BCF479700B2DEC4 /* Resources */,
+				50D0BCDA1BCF479700B2DEC4 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				50D0BCB71BCF479700B2DEC4 /* PBXTargetDependency */,
+			);
+			name = BeijingAirWatch;
+			productName = BeijingAirWatch;
+			productReference = 50D0BCA21BCF479700B2DEC4 /* BeijingAirWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		50D0BCB31BCF479700B2DEC4 /* BeijingAirWatch WatchKit App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50D0BCD71BCF479700B2DEC4 /* Build configuration list for PBXNativeTarget "BeijingAirWatch WatchKit App" */;
+			buildPhases = (
+				50D0BCB21BCF479700B2DEC4 /* Resources */,
+				50D0BCD61BCF479700B2DEC4 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				50D0BCC61BCF479700B2DEC4 /* PBXTargetDependency */,
+			);
+			name = "BeijingAirWatch WatchKit App";
+			productName = "BeijingAirWatch WatchKit App";
+			productReference = 50D0BCB41BCF479700B2DEC4 /* BeijingAirWatch WatchKit App.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		50D0BCC21BCF479700B2DEC4 /* BeijingAirWatch WatchKit Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50D0BCD31BCF479700B2DEC4 /* Build configuration list for PBXNativeTarget "BeijingAirWatch WatchKit Extension" */;
+			buildPhases = (
+				50D0BCBF1BCF479700B2DEC4 /* Sources */,
+				50D0BCC01BCF479700B2DEC4 /* Frameworks */,
+				50D0BCC11BCF479700B2DEC4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "BeijingAirWatch WatchKit Extension";
+			productName = "BeijingAirWatch WatchKit Extension";
+			productReference = 50D0BCC31BCF479700B2DEC4 /* BeijingAirWatch WatchKit Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		50D0BC9A1BCF479700B2DEC4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0710;
+				LastUpgradeCheck = 0710;
+				ORGANIZATIONNAME = "Beijing Air Watch";
+				TargetAttributes = {
+					50D0BCA11BCF479700B2DEC4 = {
+						CreatedOnToolsVersion = 7.1;
+					};
+					50D0BCB31BCF479700B2DEC4 = {
+						CreatedOnToolsVersion = 7.1;
+					};
+					50D0BCC21BCF479700B2DEC4 = {
+						CreatedOnToolsVersion = 7.1;
+					};
+				};
+			};
+			buildConfigurationList = 50D0BC9D1BCF479700B2DEC4 /* Build configuration list for PBXProject "BeijingAirWatch" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 50D0BC991BCF479700B2DEC4;
+			productRefGroup = 50D0BCA31BCF479700B2DEC4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				50D0BCA11BCF479700B2DEC4 /* BeijingAirWatch */,
+				50D0BCB31BCF479700B2DEC4 /* BeijingAirWatch WatchKit App */,
+				50D0BCC21BCF479700B2DEC4 /* BeijingAirWatch WatchKit Extension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		50D0BCA01BCF479700B2DEC4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50D0BCB01BCF479700B2DEC4 /* LaunchScreen.storyboard in Resources */,
+				50D0BCAD1BCF479700B2DEC4 /* Assets.xcassets in Resources */,
+				50D0BCAB1BCF479700B2DEC4 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50D0BCB21BCF479700B2DEC4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50D0BCBD1BCF479700B2DEC4 /* Assets.xcassets in Resources */,
+				50D0BCBB1BCF479700B2DEC4 /* Interface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50D0BCC11BCF479700B2DEC4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50D0BCCF1BCF479700B2DEC4 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		50D0BC9E1BCF479700B2DEC4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50D0BCA81BCF479700B2DEC4 /* ViewController.swift in Sources */,
+				50D0BCA61BCF479700B2DEC4 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50D0BCBF1BCF479700B2DEC4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50D0BCCB1BCF479700B2DEC4 /* ExtensionDelegate.swift in Sources */,
+				50D0BCC91BCF479700B2DEC4 /* InterfaceController.swift in Sources */,
+				50D0BCCD1BCF479700B2DEC4 /* ComplicationController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		50D0BCB71BCF479700B2DEC4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 50D0BCB31BCF479700B2DEC4 /* BeijingAirWatch WatchKit App */;
+			targetProxy = 50D0BCB61BCF479700B2DEC4 /* PBXContainerItemProxy */;
+		};
+		50D0BCC61BCF479700B2DEC4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 50D0BCC21BCF479700B2DEC4 /* BeijingAirWatch WatchKit Extension */;
+			targetProxy = 50D0BCC51BCF479700B2DEC4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		50D0BCA91BCF479700B2DEC4 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				50D0BCAA1BCF479700B2DEC4 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		50D0BCAE1BCF479700B2DEC4 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				50D0BCAF1BCF479700B2DEC4 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		50D0BCB91BCF479700B2DEC4 /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				50D0BCBA1BCF479700B2DEC4 /* Base */,
+			);
+			name = Interface.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		50D0BCD11BCF479700B2DEC4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		50D0BCD21BCF479700B2DEC4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		50D0BCD41BCF479700B2DEC4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				INFOPLIST_FILE = "BeijingAirWatch WatchKit Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.BeijingAirWatch.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		50D0BCD51BCF479700B2DEC4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				INFOPLIST_FILE = "BeijingAirWatch WatchKit Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.BeijingAirWatch.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+		50D0BCD81BCF479700B2DEC4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				IBSC_MODULE = BeijingAirWatch_WatchKit_Extension;
+				INFOPLIST_FILE = "BeijingAirWatch WatchKit App/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = com.BeijingAirWatch.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		50D0BCD91BCF479700B2DEC4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				IBSC_MODULE = BeijingAirWatch_WatchKit_Extension;
+				INFOPLIST_FILE = "BeijingAirWatch WatchKit App/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = com.BeijingAirWatch.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+		50D0BCDC1BCF479700B2DEC4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = BeijingAirWatch/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.BeijingAirWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		50D0BCDD1BCF479700B2DEC4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = BeijingAirWatch/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.BeijingAirWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		50D0BC9D1BCF479700B2DEC4 /* Build configuration list for PBXProject "BeijingAirWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50D0BCD11BCF479700B2DEC4 /* Debug */,
+				50D0BCD21BCF479700B2DEC4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		50D0BCD31BCF479700B2DEC4 /* Build configuration list for PBXNativeTarget "BeijingAirWatch WatchKit Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50D0BCD41BCF479700B2DEC4 /* Debug */,
+				50D0BCD51BCF479700B2DEC4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		50D0BCD71BCF479700B2DEC4 /* Build configuration list for PBXNativeTarget "BeijingAirWatch WatchKit App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50D0BCD81BCF479700B2DEC4 /* Debug */,
+				50D0BCD91BCF479700B2DEC4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		50D0BCDB1BCF479700B2DEC4 /* Build configuration list for PBXNativeTarget "BeijingAirWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50D0BCDC1BCF479700B2DEC4 /* Debug */,
+				50D0BCDD1BCF479700B2DEC4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 50D0BC9A1BCF479700B2DEC4 /* Project object */;
+}
