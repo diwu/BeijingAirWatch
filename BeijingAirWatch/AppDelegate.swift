@@ -64,7 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     
     func test(completionHandler: (UIBackgroundFetchResult) -> Void) {
         sendLocalNotif("尝试获取数据", badge: -1)
-        let request = NSMutableURLRequest(URL: NSURL(string: "http://www.stateair.net/web/post/1/1.html")!)
+        let request = createRequest()
         if session == nil {
             session = sharedSession()
         }

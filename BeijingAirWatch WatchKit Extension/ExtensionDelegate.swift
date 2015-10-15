@@ -16,19 +16,23 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
     var wcUserInfo: [String: AnyObject]?
     var myOwnComplication: CLKComplication?
     
+    func reloadComplication() {
+        if myOwnComplication == nil {
+            let complicationServer = CLKComplicationServer.sharedInstance()
+            for complication in complicationServer.activeComplications {
+                complicationServer.reloadTimelineForComplication(complication)
+            }
+        } else {
+            let complicationServer = CLKComplicationServer.sharedInstance()
+            complicationServer.reloadTimelineForComplication(myOwnComplication)
+        }
+    }
+    
     func session(session: WCSession, didReceiveUserInfo userInfo: [String : AnyObject]) {
         print("did receive info: \(userInfo)")
         if userInfo["a"] != nil {
             wcUserInfo = userInfo
-            if myOwnComplication == nil {
-                let complicationServer = CLKComplicationServer.sharedInstance()
-                for complication in complicationServer.activeComplications {
-                    complicationServer.reloadTimelineForComplication(complication)
-                }
-            } else {
-                let complicationServer = CLKComplicationServer.sharedInstance()
-                complicationServer.reloadTimelineForComplication(myOwnComplication)
-            }
+            reloadComplication()
         }
     }
     
