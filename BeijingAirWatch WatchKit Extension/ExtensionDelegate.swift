@@ -7,11 +7,19 @@
 //
 
 import WatchKit
+import WatchConnectivity
 
-class ExtensionDelegate: NSObject, WKExtensionDelegate {
+class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
 
+    private var wcSession: WCSession?
+    
     func applicationDidFinishLaunching() {
         // Perform any final initialization of your application.
+        if (WCSession.isSupported()) {
+            let wcSession = WCSession.defaultSession()
+            wcSession.delegate = self
+            wcSession.activateSession()
+        }
     }
 
     func applicationDidBecomeActive() {

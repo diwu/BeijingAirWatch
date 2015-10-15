@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import WatchConnectivity
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
 
     var window: UIWindow?
 
@@ -18,10 +19,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var concentration: Double = -1.0
     private var session: NSURLSession?
     private let TIME_OUT_LIMIT: Double = 10.0;
+    private var wcSession: WCSession?
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         UIApplication.sharedApplication().setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+        if (WCSession.isSupported()) {
+            let wcSession = WCSession.defaultSession()
+            wcSession.delegate = self
+            wcSession.activateSession()
+        }
         return true
     }
     
