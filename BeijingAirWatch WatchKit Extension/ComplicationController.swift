@@ -7,7 +7,7 @@
 //
 
 import ClockKit
-
+import WatchKit
 
 class ComplicationController: NSObject, CLKComplicationDataSource {
     
@@ -42,6 +42,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     func getCurrentTimelineEntryForComplication(complication: CLKComplication, withHandler handler: ((CLKComplicationTimelineEntry?) -> Void)) {
         // Call the handler with the current timeline entry
+        print(" - 2 -")
         if complication.family == .ModularSmall {
             let entry = createTimeLineEntry(firstLine: "--", secondLine: "--", date: NSDate())
             handler(entry)
@@ -64,6 +65,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     func getNextRequestedUpdateDateWithHandler(handler: (NSDate?) -> Void) {
         // Call the handler with the date when you would next like to be given the opportunity to update your complication content
+        print(" - 1 -")
         handler(nil);
     }
     
@@ -78,4 +80,11 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         handler(template)
     }
     
+    func requestedUpdateDidBegin() {
+        let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+        print(" - 3 - \(delegate.wcUserInfo)")
+    }
+    func requestedUpdateBudgetExhausted() {
+        print(" - 4 - ")
+    }
 }

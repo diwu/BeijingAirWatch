@@ -536,6 +536,7 @@
 				50D0BCD51BCF479700B2DEC4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		50D0BCD71BCF479700B2DEC4 /* Build configuration list for PBXNativeTarget "BeijingAirWatch WatchKit App" */ = {
 			isa = XCConfigurationList;
@@ -544,6 +545,7 @@
 				50D0BCD91BCF479700B2DEC4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		50D0BCDB1BCF479700B2DEC4 /* Build configuration list for PBXNativeTarget "BeijingAirWatch" */ = {
 			isa = XCConfigurationList;
@@ -552,6 +554,7 @@
 				50D0BCDD1BCF479700B2DEC4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

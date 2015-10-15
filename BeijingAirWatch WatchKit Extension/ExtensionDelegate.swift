@@ -11,14 +11,22 @@ import WatchConnectivity
 
 class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
 
-    private var wcSession: WCSession?
+    var wcSession: WCSession?
+    var wcUserInfo: [String: AnyObject]?
+    
+    func session(session: WCSession, didReceiveUserInfo userInfo: [String : AnyObject]) {
+        print("did receive info: \(userInfo)")
+        wcUserInfo = userInfo
+    }
     
     func applicationDidFinishLaunching() {
         // Perform any final initialization of your application.
+        print("did launch")
         if (WCSession.isSupported()) {
-            let wcSession = WCSession.defaultSession()
-            wcSession.delegate = self
-            wcSession.activateSession()
+            wcSession = WCSession.defaultSession()
+            wcSession!.delegate = self
+            wcSession!.activateSession()
+            print("did activate session")
         }
     }
 

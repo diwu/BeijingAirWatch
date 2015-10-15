@@ -25,15 +25,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         // Override point for customization after application launch.
         UIApplication.sharedApplication().setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         if (WCSession.isSupported()) {
-            let wcSession = WCSession.defaultSession()
-            wcSession.delegate = self
-            wcSession.activateSession()
+            wcSession = WCSession.defaultSession()
+            wcSession?.delegate = self
+            wcSession?.activateSession()
         }
         return true
     }
     
     func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-        print("called...");
+        print("called... complication enabled = \(wcSession?.complicationEnabled)");
         test(completionHandler)
     }
     
@@ -101,6 +101,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                     self.aqi = tmpAQI
                     self.concentration = tmpConcentration
                     print("data loaded: api = \(self.aqi), concentration = \(self.concentration)")
+                    self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration])
                     completionHandler(.NewData)
                     return
                 }
