@@ -66,7 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         sendLocalNotif("尝试获取数据", badge: -1)
         let request = createRequest()
         if session == nil {
-            session = sharedSession()
+            session = sharedSessionForIOS()
         }
         httpGet(session, request: request){
             (data, error) -> Void in

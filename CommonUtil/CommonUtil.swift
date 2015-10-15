@@ -42,8 +42,15 @@ func parseConcentration(data: String) -> Double {
     return -1.0
 }
 
-func sharedSession() -> NSURLSession {
+func sharedSessionForIOS() -> NSURLSession {
     let session = NSURLSession.sharedSession()
+    session.configuration.timeoutIntervalForRequest = TIME_OUT_LIMIT
+    session.configuration.timeoutIntervalForResource = TIME_OUT_LIMIT
+    return session
+}
+
+func sessionForWatchExtension() -> NSURLSession {
+    let session = NSURLSession.init(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
     session.configuration.timeoutIntervalForRequest = TIME_OUT_LIMIT
     session.configuration.timeoutIntervalForResource = TIME_OUT_LIMIT
     return session

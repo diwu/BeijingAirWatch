@@ -126,7 +126,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         }
         let request = createRequest()
         if session == nil {
-            session = sharedSession()
+            session = sessionForWatchExtension()
         }
         httpGet(session, request: request){
             (data, error) -> Void in
