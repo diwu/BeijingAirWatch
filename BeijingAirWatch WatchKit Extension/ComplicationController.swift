@@ -56,7 +56,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         rememberMyOwnComplication(complication)
         print(" - 2 -")
         if complication.family == .ModularSmall {
-            if currentAQI > 1 && currentConcentration > 1 {
+            if processDataFromDelegate() == true {
                 let entry = createTimeLineEntry(firstLine: "\(currentAQI)", secondLine: "\(currentConcentration)", date: NSDate())
                 handler(entry)
             } else {
@@ -103,24 +103,31 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     func requestedUpdateDidBegin() {
         let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
         print(" - 3 - \(delegate.wcUserInfo)")
-        if let unwrappedInfo = delegate.wcUserInfo {
-            let tmpA: Int = unwrappedInfo["a"] as! Int
-            let tmpC: Double = unwrappedInfo["c"] as! Double
-            if tmpA > 1 && tmpC > 1 && (tmpA != currentAQI || tmpC != currentConcentration) {
-                currentAQI = tmpA
-                currentConcentration = tmpC
-                let complicationServer = CLKComplicationServer.sharedInstance()
-                if delegate.myOwnComplication == nil {
-                    for complication in complicationServer.activeComplications {
-                        complicationServer.reloadTimelineForComplication(complication)
-                    }
-                } else {
-                    complicationServer.reloadTimelineForComplication(delegate.myOwnComplication)
+        if processDataFromDelegate() == true {
+            let complicationServer = CLKComplicationServer.sharedInstance()
+            if delegate.myOwnComplication == nil {
+                for complication in complicationServer.activeComplications {
+                    complicationServer.reloadTimelineForComplication(complication)
                 }
+            } else {
+                complicationServer.reloadTimelineForComplication(delegate.myOwnComplication)
             }
         }
     }
     func requestedUpdateBudgetExhausted() {
         print(" - 4 - ")
+    }
+    func processDataFromDelegate() -> Bool {
+        let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+        if let unwrappedInfo = delegate.wcUserInfo {
+            let tmpA: Int = unwrappedInfo["a"] as! Int
+            let tmpC: Double = unwrappedInfo["c"] as! Double
+            if tmpA > 1 && tmpC > 1 {
+                currentAQI = tmpA
+                currentConcentration = tmpC
+                return true;
+            }
+        }
+        return false
     }
 }
