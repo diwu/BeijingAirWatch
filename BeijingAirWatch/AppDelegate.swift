@@ -104,7 +104,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     
     func sendLocalNotif(text: String, badge: Int) {
         let notif = UILocalNotification()
-        notif.fireDate = NSDate.init(timeIntervalSinceNow: 1)
+        notif.fireDate = NSDate.init(timeIntervalSinceNow: 5)
         notif.alertBody = text
         notif.timeZone = NSTimeZone.defaultTimeZone()
         notif.soundName = UILocalNotificationDefaultSoundName
