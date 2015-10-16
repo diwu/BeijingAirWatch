@@ -83,7 +83,7 @@ class InterfaceController: WKInterfaceController {
                 let tmpAQI = parseAQI(data)
                 let tmpConcentration = parseConcentration(data)
                 let tmpTime = parseTime(data)
-                if tmpAQI > 1 && tmpConcentration > 1.0 && (tmpAQI != self.aqi || tmpConcentration != self.concentration || tmpTime != self.time) {
+                if tmpAQI > 1 && tmpConcentration > 1.0 && tmpTime.containsString(",") {
                     self.aqi = tmpAQI
                     self.concentration = tmpConcentration
                     self.time = tmpTime

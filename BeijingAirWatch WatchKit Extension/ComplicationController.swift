@@ -81,7 +81,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                 NSUserDefaults.standardUserDefaults().setObject(self.time, forKey: "t")
                 NSUserDefaults.standardUserDefaults().synchronize()
             } else {
-                let entry = createTimeLineEntryModularSmall(firstLine: "--", secondLine: "--", date: NSDate())
+                let entry = createTimeLineEntryModularSmall(firstLine: "?", secondLine: "?", date: NSDate())
                 handler(entry)
             }
         } else if complication.family == .ModularLarge {
@@ -93,7 +93,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                 NSUserDefaults.standardUserDefaults().setObject(self.time, forKey: "t")
                 NSUserDefaults.standardUserDefaults().synchronize()
             } else {
-                let entry = createTimeLineEntryModularLarge(firstLine: "--", secondLine: "--", thirdLine: "--", date: NSDate())
+                let entry = createTimeLineEntryModularLarge(firstLine: "?", secondLine: "?", thirdLine: "?", date: NSDate())
                 handler(entry)
             }
         } else {
@@ -138,9 +138,9 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Date :")
             template.row2Column1TextProvider = CLKSimpleTextProvider(text: "AQI  :")
             template.row3Column1TextProvider = CLKSimpleTextProvider(text: "PM2.5:")
-            template.row1Column2TextProvider = CLKSimpleTextProvider(text: "--")
-            template.row2Column2TextProvider = CLKSimpleTextProvider(text: "--")
-            template.row3Column2TextProvider = CLKSimpleTextProvider(text: "--")
+            template.row1Column2TextProvider = CLKSimpleTextProvider(text: "?")
+            template.row2Column2TextProvider = CLKSimpleTextProvider(text: "?")
+            template.row3Column2TextProvider = CLKSimpleTextProvider(text: "?")
             handler(template)
         }
     }
