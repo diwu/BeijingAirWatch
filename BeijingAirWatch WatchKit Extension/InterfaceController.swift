@@ -11,12 +11,19 @@ import Foundation
 
 
 class InterfaceController: WKInterfaceController {
-
+    @IBOutlet var refreshButton: WKInterfaceButton!
+    @IBOutlet var timeLabel: WKInterfaceLabel!
+    @IBOutlet var aqiLabel: WKInterfaceLabel!
+    @IBOutlet var concentrationLabel: WKInterfaceLabel!
+    
     private var aqi: Int = -1
     private var concentration: Double = -1.0
     private var time: String? = "Invalid"
     private var session: NSURLSession?
     
+    @IBAction func refreshButtonPressed() {
+        test()
+    }
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
         
@@ -33,8 +40,21 @@ class InterfaceController: WKInterfaceController {
         // This method is called when watch view controller is no longer visible
         super.didDeactivate()
     }
+    
+    func populateLabels() {
+        if self.aqi <= 1 {
+            timeLabel.setText("--")
+            aqiLabel.setText("--")
+            concentrationLabel.setText("--")
+        } else {
+            timeLabel.setText(time)
+            aqiLabel.setText("AQI: \(aqi)")
+            concentrationLabel.setText("PM2.5: \(concentration)")
+        }
+    }
 
     func test() {
+        refreshButton.setEnabled(false)
         self.aqi = NSUserDefaults.standardUserDefaults().integerForKey("a")
         self.concentration = NSUserDefaults.standardUserDefaults().doubleForKey("c")
         self.time = NSUserDefaults.standardUserDefaults().stringForKey("t")
@@ -47,6 +67,7 @@ class InterfaceController: WKInterfaceController {
         if self.concentration <= 1.0 {
             self.concentration = -1.0
         }
+        populateLabels()
         let request = createRequest()
         if session == nil {
             session = sessionForWatchExtension()
@@ -64,12 +85,15 @@ class InterfaceController: WKInterfaceController {
                     self.concentration = tmpConcentration
                     self.time = tmpTime
                     print("wc - data loaded (by Interface Controller): api = \(self.aqi), concentration = \(self.concentration)， time = \(self.time)")
+                    self.populateLabels()
                     let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
                     delegate.wcUserInfo = ["a": self.aqi, "c": self.concentration, "t": self.time!]
                     delegate.reloadComplication()
+                    self.refreshButton.setEnabled(true)
                     return
                 }
             }
+            self.refreshButton.setEnabled(true)
         }
     }
 }

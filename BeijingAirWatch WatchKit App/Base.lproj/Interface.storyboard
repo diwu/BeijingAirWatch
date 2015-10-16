@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="6221" systemVersion="13E28" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="9058" systemVersion="15A284" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="AgC-eL-Hgc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6213"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="3733"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9048"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="9019"/>
     </dependencies>
     <scenes>
         <!--Interface Controller-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModuleProvider="target"/>
+                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="BeijingAirWatch_WatchKit_App" customModuleProvider="target">
+                    <items>
+                        <group width="1" alignment="left" verticalAlignment="center" layout="vertical" id="uzy-eZ-Hp5">
+                            <items>
+                                <label alignment="center" text="Label" textAlignment="center" id="UkC-fD-KFG"/>
+                                <label alignment="center" text="Label" id="vfQ-fo-4HH"/>
+                                <label alignment="center" text="Label" id="AxY-Fh-p2g"/>
+                                <button width="1" alignment="left" verticalAlignment="bottom" title="Press to Refresh" id="yL1-WP-a7c">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <connections>
+                                        <action selector="refreshButtonPressed" destination="AgC-eL-Hgc" id="1b1-UV-vE5"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="aqiLabel" destination="vfQ-fo-4HH" id="lhS-F1-zel"/>
+                        <outlet property="concentrationLabel" destination="AxY-Fh-p2g" id="LQW-aO-hHz"/>
+                        <outlet property="refreshButton" destination="yL1-WP-a7c" id="H1K-1v-twP"/>
+                        <outlet property="timeLabel" destination="UkC-fD-KFG" id="cso-8t-0Lz"/>
+                    </connections>
+                </controller>
             </objects>
         </scene>
     </scenes>
