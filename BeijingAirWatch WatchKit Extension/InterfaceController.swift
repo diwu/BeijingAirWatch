@@ -55,7 +55,7 @@ class InterfaceController: WKInterfaceController {
     }
 
     func test() {
-        sourceLabel.setText(sourceURL())
+        sourceLabel.setText(sourceDescription())
         refreshButton.setEnabled(false)
         refreshButton.setTitle("Refreshing...")
         self.aqi = NSUserDefaults.standardUserDefaults().integerForKey("a")

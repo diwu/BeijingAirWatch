@@ -10,6 +10,14 @@ import Foundation
 
 let TIME_OUT_LIMIT: Double = 10.0;
 
+enum City: String {
+    case Beijing = "Beijing"
+    case Chengdu = "Chengdu"
+    case Guangzhou = "Guangzhou"
+    case Shanghai = "Shanghai"
+    case Shenyang = "Shenyang"
+}
+
 func parseTime(data: String) -> String {
     let escapedString: String? = data.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
 //    print("data = \(escapedString)")
@@ -88,9 +96,28 @@ func httpGet(session: NSURLSession?, request: NSURLRequest!, callback: (String, 
 }
 
 func createRequest() -> NSURLRequest {
-    return NSMutableURLRequest(URL: NSURL(string: sourceURL())!)
+    return NSMutableURLRequest(URL: NSURL(string: sourceURL(selectedCity()))!)
 }
 
-func sourceURL() -> String {
-    return "http://www.stateair.net/web/post/1/1.html";
+func sourceURL(city: City) -> String {
+    switch city {
+    case .Beijing:
+        return "http://www.stateair.net/web/post/1/1.html";
+    case .Chengdu:
+        return "http://www.stateair.net/web/post/1/2.html";
+    case .Guangzhou:
+        return "http://www.stateair.net/web/post/1/3.html";
+    case .Shanghai:
+        return "http://www.stateair.net/web/post/1/4.html";
+    case .Shenyang:
+        return "http://www.stateair.net/web/post/1/5.html";
+    }
+}
+
+func selectedCity() -> City {
+    return .Beijing
+}
+
+func sourceDescription() -> String {
+    return "\(selectedCity()): \(sourceURL(selectedCity()))"
 }
