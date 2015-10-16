@@ -39,22 +39,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             time = NSUserDefaults.standardUserDefaults().stringForKey("t")
         }
         
+        /*
         let settings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Alert, UIUserNotificationType.Badge,UIUserNotificationType.Sound], categories: nil)
         application.registerUserNotificationSettings(settings)
+*/
 
         return true
     }
     
     func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+
+        completionHandler(.NoData)
+
+        /*
         print("called... complication enabled = \(wcSession?.complicationEnabled)");
         if wcSession?.complicationEnabled == true {
             test(completionHandler)
         } else {
             completionHandler(.NoData)
         }
+*/
     }
     
     func sendLocalNotif(text: String, badge: Int) {
+        /*
         let notif = UILocalNotification()
         notif.fireDate = NSDate.init(timeIntervalSinceNow: 5)
         notif.alertBody = text
@@ -64,6 +72,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             notif.applicationIconBadgeNumber = badge
         }
         UIApplication.sharedApplication().scheduleLocalNotification(notif)
+*/
     }
     
     func test(completionHandler: (UIBackgroundFetchResult) -> Void) {
@@ -91,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                     NSUserDefaults.standardUserDefaults().synchronize()
                     print("data loaded: api = \(self.aqi), concentration = \(self.concentration), time = \(tmpTime)")
                     if self.wcSession?.complicationEnabled == true {
-                        self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration, "t": tmpTime])
+//                        self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration, "t": tmpTime])
                     }
                     self.sendLocalNotif("解析得到新数据，刷新手表", badge: tmpAQI)
                     completionHandler(.NewData)
