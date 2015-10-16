@@ -14,6 +14,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     // MARK: - Timeline Configuration
     private var aqi: Int = -1
     private var concentration: Double = -1.0
+    private var time: String = "Invalid"
     private var session: NSURLSession?
     private var isFromIOSApp: Bool = true
     
@@ -118,6 +119,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     func test() {
         self.aqi = NSUserDefaults.standardUserDefaults().integerForKey("a")
         self.concentration = NSUserDefaults.standardUserDefaults().doubleForKey("c")
+        self.time = NSUserDefaults.standardUserDefaults().stringForKey("t")!
         if self.aqi <= 1 {
             self.aqi = -1
         }
@@ -135,10 +137,12 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             } else {
                 let tmpAQI = parseAQI(data)
                 let tmpConcentration = parseConcentration(data)
-                if tmpAQI > 1 && tmpConcentration > 1.0 && (tmpAQI != self.aqi || tmpConcentration != self.concentration) {
+                let tmpTime = parseTime(data)
+                if tmpAQI > 1 && tmpConcentration > 1.0 && (tmpAQI != self.aqi || tmpConcentration != self.concentration || tmpTime != self.time) {
                     self.aqi = tmpAQI
                     self.concentration = tmpConcentration
-                    print("wc - data loaded: api = \(self.aqi), concentration = \(self.concentration)")
+                    self.time = tmpTime
+                    print("wc - data loaded: api = \(self.aqi), concentration = \(self.concentration)， time = \(self.time)")
                     self.isFromIOSApp = false
                     let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
                     delegate.reloadComplication()

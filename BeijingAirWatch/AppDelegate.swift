@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     private var isLoadingData: Bool = false
     private var aqi: Int = -1
     private var concentration: Double = -1.0
+    private var time: String = "Invalid"
     var wcSession: WCSession?
     private var session: NSURLSession?
     
@@ -33,6 +34,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         }
         if NSUserDefaults.standardUserDefaults().doubleForKey("c") > 1.0 {
             concentration = NSUserDefaults.standardUserDefaults().doubleForKey("c")
+        }
+        if NSUserDefaults.standardUserDefaults().stringForKey("t") != nil {
+            time = NSUserDefaults.standardUserDefaults().stringForKey("t")!
         }
         
         let settings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Alert, UIUserNotificationType.Badge,UIUserNotificationType.Sound], categories: nil)
@@ -76,13 +80,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             } else {
                 let tmpAQI = parseAQI(data)
                 let tmpConcentration = parseConcentration(data)
-                if tmpAQI > 1 && tmpConcentration > 1.0 && (tmpAQI != self.aqi || tmpConcentration != self.concentration) {
+                let tmpTime = parseTime(data)
+                if tmpAQI > 1 && tmpConcentration > 1.0 && (tmpAQI != self.aqi || tmpConcentration != self.concentration || tmpTime != self.time) {
                     self.aqi = tmpAQI
                     self.concentration = tmpConcentration
+                    self.time = tmpTime
                     NSUserDefaults.standardUserDefaults().setInteger(self.aqi, forKey: "a")
                     NSUserDefaults.standardUserDefaults().setDouble(self.concentration, forKey: "c")
+                    NSUserDefaults.standardUserDefaults().setObject(self.time, forKey: "t")
                     NSUserDefaults.standardUserDefaults().synchronize()
-                    print("data loaded: api = \(self.aqi), concentration = \(self.concentration)")
+                    print("data loaded: api = \(self.aqi), concentration = \(self.concentration), time = \(tmpTime)")
                     if self.wcSession?.complicationEnabled == true {
                         self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration])
                     }
