@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     private var isLoadingData: Bool = false
     private var aqi: Int = -1
     private var concentration: Double = -1.0
-    private var time: String = "Invalid"
+    private var time: String? = "Invalid"
     var wcSession: WCSession?
     private var session: NSURLSession?
     
@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             concentration = NSUserDefaults.standardUserDefaults().doubleForKey("c")
         }
         if NSUserDefaults.standardUserDefaults().stringForKey("t") != nil {
-            time = NSUserDefaults.standardUserDefaults().stringForKey("t")!
+            time = NSUserDefaults.standardUserDefaults().stringForKey("t")
         }
         
         let settings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Alert, UIUserNotificationType.Badge,UIUserNotificationType.Sound], categories: nil)
@@ -91,7 +91,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                     NSUserDefaults.standardUserDefaults().synchronize()
                     print("data loaded: api = \(self.aqi), concentration = \(self.concentration), time = \(tmpTime)")
                     if self.wcSession?.complicationEnabled == true {
-                        self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration])
+                        self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration, "t": tmpTime])
                     }
                     self.sendLocalNotif("解析得到新数据，刷新手表", badge: tmpAQI)
                     completionHandler(.NewData)

@@ -14,7 +14,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     // MARK: - Timeline Configuration
     private var aqi: Int = -1
     private var concentration: Double = -1.0
-    private var time: String = "Invalid"
+    private var time: String? = "Invalid"
     private var session: NSURLSession?
     private var isFromIOSApp: Bool = true
     
@@ -45,11 +45,25 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     // MARK: - Timeline Population
     
-    func createTimeLineEntry(firstLine firstLine: String, secondLine: String, date: NSDate) -> CLKComplicationTimelineEntry {
+    func createTimeLineEntryModularSmall(firstLine firstLine: String, secondLine: String, date: NSDate) -> CLKComplicationTimelineEntry {
         let template = CLKComplicationTemplateModularSmallStackText()
         template.line1TextProvider = CLKSimpleTextProvider(text: firstLine)
         template.line2TextProvider = CLKSimpleTextProvider(text: secondLine)
         template.highlightLine2 = true
+        let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
+        return(entry)
+    }
+    
+    func createTimeLineEntryModularLarge(firstLine firstLine: String, secondLine: String, thirdLine: String, date: NSDate) -> CLKComplicationTimelineEntry {
+        let template = CLKComplicationTemplateModularLargeColumns()
+        if thirdLine.containsString(",") == true {
+            template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Date")
+            template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(thirdLine.componentsSeparatedByString(" ")[0])\(thirdLine.componentsSeparatedByString(" ")[1])\(thirdLine.componentsSeparatedByString(" ")[3])\(thirdLine.componentsSeparatedByString(" ")[4])")
+        }
+        template.row2Column1TextProvider = CLKSimpleTextProvider(text: "AQI")
+        template.row3Column1TextProvider = CLKSimpleTextProvider(text: "PM2.5")
+        template.row2Column2TextProvider = CLKSimpleTextProvider(text: firstLine)
+        template.row3Column2TextProvider = CLKSimpleTextProvider(text: secondLine)
         let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
         return(entry)
     }
@@ -60,13 +74,26 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         print("wc - getCurrentTimelineEntryForComplication()")
         if complication.family == .ModularSmall {
             if processDataFromDelegate() == true {
-                let entry = createTimeLineEntry(firstLine: "\(aqi)", secondLine: "\(concentration)", date: NSDate())
+                let entry = createTimeLineEntryModularSmall(firstLine: "\(aqi)", secondLine: "\(concentration)", date: NSDate())
                 handler(entry)
                 NSUserDefaults.standardUserDefaults().setInteger(self.aqi, forKey: "a")
                 NSUserDefaults.standardUserDefaults().setDouble(self.concentration, forKey: "c")
+                NSUserDefaults.standardUserDefaults().setObject(self.time, forKey: "t")
                 NSUserDefaults.standardUserDefaults().synchronize()
             } else {
-                let entry = createTimeLineEntry(firstLine: "--", secondLine: "--", date: NSDate())
+                let entry = createTimeLineEntryModularSmall(firstLine: "--", secondLine: "--", date: NSDate())
+                handler(entry)
+            }
+        } else if complication.family == .ModularLarge {
+            if processDataFromDelegate() == true {
+                let entry = createTimeLineEntryModularLarge(firstLine: "\(aqi)", secondLine: "\(concentration)", thirdLine: time!, date: NSDate())
+                handler(entry)
+                NSUserDefaults.standardUserDefaults().setInteger(self.aqi, forKey: "a")
+                NSUserDefaults.standardUserDefaults().setDouble(self.concentration, forKey: "c")
+                NSUserDefaults.standardUserDefaults().setObject(self.time, forKey: "t")
+                NSUserDefaults.standardUserDefaults().synchronize()
+            } else {
+                let entry = createTimeLineEntryModularLarge(firstLine: "--", secondLine: "--", thirdLine: "--", date: NSDate())
                 handler(entry)
             }
         } else {
@@ -100,11 +127,22 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     func getPlaceholderTemplateForComplication(complication: CLKComplication, withHandler handler: (CLKComplicationTemplate?) -> Void) {
         // This method will be called once per supported complication, and the results will be cached
         rememberMyOwnComplication(complication)
-        let template = CLKComplicationTemplateModularSmallStackText()
-        template.line1TextProvider = CLKSimpleTextProvider(text: "AQI")
-        template.line2TextProvider = CLKSimpleTextProvider(text: "PM2.5")
-        template.highlightLine2 = true
-        handler(template)
+        if complication.family == .ModularSmall {
+            let template = CLKComplicationTemplateModularSmallStackText()
+            template.line1TextProvider = CLKSimpleTextProvider(text: "AQI")
+            template.line2TextProvider = CLKSimpleTextProvider(text: "PM2.5")
+            template.highlightLine2 = true
+            handler(template)
+        } else {
+            let template = CLKComplicationTemplateModularLargeColumns()
+            template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Date :")
+            template.row2Column1TextProvider = CLKSimpleTextProvider(text: "AQI  :")
+            template.row3Column1TextProvider = CLKSimpleTextProvider(text: "PM2.5:")
+            template.row1Column2TextProvider = CLKSimpleTextProvider(text: "--")
+            template.row2Column2TextProvider = CLKSimpleTextProvider(text: "--")
+            template.row3Column2TextProvider = CLKSimpleTextProvider(text: "--")
+            handler(template)
+        }
     }
     
     func requestedUpdateDidBegin() {
@@ -119,7 +157,10 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     func test() {
         self.aqi = NSUserDefaults.standardUserDefaults().integerForKey("a")
         self.concentration = NSUserDefaults.standardUserDefaults().doubleForKey("c")
-        self.time = NSUserDefaults.standardUserDefaults().stringForKey("t")!
+        self.time = NSUserDefaults.standardUserDefaults().stringForKey("t")
+        if self.time == nil {
+            self.time = "Invalid"
+        }
         if self.aqi <= 1 {
             self.aqi = -1
         }
@@ -158,9 +199,11 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             if let unwrappedInfo = delegate.wcUserInfo {
                 let tmpA: Int = unwrappedInfo["a"] as! Int
                 let tmpC: Double = unwrappedInfo["c"] as! Double
+                let tmpT: String = unwrappedInfo["t"] as! String
                 if tmpA > 1 && tmpC > 1 {
                     aqi = tmpA
                     concentration = tmpC
+                    time = tmpT
                     return true;
                 }
             }
