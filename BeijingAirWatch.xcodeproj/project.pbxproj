@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5056C2891BD1074C001CBE23 /* CityInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5056C2881BD1074C001CBE23 /* CityInterfaceController.swift */; };
 		50A775A51BCFE73E00FD19BA /* CommonUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A775A41BCFE73E00FD19BA /* CommonUtil.swift */; };
 		50A775A61BCFE73E00FD19BA /* CommonUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A775A41BCFE73E00FD19BA /* CommonUtil.swift */; };
 		50D0BCA61BCF479700B2DEC4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D0BCA51BCF479700B2DEC4 /* AppDelegate.swift */; };
@@ -67,6 +68,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5056C2881BD1074C001CBE23 /* CityInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityInterfaceController.swift; sourceTree = "<group>"; };
 		50A775A41BCFE73E00FD19BA /* CommonUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CommonUtil.swift; path = CommonUtil/CommonUtil.swift; sourceTree = "<group>"; };
 		50D0BCA21BCF479700B2DEC4 /* BeijingAirWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeijingAirWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50D0BCA51BCF479700B2DEC4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 				50D0BCCC1BCF479700B2DEC4 /* ComplicationController.swift */,
 				50D0BCCE1BCF479700B2DEC4 /* Assets.xcassets */,
 				50D0BCD01BCF479700B2DEC4 /* Info.plist */,
+				5056C2881BD1074C001CBE23 /* CityInterfaceController.swift */,
 			);
 			path = "BeijingAirWatch WatchKit Extension";
 			sourceTree = "<group>";
@@ -320,6 +323,7 @@
 				50D0BCC91BCF479700B2DEC4 /* InterfaceController.swift in Sources */,
 				50A775A61BCFE73E00FD19BA /* CommonUtil.swift in Sources */,
 				50D0BCCD1BCF479700B2DEC4 /* ComplicationController.swift in Sources */,
+				5056C2891BD1074C001CBE23 /* CityInterfaceController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

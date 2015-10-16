@@ -15,13 +15,24 @@
                                 <label alignment="center" text="Label" textAlignment="center" id="UkC-fD-KFG"/>
                                 <label alignment="center" text="Label" id="vfQ-fo-4HH"/>
                                 <label alignment="center" text="Label" id="AxY-Fh-p2g"/>
-                                <button width="1" alignment="left" title="Press to Refresh" id="yL1-WP-a7c">
-                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    <connections>
-                                        <action selector="refreshButtonPressed" destination="AgC-eL-Hgc" id="1b1-UV-vE5"/>
-                                    </connections>
-                                </button>
+                                <group width="1" alignment="left" id="aTG-sG-nuz">
+                                    <items>
+                                        <button width="0.5" alignment="left" title="City" id="mhq-iC-R0f">
+                                            <color key="backgroundColor" red="0.60000002384185791" green="0.40000000596046448" blue="0.20000000298023224" alpha="1" colorSpace="calibratedRGB"/>
+                                            <connections>
+                                                <action selector="cityButtonPressed" destination="AgC-eL-Hgc" id="UKK-pa-FlQ"/>
+                                                <segue destination="iRs-Ja-Upi" kind="push" id="w3v-8Z-tEg"/>
+                                            </connections>
+                                        </button>
+                                        <button width="0.5" alignment="right" title="Refresh" id="yL1-WP-a7c">
+                                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <connections>
+                                                <action selector="refreshButtonPressed" destination="AgC-eL-Hgc" id="1b1-UV-vE5"/>
+                                            </connections>
+                                        </button>
+                                    </items>
+                                </group>
                                 <label alignment="center" text="Label" textAlignment="center" numberOfLines="3" id="80O-8s-4ZW">
                                     <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                 </label>
@@ -30,6 +41,7 @@
                     </items>
                     <connections>
                         <outlet property="aqiLabel" destination="vfQ-fo-4HH" id="lhS-F1-zel"/>
+                        <outlet property="cityButton" destination="mhq-iC-R0f" id="rib-PL-n3A"/>
                         <outlet property="concentrationLabel" destination="AxY-Fh-p2g" id="LQW-aO-hHz"/>
                         <outlet property="refreshButton" destination="yL1-WP-a7c" id="H1K-1v-twP"/>
                         <outlet property="sourceLabel" destination="80O-8s-4ZW" id="PX5-tU-7ft"/>
@@ -37,6 +49,20 @@
                     </connections>
                 </controller>
             </objects>
+        </scene>
+        <!--City Interface Controller-->
+        <scene sceneID="KHf-Ab-Trz">
+            <objects>
+                <controller id="iRs-Ja-Upi" customClass="CityInterfaceController" customModule="BeijingAirWatch_WatchKit_Extension">
+                    <items>
+                        <picker height="100" alignment="left" focusStyle="stack" indicatorMode="shownWhileFocused" id="zj4-ur-Ksa"/>
+                    </items>
+                    <connections>
+                        <outlet property="cityPicker" destination="zj4-ur-Ksa" id="WDG-5f-kj7"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="622" y="388"/>
         </scene>
     </scenes>
 </document>

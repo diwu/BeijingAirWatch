@@ -121,3 +121,6 @@ func selectedCity() -> City {
 func sourceDescription() -> String {
     return "\(selectedCity()): \(sourceURL(selectedCity()))"
 }
+
+let CitiesList: [City] = [.Beijing, .Chengdu, .Guangzhou, .Shanghai, .Shenyang]
+

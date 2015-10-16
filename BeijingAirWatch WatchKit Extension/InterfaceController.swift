@@ -12,6 +12,7 @@ import Foundation
 
 class InterfaceController: WKInterfaceController {
     @IBOutlet var refreshButton: WKInterfaceButton!
+    @IBOutlet var cityButton: WKInterfaceButton!
     @IBOutlet var timeLabel: WKInterfaceLabel!
     @IBOutlet var aqiLabel: WKInterfaceLabel!
     @IBOutlet var sourceLabel: WKInterfaceLabel!
@@ -22,6 +23,9 @@ class InterfaceController: WKInterfaceController {
     private var time: String? = "Invalid"
     private var session: NSURLSession?
     
+    @IBAction func cityButtonPressed() {
+        
+    }
     @IBAction func refreshButtonPressed() {
         test()
     }
@@ -92,12 +96,12 @@ class InterfaceController: WKInterfaceController {
                     let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
                     delegate.wcUserInfo = ["a": self.aqi, "c": self.concentration, "t": self.time!]
                     delegate.reloadComplication()
-                    self.refreshButton.setTitle("Press to Refresh")
+                    self.refreshButton.setTitle("Refresh")
                     self.refreshButton.setEnabled(true)
                     return
                 }
             }
-            self.refreshButton.setTitle("Press to Refresh")
+            self.refreshButton.setTitle("Refresh")
             self.refreshButton.setEnabled(true)
         }
     }
