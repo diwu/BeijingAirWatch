@@ -88,5 +88,9 @@ func httpGet(session: NSURLSession?, request: NSURLRequest!, callback: (String, 
 }
 
 func createRequest() -> NSURLRequest {
-    return NSMutableURLRequest(URL: NSURL(string: "http://www.stateair.net/web/post/1/1.html")!)
+    return NSMutableURLRequest(URL: NSURL(string: sourceURL())!)
+}
+
+func sourceURL() -> String {
+    return "http://www.stateair.net/web/post/1/1.html";
 }

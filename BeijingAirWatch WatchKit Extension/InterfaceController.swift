@@ -14,6 +14,7 @@ class InterfaceController: WKInterfaceController {
     @IBOutlet var refreshButton: WKInterfaceButton!
     @IBOutlet var timeLabel: WKInterfaceLabel!
     @IBOutlet var aqiLabel: WKInterfaceLabel!
+    @IBOutlet var sourceLabel: WKInterfaceLabel!
     @IBOutlet var concentrationLabel: WKInterfaceLabel!
     
     private var aqi: Int = -1
@@ -54,7 +55,9 @@ class InterfaceController: WKInterfaceController {
     }
 
     func test() {
+        sourceLabel.setText(sourceURL())
         refreshButton.setEnabled(false)
+        refreshButton.setTitle("Refreshing...")
         self.aqi = NSUserDefaults.standardUserDefaults().integerForKey("a")
         self.concentration = NSUserDefaults.standardUserDefaults().doubleForKey("c")
         self.time = NSUserDefaults.standardUserDefaults().stringForKey("t")
@@ -89,10 +92,12 @@ class InterfaceController: WKInterfaceController {
                     let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
                     delegate.wcUserInfo = ["a": self.aqi, "c": self.concentration, "t": self.time!]
                     delegate.reloadComplication()
+                    self.refreshButton.setTitle("Press to Refresh")
                     self.refreshButton.setEnabled(true)
                     return
                 }
             }
+            self.refreshButton.setTitle("Press to Refresh")
             self.refreshButton.setEnabled(true)
         }
     }

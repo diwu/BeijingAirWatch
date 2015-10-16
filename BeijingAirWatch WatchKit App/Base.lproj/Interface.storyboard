@@ -15,13 +15,16 @@
                                 <label alignment="center" text="Label" textAlignment="center" id="UkC-fD-KFG"/>
                                 <label alignment="center" text="Label" id="vfQ-fo-4HH"/>
                                 <label alignment="center" text="Label" id="AxY-Fh-p2g"/>
-                                <button width="1" alignment="left" verticalAlignment="bottom" title="Press to Refresh" id="yL1-WP-a7c">
+                                <button width="1" alignment="left" title="Press to Refresh" id="yL1-WP-a7c">
                                     <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <connections>
                                         <action selector="refreshButtonPressed" destination="AgC-eL-Hgc" id="1b1-UV-vE5"/>
                                     </connections>
                                 </button>
+                                <label alignment="center" text="Label" textAlignment="center" numberOfLines="3" id="80O-8s-4ZW">
+                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                </label>
                             </items>
                         </group>
                     </items>
@@ -29,6 +32,7 @@
                         <outlet property="aqiLabel" destination="vfQ-fo-4HH" id="lhS-F1-zel"/>
                         <outlet property="concentrationLabel" destination="AxY-Fh-p2g" id="LQW-aO-hHz"/>
                         <outlet property="refreshButton" destination="yL1-WP-a7c" id="H1K-1v-twP"/>
+                        <outlet property="sourceLabel" destination="80O-8s-4ZW" id="PX5-tU-7ft"/>
                         <outlet property="timeLabel" destination="UkC-fD-KFG" id="cso-8t-0Lz"/>
                     </connections>
                 </controller>
