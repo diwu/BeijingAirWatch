@@ -11,7 +11,23 @@ import Foundation
 
 class CityInterfaceController: WKInterfaceController {
     
+    private var selectedIndex: Int = -1
+    
     @IBOutlet var cityPicker: WKInterfacePicker!
+    
+    @IBOutlet var confirmCityButton: WKInterfaceButton!
+    @IBAction func cityDidSelected(value: Int) {
+        print("selected city: \(CitiesList[value].rawValue)")
+        confirmCityButton.setTitle("Confirm: \(CitiesList[value].rawValue)")
+        selectedIndex = value
+    }
+    @IBAction func confirmCityButtonPressed() {
+        if selectedIndex != -1 {
+            NSUserDefaults.standardUserDefaults().setObject(CitiesList[selectedIndex].rawValue, forKey: "selected_city")
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+        popController()
+    }
     
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
@@ -24,6 +40,8 @@ class CityInterfaceController: WKInterfaceController {
             arr.append(item)
         }
         cityPicker.setItems(arr)
+        selectedIndex = CitiesList.indexOf(selectedCity())!
+        cityPicker.setSelectedItemIndex(selectedIndex)
     }
     
     override func willActivate() {

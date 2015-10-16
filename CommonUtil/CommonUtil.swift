@@ -115,7 +115,12 @@ func sourceURL(city: City) -> String {
 }
 
 func selectedCity() -> City {
-    return .Beijing
+    let sc: String? = NSUserDefaults.standardUserDefaults().stringForKey("selected_city")
+    if sc == nil {
+        return .Beijing
+    } else {
+        return City(rawValue: sc!)!
+    }
 }
 
 func sourceDescription() -> String {

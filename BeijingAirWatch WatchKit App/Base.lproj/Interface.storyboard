@@ -55,10 +55,27 @@
             <objects>
                 <controller id="iRs-Ja-Upi" customClass="CityInterfaceController" customModule="BeijingAirWatch_WatchKit_Extension">
                     <items>
-                        <picker height="100" alignment="left" focusStyle="stack" indicatorMode="shownWhileFocused" id="zj4-ur-Ksa"/>
+                        <group width="1" alignment="left" layout="vertical" id="5zt-km-fkG">
+                            <items>
+                                <picker height="100" alignment="left" focusStyle="stack" indicatorMode="shownWhileFocused" id="zj4-ur-Ksa">
+                                    <connections>
+                                        <action selector="cityDidSelected:" destination="iRs-Ja-Upi" id="COW-Dt-Xsm"/>
+                                    </connections>
+                                </picker>
+                                <button width="1" alignment="left" title="--" id="njB-nM-xlH">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                    <connections>
+                                        <action selector="confirmCityButtonPressed" destination="iRs-Ja-Upi" id="qbt-cm-xq5"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
                     </items>
                     <connections>
                         <outlet property="cityPicker" destination="zj4-ur-Ksa" id="WDG-5f-kj7"/>
+                        <outlet property="confirmCityButton" destination="njB-nM-xlH" id="efb-PP-X9Q"/>
                     </connections>
                 </controller>
             </objects>

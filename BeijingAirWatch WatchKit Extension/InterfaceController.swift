@@ -24,7 +24,7 @@ class InterfaceController: WKInterfaceController {
     private var session: NSURLSession?
     
     @IBAction func cityButtonPressed() {
-        
+
     }
     @IBAction func refreshButtonPressed() {
         test()
