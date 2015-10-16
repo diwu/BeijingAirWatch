@@ -10,6 +10,23 @@ import Foundation
 
 let TIME_OUT_LIMIT: Double = 10.0;
 
+func parseTime(data: String) -> String {
+    let escapedString: String? = data.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
+//    print("data = \(escapedString)")
+    if let unwrapped = escapedString {
+        let arr = unwrapped.componentsSeparatedByString("%0D%0A%09%09%09%09%09%09%09%09%3C")
+        for s in arr {
+            let subArr = s.componentsSeparatedByString("%3E%0D%0A%09%09%09%09%09%09%09%09%09")
+            if let tmp = subArr.last {
+                if (tmp.containsString("PM") || tmp.containsString("AM")) && tmp.characters.count <= 40 {
+                    return tmp.stringByRemovingPercentEncoding!
+                }
+            }
+        }
+    }
+    return "Invalid Time"
+}
+
 func parseAQI(data: String) -> Int {
     let escapedString: String? = data.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
     if let unwrapped = escapedString {
