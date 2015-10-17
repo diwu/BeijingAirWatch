@@ -20,11 +20,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     private var time: String? = "Invalid"
     var wcSession: WCSession?
     private var session: NSURLSession?
-    private var bgTaskID: UIBackgroundTaskIdentifier? = nil
+    private var bgTaskID: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     
     func registerBackgroundVOIPCallback() {
         let ret = UIApplication.sharedApplication().setKeepAliveTimeout(600) { () -> Void in
             NSLog("voip called...")
+            self.properlyEndBgTaskIfThereIsOne()
             self.bgTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
                 self.fetchNewData()
             })
@@ -111,10 +112,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             test(nil)
         } else {
             sendLocalNotif("\(selectedCity()):未激活，不刷新", badge: -1)
-            if let unwrappedID = self.bgTaskID {
-                self.bgTaskID = nil
-                UIApplication.sharedApplication().endBackgroundTask(unwrappedID)
-            }
+            properlyEndBgTaskIfThereIsOne()
+        }
+    }
+    
+    func properlyEndBgTaskIfThereIsOne() {
+        if self.bgTaskID != UIBackgroundTaskInvalid {
+            UIApplication.sharedApplication().endBackgroundTask(self.bgTaskID)
+            self.bgTaskID = UIBackgroundTaskInvalid
         }
     }
     
@@ -159,10 +164,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                     }
                     self.sendLocalNotif("\(selectedCity()):解析得到新数据，刷新手表", badge: tmpAQI)
                     completionHandler?(.NewData)
-                    if let unwrappedID = self.bgTaskID {
-                        self.bgTaskID = nil
-                        UIApplication.sharedApplication().endBackgroundTask(unwrappedID)
-                    }
+                    self.properlyEndBgTaskIfThereIsOne()
                     return
                 }
                 if tmpAQI < 1 || tmpConcentration < 1 {
@@ -174,10 +176,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             }
             self.isLoadingData = false
             completionHandler?(.NoData)
-            if let unwrappedID = self.bgTaskID {
-                self.bgTaskID = nil
-                UIApplication.sharedApplication().endBackgroundTask(unwrappedID)
-            }
+            self.properlyEndBgTaskIfThereIsOne()
         }
     }
     
