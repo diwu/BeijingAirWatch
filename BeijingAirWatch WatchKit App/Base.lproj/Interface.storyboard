@@ -12,9 +12,9 @@
                     <items>
                         <group width="1" alignment="left" verticalAlignment="center" layout="vertical" id="uzy-eZ-Hp5">
                             <items>
-                                <label alignment="center" text="Label" textAlignment="center" id="UkC-fD-KFG"/>
-                                <label alignment="center" text="Label" id="vfQ-fo-4HH"/>
-                                <label alignment="center" text="Label" id="AxY-Fh-p2g"/>
+                                <label alignment="center" text="--" textAlignment="center" id="UkC-fD-KFG"/>
+                                <label alignment="center" text="--" id="vfQ-fo-4HH"/>
+                                <label alignment="center" text="--" id="AxY-Fh-p2g"/>
                                 <group width="1" alignment="left" id="aTG-sG-nuz">
                                     <items>
                                         <button width="0.5" alignment="left" title="City" id="mhq-iC-R0f">
@@ -33,8 +33,8 @@
                                         </button>
                                     </items>
                                 </group>
-                                <label alignment="center" text="Label" textAlignment="center" numberOfLines="3" id="80O-8s-4ZW">
-                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                <label alignment="center" text="Press Refresh Button to Fetch the Latest Data" textAlignment="center" numberOfLines="3" id="80O-8s-4ZW">
+                                    <fontDescription key="font" type="system" pointSize="11"/>
                                 </label>
                             </items>
                         </group>
