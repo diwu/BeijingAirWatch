@@ -109,12 +109,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         startWCSession()
         if wcSession?.complicationEnabled == true {
             test(nil)
+        } else {
+            sendLocalNotif("\(selectedCity()):未激活，不刷新", badge: -1)
+            if let unwrappedID = self.bgTaskID {
+                self.bgTaskID = nil
+                UIApplication.sharedApplication().endBackgroundTask(unwrappedID)
+            }
         }
     }
     
     func sendLocalNotif(text: String, badge: Int) {
         let notif = UILocalNotification()
-        notif.fireDate = NSDate.init(timeIntervalSinceNow: 5)
+        notif.fireDate = NSDate.init(timeIntervalSinceNow: 1)
         notif.alertBody = text
         notif.timeZone = NSTimeZone.defaultTimeZone()
         notif.soundName = UILocalNotificationDefaultSoundName
