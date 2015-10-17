@@ -32,6 +32,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         }
     }
     
+    func session(session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
+        if message["selected_city"] != nil {
+            let city: String = message["selected_city"] as! String
+            NSUserDefaults.standardUserDefaults().setObject(city, forKey: "selected_city")
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+        print("did receive wc session msg (ios app side): \(message)")
+        print("ios app sourcel url: \(sourceDescription())")
+        replyHandler(["xxx":"xxx"])
+        sendLocalNotif("更新城市为:\(selectedCity())", badge: -1)
+    }
+    
+    /*
     func session(session: WCSession, didReceiveUserInfo userInfo: [String : AnyObject]) {
         if userInfo["selected_city"] != nil {
             let city: String = userInfo["selected_city"] as! String
@@ -41,6 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         print("did receive info (ios app side): \(userInfo)")
         print("ios app sourcel url: \(sourceDescription())")
     }
+*/
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -109,7 +123,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             (data, error) -> Void in
             if error != nil {
                 print(error)
-                self.sendLocalNotif("获取数据出错", badge: -1)
+                self.sendLocalNotif("\(selectedCity()):获取数据出错", badge: -1)
             } else {
                 let tmpAQI = parseAQI(data)
                 let tmpConcentration = parseConcentration(data)

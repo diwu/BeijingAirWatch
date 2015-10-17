@@ -8,7 +8,8 @@
 
 import Foundation
 
-let TIME_OUT_LIMIT: Double = 10.0;
+let TIME_OUT_LIMIT: Double = 15.0;
+let TIME_OUT_LIMIT_IOS: Double = 30.0;
 
 enum City: String {
     case Beijing = "Beijing"
@@ -69,8 +70,8 @@ func parseConcentration(data: String) -> Double {
 
 func sharedSessionForIOS() -> NSURLSession {
     let session = NSURLSession.sharedSession()
-    session.configuration.timeoutIntervalForRequest = TIME_OUT_LIMIT
-    session.configuration.timeoutIntervalForResource = TIME_OUT_LIMIT
+    session.configuration.timeoutIntervalForRequest = TIME_OUT_LIMIT_IOS
+    session.configuration.timeoutIntervalForResource = TIME_OUT_LIMIT_IOS
     return session
 }
 

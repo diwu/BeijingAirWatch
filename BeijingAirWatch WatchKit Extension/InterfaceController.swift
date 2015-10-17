@@ -38,7 +38,7 @@ class InterfaceController: WKInterfaceController {
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
-        test()
+//        test()
     }
 
     override func didDeactivate() {
@@ -57,10 +57,15 @@ class InterfaceController: WKInterfaceController {
             concentrationLabel.setText("PM2.5: \(concentration)")
         }
     }
+    
+    func toggleAllButtons(enable: Bool) {
+        refreshButton.setEnabled(enable)
+        cityButton.setEnabled(enable)
+    }
 
     func test() {
         sourceLabel.setText(sourceDescription())
-        refreshButton.setEnabled(false)
+        toggleAllButtons(false)
         refreshButton.setTitle("Refreshing...")
         self.aqi = NSUserDefaults.standardUserDefaults().integerForKey("a")
         self.concentration = NSUserDefaults.standardUserDefaults().doubleForKey("c")
@@ -97,12 +102,12 @@ class InterfaceController: WKInterfaceController {
                     delegate.wcUserInfo = ["a": self.aqi, "c": self.concentration, "t": self.time!]
                     delegate.reloadComplication()
                     self.refreshButton.setTitle("Refresh")
-                    self.refreshButton.setEnabled(true)
+                    self.toggleAllButtons(true)
                     return
                 }
             }
             self.refreshButton.setTitle("Refresh")
-            self.refreshButton.setEnabled(true)
+            self.toggleAllButtons(true)
         }
     }
 }

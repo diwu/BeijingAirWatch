@@ -23,11 +23,25 @@ class CityInterfaceController: WKInterfaceController {
     }
     @IBAction func confirmCityButtonPressed() {
         if selectedIndex != -1 {
-            NSUserDefaults.standardUserDefaults().setObject(CitiesList[selectedIndex].rawValue, forKey: "selected_city")
+
+            let previousSelectedCity: City = selectedCity()
+            
+            NSUserDefaults.standardUserDefaults().setObject(CitiesList[self.selectedIndex].rawValue, forKey: "selected_city")
             NSUserDefaults.standardUserDefaults().synchronize()
-            syncCityToIOSApp()
+            
+            syncCityToIOSApp(replyHandler: { (reply: [String : AnyObject]) -> Void in
+                
+                self.popController()
+                
+                }, errorHandler: { (error: NSError) -> Void in
+                    
+                print("watch failed to send city to ios app")
+                    
+                    NSUserDefaults.standardUserDefaults().setObject(previousSelectedCity.rawValue, forKey: "selected_city")
+                    NSUserDefaults.standardUserDefaults().synchronize()
+                    
+            })
         }
-        popController()
     }
     
     func startWCSession() {
@@ -35,9 +49,9 @@ class CityInterfaceController: WKInterfaceController {
         delegate.startWCSession()
     }
     
-    func syncCityToIOSApp() {
+    func syncCityToIOSApp(replyHandler replyHandler: (([String : AnyObject]) -> Void)?, errorHandler: ((NSError) -> Void)?) {
         let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
-        delegate.sendCityToIOSApp()
+        delegate.sendCityToIOSApp(replyHandler: replyHandler, errorHandler: errorHandler)
     }
     
     override func awakeWithContext(context: AnyObject?) {

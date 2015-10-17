@@ -46,8 +46,11 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
         }
     }
     
-    func sendCityToIOSApp() {
-        wcSession?.transferUserInfo(["selected_city": selectedCity().rawValue])
+    func sendCityToIOSApp(replyHandler replyHandler: (([String : AnyObject]) -> Void)?, errorHandler: ((NSError) -> Void)?) {
+//        wcSession?.transferUserInfo(["selected_city": selectedCity().rawValue])
+        //     public func sendMessage(message: [String : AnyObject], replyHandler: (([String : AnyObject]) -> Void)?, errorHandler: ((NSError) -> Void)?)
+
+        wcSession?.sendMessage(["selected_city": selectedCity().rawValue], replyHandler: replyHandler, errorHandler:errorHandler)
     }
     
     func applicationDidFinishLaunching() {
