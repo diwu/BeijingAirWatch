@@ -76,13 +76,13 @@ func sharedSessionForIOS() -> NSURLSession {
 }
 
 func sessionForWatchExtension() -> NSURLSession {
-    let session = NSURLSession.init(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+    let session = NSURLSession.sharedSession()
     session.configuration.timeoutIntervalForRequest = TIME_OUT_LIMIT
     session.configuration.timeoutIntervalForResource = TIME_OUT_LIMIT
     return session
 }
 
-func httpGet(session: NSURLSession?, request: NSURLRequest!, callback: (String, String?) -> Void) {
+func createHttpGetDataTask(session: NSURLSession?, request: NSURLRequest!, callback: (String, String?) -> Void) -> NSURLSessionDataTask? {
     let task = session?.dataTaskWithRequest(request){
         (data, response, error) -> Void in
         if error != nil {
@@ -93,7 +93,7 @@ func httpGet(session: NSURLSession?, request: NSURLRequest!, callback: (String, 
             callback(result as String, nil)
         }
     }
-    task?.resume()
+    return task
 }
 
 func createRequest() -> NSURLRequest {

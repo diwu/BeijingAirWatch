@@ -17,7 +17,8 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     private var time: String? = "Invalid"
     private var session: NSURLSession?
     private var isFromIOSApp: Bool = true
-    
+    private var task: NSURLSessionDataTask?
+
     func rememberMyOwnComplication(complication: CLKComplication) {
         let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
         delegate.myOwnComplication = complication
@@ -235,7 +236,8 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         if session == nil {
             session = sessionForWatchExtension()
         }
-        httpGet(session, request: request){
+        self.task?.cancel()
+        self.task = createHttpGetDataTask(session, request: request){
             (data, error) -> Void in
             if error != nil {
                 print(error)
@@ -259,6 +261,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                 }
             }
         }
+        self.task?.resume()
     }
     
     func processDataFromDelegate() -> Bool {

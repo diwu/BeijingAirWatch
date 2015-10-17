@@ -21,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     var wcSession: WCSession?
     private var session: NSURLSession?
     private var bgTaskID: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    private var task: NSURLSessionDataTask?
     
     func registerBackgroundVOIPCallback() {
         let ret = UIApplication.sharedApplication().setKeepAliveTimeout(600) { () -> Void in
@@ -112,12 +113,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     func fetchNewData() {
         print("called... complication enabled = \(wcSession?.complicationEnabled)");
         startWCSession()
+        
+        test(nil)
+
+        /*
         if wcSession?.complicationEnabled == true {
             test(nil)
         } else {
             sendLocalNotif("\(selectedCity()):未激活，不刷新", badge: -1)
             properlyEndBgTaskIfThereIsOne()
         }
+*/
     }
     
     func properlyEndBgTaskIfThereIsOne() {
@@ -145,7 +151,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         if session == nil {
             session = sharedSessionForIOS()
         }
-        httpGet(session, request: request){
+        self.task?.cancel()
+        self.task = createHttpGetDataTask(session, request: request){
             (data, error) -> Void in
             if error != nil {
                 print(error)
@@ -183,6 +190,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             completionHandler?(.NoData)
             self.properlyEndBgTaskIfThereIsOne()
         }
+        self.task?.resume()
     }
     
     func applicationWillResignActive(application: UIApplication) {

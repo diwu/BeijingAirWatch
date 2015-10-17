@@ -23,6 +23,7 @@ class InterfaceController: WKInterfaceController {
     private var time: String? = "Invalid"
     private var session: NSURLSession?
     private var previousCity: City = .Beijing
+    private var task: NSURLSessionDataTask?
     
     @IBAction func cityButtonPressed() {
 
@@ -90,7 +91,8 @@ class InterfaceController: WKInterfaceController {
         if session == nil {
             session = sessionForWatchExtension()
         }
-        httpGet(session, request: request){
+        self.task?.cancel()
+        self.task = createHttpGetDataTask(session, request: request){
             (data, error) -> Void in
             if error != nil {
                 print(error)
@@ -115,5 +117,6 @@ class InterfaceController: WKInterfaceController {
             self.refreshButton.setTitle("Refresh")
             self.toggleAllButtons(true)
         }
+        self.task?.resume()
     }
 }
