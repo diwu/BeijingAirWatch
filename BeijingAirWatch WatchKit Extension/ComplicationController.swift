@@ -73,40 +73,82 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
             return(entry)
         }
-
-
+    }
+    
+    func createTimeLineEntryCircularSmall(firstLine firstLine: String, date: NSDate) -> CLKComplicationTimelineEntry {
+        let template = CLKComplicationTemplateCircularSmallSimpleText()
+        template.textProvider = CLKSimpleTextProvider(text: firstLine)
+        let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
+        return(entry)
+    }
+    
+    func createTimeLineEntryUtilitarianLarge(firstLine firstLine: String, date: NSDate) -> CLKComplicationTimelineEntry {
+        let template = CLKComplicationTemplateUtilitarianLargeFlat()
+        template.textProvider = CLKSimpleTextProvider(text: firstLine)
+        let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
+        return(entry)
+    }
+    
+    func createTimeLineEntryUtilitarianSmall(firstLine firstLine: String, date: NSDate) -> CLKComplicationTimelineEntry {
+        let template = CLKComplicationTemplateUtilitarianSmallFlat()
+        template.textProvider = CLKSimpleTextProvider(text: firstLine)
+        let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
+        return(entry)
     }
     
     func getCurrentTimelineEntryForComplication(complication: CLKComplication, withHandler handler: ((CLKComplicationTimelineEntry?) -> Void)) {
         // Call the handler with the current timeline entry
         rememberMyOwnComplication(complication)
         print("wc - getCurrentTimelineEntryForComplication()")
+        let ret = processDataFromDelegate()
+        
+        if ret == true {
+            NSUserDefaults.standardUserDefaults().setInteger(self.aqi, forKey: "a")
+            NSUserDefaults.standardUserDefaults().setDouble(self.concentration, forKey: "c")
+            NSUserDefaults.standardUserDefaults().setObject(self.time, forKey: "t")
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+
         if complication.family == .ModularSmall {
-            if processDataFromDelegate() == true {
+            if ret == true {
                 let entry = createTimeLineEntryModularSmall(firstLine: "\(aqi)", secondLine: "\(concentration)", date: NSDate())
                 handler(entry)
-                NSUserDefaults.standardUserDefaults().setInteger(self.aqi, forKey: "a")
-                NSUserDefaults.standardUserDefaults().setDouble(self.concentration, forKey: "c")
-                NSUserDefaults.standardUserDefaults().setObject(self.time, forKey: "t")
-                NSUserDefaults.standardUserDefaults().synchronize()
             } else {
                 let entry = createTimeLineEntryModularSmall(firstLine: "?", secondLine: "?", date: NSDate())
                 handler(entry)
             }
         } else if complication.family == .ModularLarge {
-            if processDataFromDelegate() == true {
+            if ret == true {
                 let entry = createTimeLineEntryModularLarge(firstLine: "\(aqi)", secondLine: "\(concentration)", thirdLine: time!, date: NSDate())
                 handler(entry)
-                NSUserDefaults.standardUserDefaults().setInteger(self.aqi, forKey: "a")
-                NSUserDefaults.standardUserDefaults().setDouble(self.concentration, forKey: "c")
-                NSUserDefaults.standardUserDefaults().setObject(self.time, forKey: "t")
-                NSUserDefaults.standardUserDefaults().synchronize()
             } else {
                 let entry = createTimeLineEntryModularLarge(firstLine: "?", secondLine: "?", thirdLine: "?", date: NSDate())
                 handler(entry)
             }
+        } else if complication.family == .CircularSmall {
+            if ret == true {
+                let entry = createTimeLineEntryCircularSmall(firstLine: "\(concentration)", date: NSDate())
+                handler(entry)
+            } else {
+                let entry = createTimeLineEntryCircularSmall(firstLine: "?", date: NSDate())
+                handler(entry)
+            }
+        } else if complication.family == .UtilitarianLarge {
+            if ret == true {
+                let entry = createTimeLineEntryUtilitarianLarge(firstLine: "\(concentration)", date: NSDate())
+                handler(entry)
+            } else {
+                let entry = createTimeLineEntryUtilitarianLarge(firstLine: "?", date: NSDate())
+                handler(entry)
+            }
         } else {
-            handler(nil)
+            if ret == true {
+                let entry = createTimeLineEntryUtilitarianSmall(firstLine: "\(concentration)", date: NSDate())
+                handler(entry)
+            } else {
+                let entry = createTimeLineEntryUtilitarianSmall(firstLine: "?", date: NSDate())
+                handler(entry)
+            }
         }
         isFromIOSApp = true
     }
@@ -142,7 +184,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             template.line2TextProvider = CLKSimpleTextProvider(text: "PM2.5")
             template.highlightLine2 = true
             handler(template)
-        } else {
+        } else if complication.family == .ModularLarge {
             let template = CLKComplicationTemplateModularLargeColumns()
             template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Date :")
             template.row2Column1TextProvider = CLKSimpleTextProvider(text: "AQI  :")
@@ -150,6 +192,18 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             template.row1Column2TextProvider = CLKSimpleTextProvider(text: "?")
             template.row2Column2TextProvider = CLKSimpleTextProvider(text: "?")
             template.row3Column2TextProvider = CLKSimpleTextProvider(text: "?")
+            handler(template)
+        } else if complication.family == .CircularSmall {
+            let template = CLKComplicationTemplateCircularSmallSimpleText()
+            template.textProvider = CLKSimpleTextProvider(text: "PM2.5")
+            handler(template)
+        } else if complication.family == .UtilitarianLarge {
+            let template = CLKComplicationTemplateUtilitarianLargeFlat()
+            template.textProvider = CLKSimpleTextProvider(text: "PM2.5")
+            handler(template)
+        } else {
+            let template = CLKComplicationTemplateUtilitarianSmallFlat()
+            template.textProvider = CLKSimpleTextProvider(text: "PM2.5")
             handler(template)
         }
     }
