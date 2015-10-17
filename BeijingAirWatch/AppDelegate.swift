@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     private var time: String? = "Invalid"
     var wcSession: WCSession?
     private var session: NSURLSession?
+    private var bgTaskID: UIBackgroundTaskIdentifier? = nil
     
     func startWCSession() {
         if (WCSession.isSupported() && wcSession == nil) {
@@ -99,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     }
     
     func test(completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
-        sendLocalNotif("尝试获取数据", badge: -1)
+        sendLocalNotif("\(selectedCity()):尝试获取数据", badge: -1)
         let request = createRequest()
         if session == nil {
             session = sharedSessionForIOS()
@@ -125,19 +126,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                     if self.wcSession?.complicationEnabled == true {
                         self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration, "t": tmpTime])
                     }
-                    self.sendLocalNotif("解析得到新数据，刷新手表", badge: tmpAQI)
+                    self.sendLocalNotif("\(selectedCity()):解析得到新数据，刷新手表", badge: tmpAQI)
                     completionHandler?(.NewData)
+                    if let unwrappedID = self.bgTaskID {
+                        self.bgTaskID = nil
+                        UIApplication.sharedApplication().endBackgroundTask(unwrappedID)
+                    }
                     return
                 }
                 if tmpAQI < 1 || tmpConcentration < 1 {
-                    self.sendLocalNotif("解析数据出错", badge: -1)
+                    self.sendLocalNotif("\(selectedCity()):解析数据出错", badge: -1)
                 }
                 if tmpAQI == self.aqi && tmpConcentration == self.concentration {
-                    self.sendLocalNotif("数据未变", badge: -1)
+                    self.sendLocalNotif("\(selectedCity()):数据未变", badge: -1)
                 }
             }
             self.isLoadingData = false
             completionHandler?(.NoData)
+            if let unwrappedID = self.bgTaskID {
+                self.bgTaskID = nil
+                UIApplication.sharedApplication().endBackgroundTask(unwrappedID)
+            }
         }
     }
     
@@ -151,7 +160,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         UIApplication.sharedApplication().setKeepAliveTimeout(600) { () -> Void in
             NSLog("voip called...")
-            self.fetchNewData()
+            self.bgTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+                self.fetchNewData()
+            })
         }
     }
 
