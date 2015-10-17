@@ -23,12 +23,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     private var bgTaskID: UIBackgroundTaskIdentifier? = nil
     
     func registerBackgroundVOIPCallback() {
-        UIApplication.sharedApplication().setKeepAliveTimeout(600) { () -> Void in
+        let ret = UIApplication.sharedApplication().setKeepAliveTimeout(600) { () -> Void in
             NSLog("voip called...")
             self.bgTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
                 self.fetchNewData()
             })
         }
+        self.sendLocalNotif("\(ret) 尝试注册VOIP回调", badge: -1)
     }
     
     func startWCSession() {
@@ -46,11 +47,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             let city: String = message["selected_city"] as! String
             NSUserDefaults.standardUserDefaults().setObject(city, forKey: "selected_city")
             NSUserDefaults.standardUserDefaults().synchronize()
+            print("ios app sourcel url: \(sourceDescription())")
+            sendLocalNotif("更新城市为:\(selectedCity())", badge: -1)
         }
         print("did receive wc session msg (ios app side): \(message)")
-        print("ios app sourcel url: \(sourceDescription())")
         replyHandler(["xxx":"xxx"])
-        sendLocalNotif("更新城市为:\(selectedCity())", badge: -1)
         registerBackgroundVOIPCallback()
     }
     

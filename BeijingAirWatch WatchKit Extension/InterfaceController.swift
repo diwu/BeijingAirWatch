@@ -22,12 +22,15 @@ class InterfaceController: WKInterfaceController {
     private var concentration: Double = -1.0
     private var time: String? = "Invalid"
     private var session: NSURLSession?
+    private var previousCity: City = .Beijing
     
     @IBAction func cityButtonPressed() {
 
     }
     @IBAction func refreshButtonPressed() {
         test()
+        let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+        delegate.tryAskIOSAppToRegisterVOIPCallback()
     }
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
@@ -38,12 +41,15 @@ class InterfaceController: WKInterfaceController {
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
-//        test()
+        if previousCity != selectedCity() {
+            test()
+        }
     }
 
     override func didDeactivate() {
         // This method is called when watch view controller is no longer visible
         super.didDeactivate()
+        previousCity = selectedCity()
     }
     
     func populateLabels() {

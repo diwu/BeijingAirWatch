@@ -16,11 +16,20 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
     var wcUserInfo: [String: AnyObject]?
     var myOwnComplication: CLKComplication?
     
+    func tryAskIOSAppToRegisterVOIPCallback() {
+        wcSession?.sendMessage(["xxx":"xxx"], replyHandler: { (reply: [String: AnyObject]) -> Void in
+            
+            }, errorHandler: { (error: NSError) -> Void in
+                
+        })
+    }
+    
     func startWCSession() {
         if (WCSession.isSupported() && wcSession == nil) {
             wcSession = WCSession.defaultSession()
             wcSession?.delegate = self
             wcSession?.activateSession()
+            tryAskIOSAppToRegisterVOIPCallback()
         } else if (WCSession.isSupported() && wcSession != nil) {
             wcSession?.activateSession()
         }
