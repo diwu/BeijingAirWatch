@@ -37,7 +37,6 @@
 	</dict>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>fetch</string>
 		<string>voip</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

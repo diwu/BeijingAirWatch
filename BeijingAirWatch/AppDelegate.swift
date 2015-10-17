@@ -21,14 +21,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     var wcSession: WCSession?
     private var session: NSURLSession?
     
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
-        UIApplication.sharedApplication().setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
-        if (WCSession.isSupported()) {
+    func startWCSession() {
+        if (WCSession.isSupported() && wcSession == nil) {
             wcSession = WCSession.defaultSession()
             wcSession?.delegate = self
             wcSession?.activateSession()
         }
+    }
+    
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        // Override point for customization after application launch.
+        UIApplication.sharedApplication().setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+
+        startWCSession()
+        
         if NSUserDefaults.standardUserDefaults().integerForKey("a") > 1 {
             aqi = NSUserDefaults.standardUserDefaults().integerForKey("a")
         }
@@ -39,10 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             time = NSUserDefaults.standardUserDefaults().stringForKey("t")
         }
         
-        /*
         let settings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Alert, UIUserNotificationType.Badge,UIUserNotificationType.Sound], categories: nil)
         application.registerUserNotificationSettings(settings)
-*/
 
         return true
     }
@@ -51,18 +55,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
 
         completionHandler(.NoData)
 
-        /*
         print("called... complication enabled = \(wcSession?.complicationEnabled)");
         if wcSession?.complicationEnabled == true {
             test(completionHandler)
         } else {
             completionHandler(.NoData)
         }
-*/
+
+    }
+    
+    func fetchNewData() {
+        print("called... complication enabled = \(wcSession?.complicationEnabled)");
+        startWCSession()
+        if wcSession?.complicationEnabled == true {
+            test(nil)
+        }
     }
     
     func sendLocalNotif(text: String, badge: Int) {
-        /*
         let notif = UILocalNotification()
         notif.fireDate = NSDate.init(timeIntervalSinceNow: 5)
         notif.alertBody = text
@@ -72,10 +82,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             notif.applicationIconBadgeNumber = badge
         }
         UIApplication.sharedApplication().scheduleLocalNotification(notif)
-*/
     }
     
-    func test(completionHandler: (UIBackgroundFetchResult) -> Void) {
+    func test(completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
         sendLocalNotif("尝试获取数据", badge: -1)
         let request = createRequest()
         if session == nil {
@@ -100,10 +109,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                     NSUserDefaults.standardUserDefaults().synchronize()
                     print("data loaded: api = \(self.aqi), concentration = \(self.concentration), time = \(tmpTime)")
                     if self.wcSession?.complicationEnabled == true {
-//                        self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration, "t": tmpTime])
+                        self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration, "t": tmpTime])
                     }
                     self.sendLocalNotif("解析得到新数据，刷新手表", badge: tmpAQI)
-                    completionHandler(.NewData)
+                    completionHandler?(.NewData)
                     return
                 }
                 if tmpAQI < 1 || tmpConcentration < 1 {
@@ -114,7 +123,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                 }
             }
             self.isLoadingData = false
-            completionHandler(.NoData)
+            completionHandler?(.NoData)
         }
     }
     
@@ -127,7 +136,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         UIApplication.sharedApplication().setKeepAliveTimeout(600) { () -> Void in
-            NSLog("called...")
+            NSLog("voip called...")
+            fetchNewData()
         }
     }
 
