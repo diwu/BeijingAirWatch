@@ -66,9 +66,10 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
             return(entry)
         } else {
-            let template = CLKComplicationTemplateModularLargeTallBody()
-            template.headerTextProvider = CLKSimpleTextProvider(text: "\(selectedCity()) Real Time PM2.5")
-            template.bodyTextProvider = CLKSimpleTextProvider(text: "Press to select your city and start auto-refresh.")
+            let template = CLKComplicationTemplateModularLargeStandardBody()
+            template.headerTextProvider = CLKSimpleTextProvider(text: "Real-time PM2.5")
+            template.body1TextProvider = CLKSimpleTextProvider(text: "Press to select city")
+            template.body2TextProvider = CLKSimpleTextProvider(text: "& start auto-refresh.")
             let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
             return(entry)
         }
