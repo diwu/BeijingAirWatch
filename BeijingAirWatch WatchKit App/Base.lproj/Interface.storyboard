@@ -33,7 +33,7 @@
                                         </button>
                                     </items>
                                 </group>
-                                <label alignment="center" text="Press Refresh Button to Fetch the Latest Data" textAlignment="center" numberOfLines="3" id="80O-8s-4ZW">
+                                <label alignment="center" text="Press refresh button to fetch the latest data." textAlignment="center" numberOfLines="3" id="80O-8s-4ZW">
                                     <fontDescription key="font" type="system" pointSize="11"/>
                                 </label>
                             </items>
@@ -62,7 +62,7 @@
                                         <action selector="cityDidSelected:" destination="iRs-Ja-Upi" id="COW-Dt-Xsm"/>
                                     </connections>
                                 </picker>
-                                <button width="1" alignment="left" title="--" id="njB-nM-xlH">
+                                <button width="1" alignment="left" verticalAlignment="bottom" title="--" id="njB-nM-xlH">
                                     <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
@@ -79,7 +79,7 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="622" y="388"/>
+            <point key="canvasLocation" x="906" y="397"/>
         </scene>
     </scenes>
 </document>

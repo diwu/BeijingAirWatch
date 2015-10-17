@@ -55,17 +55,25 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     }
     
     func createTimeLineEntryModularLarge(firstLine firstLine: String, secondLine: String, thirdLine: String, date: NSDate) -> CLKComplicationTimelineEntry {
-        let template = CLKComplicationTemplateModularLargeColumns()
         if thirdLine.containsString(",") == true {
+            let template = CLKComplicationTemplateModularLargeColumns()
             template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Date")
             template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(thirdLine.componentsSeparatedByString(" ")[0])\(thirdLine.componentsSeparatedByString(" ")[1])\(thirdLine.componentsSeparatedByString(" ")[3])\(thirdLine.componentsSeparatedByString(" ")[4])")
+            template.row2Column1TextProvider = CLKSimpleTextProvider(text: "AQI")
+            template.row3Column1TextProvider = CLKSimpleTextProvider(text: "PM2.5")
+            template.row2Column2TextProvider = CLKSimpleTextProvider(text: firstLine)
+            template.row3Column2TextProvider = CLKSimpleTextProvider(text: secondLine)
+            let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
+            return(entry)
+        } else {
+            let template = CLKComplicationTemplateModularLargeTallBody()
+            template.headerTextProvider = CLKSimpleTextProvider(text: "\(selectedCity()) Real Time PM2.5")
+            template.bodyTextProvider = CLKSimpleTextProvider(text: "Press to select your city and start auto-refresh.")
+            let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
+            return(entry)
         }
-        template.row2Column1TextProvider = CLKSimpleTextProvider(text: "AQI")
-        template.row3Column1TextProvider = CLKSimpleTextProvider(text: "PM2.5")
-        template.row2Column2TextProvider = CLKSimpleTextProvider(text: firstLine)
-        template.row3Column2TextProvider = CLKSimpleTextProvider(text: secondLine)
-        let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
-        return(entry)
+
+
     }
     
     func getCurrentTimelineEntryForComplication(complication: CLKComplication, withHandler handler: ((CLKComplicationTimelineEntry?) -> Void)) {
