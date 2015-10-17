@@ -29,7 +29,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             self.bgTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
                 self.properlyEndBgTaskIfThereIsOne()
             })
-            self.fetchNewData()
+//            let interval: dispatch_time_t = UInt64(TIME_OUT_LIMIT_IOS) * NSEC_PER_SEC
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(interval)), dispatch_get_main_queue(), { () -> Void in
+                self.fetchNewData()
+//            })
         }
         self.sendLocalNotif("\(ret) 尝试注册VOIP回调", badge: -1)
     }
@@ -174,6 +177,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                 if tmpAQI == self.aqi && tmpConcentration == self.concentration {
                     self.sendLocalNotif("\(selectedCity()):数据未变", badge: -1)
                 }
+                self.sendLocalNotif("\(selectedCity()):网络请求因故终止", badge: -1)
             }
             self.isLoadingData = false
             completionHandler?(.NoData)
