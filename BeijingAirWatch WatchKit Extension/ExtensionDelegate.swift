@@ -16,6 +16,16 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
     var wcUserInfo: [String: AnyObject]?
     var myOwnComplication: CLKComplication?
     
+    func startWCSession() {
+        if (WCSession.isSupported() && wcSession == nil) {
+            wcSession = WCSession.defaultSession()
+            wcSession?.delegate = self
+            wcSession?.activateSession()
+        } else if (WCSession.isSupported() && wcSession != nil) {
+            wcSession?.activateSession()
+        }
+    }
+    
     func reloadComplication() {
         if myOwnComplication == nil {
             let complicationServer = CLKComplicationServer.sharedInstance()
@@ -36,15 +46,14 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
         }
     }
     
+    func sendCityToIOSApp() {
+        wcSession?.transferUserInfo(["selected_city": selectedCity().rawValue])
+    }
+    
     func applicationDidFinishLaunching() {
         // Perform any final initialization of your application.
         print("did launch")
-        if (WCSession.isSupported()) {
-            wcSession = WCSession.defaultSession()
-            wcSession!.delegate = self
-            wcSession!.activateSession()
-            print("did activate session")
-        }
+        startWCSession()
     }
 
     func applicationDidBecomeActive() {

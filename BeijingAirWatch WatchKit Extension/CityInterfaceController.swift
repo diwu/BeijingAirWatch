@@ -25,8 +25,19 @@ class CityInterfaceController: WKInterfaceController {
         if selectedIndex != -1 {
             NSUserDefaults.standardUserDefaults().setObject(CitiesList[selectedIndex].rawValue, forKey: "selected_city")
             NSUserDefaults.standardUserDefaults().synchronize()
+            syncCityToIOSApp()
         }
         popController()
+    }
+    
+    func startWCSession() {
+        let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+        delegate.startWCSession()
+    }
+    
+    func syncCityToIOSApp() {
+        let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+        delegate.sendCityToIOSApp()
     }
     
     override func awakeWithContext(context: AnyObject?) {
@@ -46,6 +57,7 @@ class CityInterfaceController: WKInterfaceController {
     
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
+        startWCSession()
         super.willActivate()
     }
     

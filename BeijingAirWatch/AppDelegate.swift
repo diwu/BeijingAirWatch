@@ -26,7 +26,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             wcSession = WCSession.defaultSession()
             wcSession?.delegate = self
             wcSession?.activateSession()
+        } else if (WCSession.isSupported() && wcSession != nil) {
+            wcSession?.activateSession()
         }
+    }
+    
+    func session(session: WCSession, didReceiveUserInfo userInfo: [String : AnyObject]) {
+        if userInfo["selected_city"] != nil {
+            let city: String = userInfo["selected_city"] as! String
+            NSUserDefaults.standardUserDefaults().setObject(city, forKey: "selected_city")
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+        print("did receive info (ios app side): \(userInfo)")
+        print("ios app sourcel url: \(sourceDescription())")
     }
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -51,6 +63,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         return true
     }
     
+    /*
     func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
 
         completionHandler(.NoData)
@@ -63,6 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         }
 
     }
+*/
     
     func fetchNewData() {
         print("called... complication enabled = \(wcSession?.complicationEnabled)");
@@ -137,7 +151,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         UIApplication.sharedApplication().setKeepAliveTimeout(600) { () -> Void in
             NSLog("voip called...")
-            fetchNewData()
+            self.fetchNewData()
         }
     }
 
