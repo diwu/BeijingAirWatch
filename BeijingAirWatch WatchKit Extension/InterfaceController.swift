@@ -85,7 +85,7 @@ class InterfaceController: WKInterfaceController {
         if self.concentration <= 1.0 {
             self.concentration = -1.0
         }
-        populateLabels()
+//        populateLabels()
         let request = createRequest()
         if session == nil {
             session = sessionForWatchExtension()

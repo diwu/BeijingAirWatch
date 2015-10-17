@@ -33,7 +33,7 @@
                                         </button>
                                     </items>
                                 </group>
-                                <label alignment="center" text="Press refresh button to fetch the latest data." textAlignment="center" numberOfLines="3" id="80O-8s-4ZW">
+                                <label alignment="center" text="The default city is Beijing." textAlignment="center" numberOfLines="3" id="80O-8s-4ZW">
                                     <fontDescription key="font" type="system" pointSize="11"/>
                                 </label>
                             </items>
