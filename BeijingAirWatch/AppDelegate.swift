@@ -27,8 +27,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             NSLog("voip called...")
             self.properlyEndBgTaskIfThereIsOne()
             self.bgTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
-                self.fetchNewData()
+                self.properlyEndBgTaskIfThereIsOne()
             })
+            self.fetchNewData()
         }
         self.sendLocalNotif("\(ret) 尝试注册VOIP回调", badge: -1)
     }
