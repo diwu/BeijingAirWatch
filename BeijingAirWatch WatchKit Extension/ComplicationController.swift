@@ -184,6 +184,10 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                     self.concentration = tmpConcentration
                     self.time = tmpTime
                     print("wc - data loaded: api = \(self.aqi), concentration = \(self.concentration)， time = \(self.time)")
+                    NSUserDefaults.standardUserDefaults().setInteger(self.aqi, forKey: "a")
+                    NSUserDefaults.standardUserDefaults().setDouble(self.concentration, forKey: "c")
+                    NSUserDefaults.standardUserDefaults().setObject(self.time, forKey: "t")
+                    NSUserDefaults.standardUserDefaults().synchronize()
                     self.isFromIOSApp = false
                     let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
                     delegate.reloadComplication()
