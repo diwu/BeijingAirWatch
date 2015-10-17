@@ -22,6 +22,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     private var session: NSURLSession?
     private var bgTaskID: UIBackgroundTaskIdentifier? = nil
     
+    func registerBackgroundVOIPCallback() {
+        UIApplication.sharedApplication().setKeepAliveTimeout(600) { () -> Void in
+            NSLog("voip called...")
+            self.bgTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+                self.fetchNewData()
+            })
+        }
+    }
+    
     func startWCSession() {
         if (WCSession.isSupported() && wcSession == nil) {
             wcSession = WCSession.defaultSession()
@@ -42,6 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         print("ios app sourcel url: \(sourceDescription())")
         replyHandler(["xxx":"xxx"])
         sendLocalNotif("更新城市为:\(selectedCity())", badge: -1)
+        registerBackgroundVOIPCallback()
     }
     
     /*
@@ -172,12 +182,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-        UIApplication.sharedApplication().setKeepAliveTimeout(600) { () -> Void in
-            NSLog("voip called...")
-            self.bgTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
-                self.fetchNewData()
-            })
-        }
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
@@ -186,6 +190,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        print("ios app did become active")
+        registerBackgroundVOIPCallback()
     }
 
     func applicationWillTerminate(application: UIApplication) {
