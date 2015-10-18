@@ -214,7 +214,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             (data, error) -> Void in
             if error != nil {
                 print(error)
-                self.sendLocalNotif("\(selectedCity()):获取数据出错", badge: -1)
+                self.sendLocalNotif("\(selectedCity()):Failed to fetch latest data. Will retry in 10 minutes.", badge: -1)
             } else {
                 let tmpAQI = parseAQI(data)
                 let tmpConcentration = parseConcentration(data)
