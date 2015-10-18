@@ -1,12 +1,13 @@
 ![][demo]
 
 #Real-time Air Quality for Major Chinese Cities
-* Real-time PM 2.5 readings for Shanghai, Beijing, Guangzhou, Shenyang and Chengdu.
+* Real-time PM 2.5 readings for major Chinese cities right on your clock face.
+* Supports Shanghai, Beijing, Guangzhou, Shenyang and Chengdu.
 * Will auto-refresh within 10 minutes when the latest hourly readings are out.
-* A clean and consice complication widget that fits perfectly on your watch clock face.
+* A clean and consice complication widget that fits perfectly on your clock face.
 
 
-#Why It Matters
+#Don't Take Clean Air for Granted
 
 ![][beijing_aqi]
 
@@ -25,7 +26,7 @@
 5. Let Xcode help you if there's any code signing error.
 6. When you see logs appearing in the Xcode console, the installation is done. Hit the stop button.
 
-#How to Setup the Complication
+#How to Set-up the Complication
 1. Go to your watch. Force touch to customize. Find the complication named **PM2.5**.
 2. If the reading is not ready yet, you will see *Press to Refresh*. 
 3. Press the complication to see the watch app.
@@ -41,6 +42,6 @@
 * The refresh will pause as soon as the current hour's readings are fetched. The refresh will resume automatically in the next hour.
 
 
-[beijing_aqi]: https://raw.githubusercontent.com/diwu/ui-markdown-store/master/beijing_aqi.png
+[beijing_aqi]: https://raw.githubusercontent.com/diwu/ui-markdown-store/master/aqi_3.jpg
 [demo]: https://raw.githubusercontent.com/diwu/ui-markdown-store/master/watch_face_demo_2.jpg
 [source]: http://www.stateair.net/web/post/1/4.html
