@@ -99,6 +99,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         registerBackgroundVOIPCallback()
     }
     
+    func session(session: WCSession, didFinishUserInfoTransfer userInfoTransfer: WCSessionUserInfoTransfer, error: NSError?) {
+        if error != nil {
+            let userInfo : [String : AnyObject]? = userInfoTransfer.userInfo
+            if let unwrapped = userInfo {
+                let tmpTime : String? = unwrapped["t"] as! String?
+                if let unwrappedTime = tmpTime {
+                    if self.time != nil && self.time! == unwrappedTime {
+                        sendLocalNotif("Transfer failed with valid data. \(self.time)", badge: -1)
+                        self.wcSession?.transferCurrentComplicationUserInfo(unwrapped)
+                        return
+                    }
+                }
+            }
+            sendLocalNotif("Transfer failed with invalid data. \(self.time)", badge: -1)
+            userInfoTransfer.cancel()
+        } else {
+            sendLocalNotif("Transfer done. \(self.time)", badge: -1)
+        }
+    }
+    
     /*
     func session(session: WCSession, didReceiveUserInfo userInfo: [String : AnyObject]) {
         if userInfo["selected_city"] != nil {

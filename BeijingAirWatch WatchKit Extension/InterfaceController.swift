@@ -42,6 +42,9 @@ class InterfaceController: WKInterfaceController {
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
+        if task != nil {
+            task?.cancel()
+        }
         if previousCity != selectedCity() {
             test()
         }
@@ -78,7 +81,6 @@ class InterfaceController: WKInterfaceController {
     func test() {
         sourceLabel.setText(sourceDescription())
         toggleAllButtons(false)
-        refreshButton.setTitle("Refreshing...")
         self.aqi = NSUserDefaults.standardUserDefaults().integerForKey("a")
         self.concentration = NSUserDefaults.standardUserDefaults().doubleForKey("c")
         self.time = NSUserDefaults.standardUserDefaults().stringForKey("t")
@@ -119,7 +121,6 @@ class InterfaceController: WKInterfaceController {
                     return
                 }
             }
-            self.refreshButton.setTitle("Refresh")
             self.toggleAllButtons(true)
         }
         self.task?.resume()
