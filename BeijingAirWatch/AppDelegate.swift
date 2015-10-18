@@ -170,9 +170,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                     NSUserDefaults.standardUserDefaults().setObject(self.time, forKey: "t")
                     NSUserDefaults.standardUserDefaults().synchronize()
                     print("data loaded: api = \(self.aqi), concentration = \(self.concentration), time = \(tmpTime)")
-                    if self.wcSession?.complicationEnabled == true {
-                        self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration, "t": tmpTime])
-                    }
+                    self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration, "t": tmpTime])
                     self.sendLocalNotif("\(selectedCity()):解析得到新数据，刷新手表", badge: tmpAQI)
                     completionHandler?(.NewData)
                     self.properlyEndBgTaskIfThereIsOne()

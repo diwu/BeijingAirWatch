@@ -58,12 +58,12 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     func createTimeLineEntryModularLarge(firstLine firstLine: String, secondLine: String, thirdLine: String, date: NSDate) -> CLKComplicationTimelineEntry {
         if thirdLine.containsString(",") == true {
             let template = CLKComplicationTemplateModularLargeColumns()
-            template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Date")
-            template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(thirdLine.componentsSeparatedByString(" ")[0])\(thirdLine.componentsSeparatedByString(" ")[1])\(thirdLine.componentsSeparatedByString(" ")[3])\(thirdLine.componentsSeparatedByString(" ")[4])")
+            template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Time")
+            template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(thirdLine.componentsSeparatedByString(" ")[3]):15 \(thirdLine.componentsSeparatedByString(" ")[4])")
             template.row2Column1TextProvider = CLKSimpleTextProvider(text: "AQI")
             template.row3Column1TextProvider = CLKSimpleTextProvider(text: "PM2.5")
             template.row2Column2TextProvider = CLKSimpleTextProvider(text: firstLine)
-            template.row3Column2TextProvider = CLKSimpleTextProvider(text: secondLine)
+            template.row3Column2TextProvider = CLKSimpleTextProvider(text: "\(secondLine) µg/m³")
             let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
             return(entry)
         } else {
@@ -139,7 +139,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                 let entry = createTimeLineEntryUtilitarianLarge(firstLine: "\(time!.componentsSeparatedByString(" ")[0]) \(time!.componentsSeparatedByString(" ")[1]) \(time!.componentsSeparatedByString(" ")[3]) \(time!.componentsSeparatedByString(" ")[4]), \(concentration)", date: NSDate())
                 handler(entry)
             } else {
-                let entry = createTimeLineEntryUtilitarianLarge(firstLine: "Press to Refresh PM2.5", date: NSDate())
+                let entry = createTimeLineEntryUtilitarianLarge(firstLine: "Press to Refresh", date: NSDate())
                 handler(entry)
             }
         } else {
@@ -188,9 +188,9 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             handler(template)
         } else if complication.family == .ModularLarge {
             let template = CLKComplicationTemplateModularLargeColumns()
-            template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Date :")
-            template.row2Column1TextProvider = CLKSimpleTextProvider(text: "AQI  :")
-            template.row3Column1TextProvider = CLKSimpleTextProvider(text: "PM2.5:")
+            template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Time")
+            template.row2Column1TextProvider = CLKSimpleTextProvider(text: "AQI")
+            template.row3Column1TextProvider = CLKSimpleTextProvider(text: "PM2.5")
             template.row1Column2TextProvider = CLKSimpleTextProvider(text: "?")
             template.row2Column2TextProvider = CLKSimpleTextProvider(text: "?")
             template.row3Column2TextProvider = CLKSimpleTextProvider(text: "?")
