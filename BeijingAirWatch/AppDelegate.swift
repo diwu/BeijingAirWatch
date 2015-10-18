@@ -106,13 +106,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                 let tmpTime : String? = unwrapped["t"] as! String?
                 if let unwrappedTime = tmpTime {
                     if self.time != nil && self.time! == unwrappedTime {
-                        sendLocalNotif("Transfer failed with valid data. \(self.time)", badge: -1)
+                        sendLocalNotif("Transfer failed. Valid. \(self.time)", badge: -1)
                         self.wcSession?.transferCurrentComplicationUserInfo(unwrapped)
                         return
                     }
                 }
             }
-            sendLocalNotif("Transfer failed with invalid data. \(self.time)", badge: -1)
+            sendLocalNotif("Transfer failed. Invalid. \(self.time)", badge: -1)
             userInfoTransfer.cancel()
         } else {
             sendLocalNotif("Transfer done. \(self.time)", badge: -1)
