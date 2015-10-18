@@ -22,11 +22,49 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     private var session: NSURLSession?
     private var bgTaskID: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     private var task: NSURLSessionDataTask?
+    private var gregorianCal: NSCalendar?
+    
+    func getLatestDataHour() -> Int? {
+        if time != nil && time?.containsString(",") == true {
+            let isAm = (time?.componentsSeparatedByString(" ")[4] == "AM")
+            if isAm == true {
+                return Int((time?.componentsSeparatedByString(" ")[3])!)
+            } else {
+                return Int((time?.componentsSeparatedByString(" ")[3])!)! + 12
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    func getCurrentHour() -> Int? {
+        let date: NSDate = NSDate.init()
+        if gregorianCal == nil {
+            gregorianCal = NSCalendar.init(calendarIdentifier: NSCalendarIdentifierGregorian)
+        }
+        let comps: NSDateComponents? = gregorianCal?.componentsInTimeZone(NSTimeZone.init(abbreviation: "HKT")!, fromDate: date)
+        return comps?.hour
+    }
+    
+    func alreadyFetchedLatestData() -> Bool {
+        let currHour: Int? = getCurrentHour()
+        let dataHour: Int? = getLatestDataHour()
+        if currHour != nil && dataHour != nil && currHour! == dataHour! {
+            self.sendLocalNotif("当前时间:\(currHour),数据时间:\(dataHour).暂停刷新", badge: -1)
+            return true
+        } else {
+            self.sendLocalNotif("当前时间:\(currHour),数据时间:\(dataHour).继续刷新", badge: -1)
+            return false
+        }
+    }
     
     func registerBackgroundVOIPCallback() {
         let ret = UIApplication.sharedApplication().setKeepAliveTimeout(600) { () -> Void in
             NSLog("voip called...")
             self.properlyEndBgTaskIfThereIsOne()
+            if self.alreadyFetchedLatestData() == true {
+                return
+            }
             self.bgTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
                 self.properlyEndBgTaskIfThereIsOne()
             })
