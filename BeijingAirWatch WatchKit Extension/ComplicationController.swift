@@ -112,7 +112,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
 
         if complication.family == .ModularSmall {
             if ret == true {
-                let entry = createTimeLineEntryModularSmall(firstLine: "\(aqi)", secondLine: "\(concentration)", date: NSDate())
+                let entry = createTimeLineEntryModularSmall(firstLine: "\(time!.componentsSeparatedByString(" ")[3]) \(time!.componentsSeparatedByString(" ")[4])", secondLine: "\(concentration)", date: NSDate())
                 handler(entry)
             } else {
                 let entry = createTimeLineEntryModularSmall(firstLine: "?", secondLine: "?", date: NSDate())
@@ -136,7 +136,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             }
         } else if complication.family == .UtilitarianLarge {
             if ret == true {
-                let entry = createTimeLineEntryUtilitarianLarge(firstLine: "\(time!.componentsSeparatedByString(" ")[0]) \(time!.componentsSeparatedByString(" ")[1]) \(time!.componentsSeparatedByString(" ")[3]) \(time!.componentsSeparatedByString(" ")[4]), \(concentration)", date: NSDate())
+                let entry = createTimeLineEntryUtilitarianLarge(firstLine: "\(time!.componentsSeparatedByString(" ")[3]) \(time!.componentsSeparatedByString(" ")[4]), \(concentration)", date: NSDate())
                 handler(entry)
             } else {
                 let entry = createTimeLineEntryUtilitarianLarge(firstLine: "Press to Refresh", date: NSDate())
