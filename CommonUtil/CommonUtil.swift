@@ -8,6 +8,8 @@
 
 import Foundation
 
+let DEBUG_LOCAL_NOTIFICATION : Bool = false
+
 let TIME_OUT_LIMIT: Double = 15.0;
 let TIME_OUT_LIMIT_IOS: Double = 30.0;
 

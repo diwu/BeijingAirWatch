@@ -147,8 +147,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             time = NSUserDefaults.standardUserDefaults().stringForKey("t")
         }
         
-        let settings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Alert, UIUserNotificationType.Badge,UIUserNotificationType.Sound], categories: nil)
-        application.registerUserNotificationSettings(settings)
+        if DEBUG_LOCAL_NOTIFICATION == true {
+            let settings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Alert, UIUserNotificationType.Badge,UIUserNotificationType.Sound], categories: nil)
+            application.registerUserNotificationSettings(settings)
+        }
 
         return true
     }
@@ -186,15 +188,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     }
     
     func sendLocalNotif(text: String, badge: Int) {
-        let notif = UILocalNotification()
-        notif.fireDate = NSDate.init(timeIntervalSinceNow: 1)
-        notif.alertBody = text
-        notif.timeZone = NSTimeZone.defaultTimeZone()
-        notif.soundName = UILocalNotificationDefaultSoundName
-        if badge > 0 {
-            notif.applicationIconBadgeNumber = badge
+        if DEBUG_LOCAL_NOTIFICATION == true {
+            let notif = UILocalNotification()
+            notif.fireDate = NSDate.init(timeIntervalSinceNow: 1)
+            notif.alertBody = text
+            notif.timeZone = NSTimeZone.defaultTimeZone()
+            notif.soundName = UILocalNotificationDefaultSoundName
+            if badge > 0 {
+                notif.applicationIconBadgeNumber = badge
+            }
+            UIApplication.sharedApplication().scheduleLocalNotification(notif)
         }
-        UIApplication.sharedApplication().scheduleLocalNotification(notif)
     }
     
     func test(completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
