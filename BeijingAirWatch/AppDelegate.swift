@@ -155,6 +155,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         return true
     }
     
+    /*
     func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
 
         self.sendLocalNotif("Bg fetch API wakes up the app.", badge: -1)
@@ -163,6 +164,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
 
         completionHandler(.NoData)
     }
+*/
     
     func fetchNewData() {
         print("called... complication enabled = \(wcSession?.complicationEnabled)");

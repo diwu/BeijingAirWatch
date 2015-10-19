@@ -171,8 +171,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     func getNextRequestedUpdateDateWithHandler(handler: (NSDate?) -> Void) {
         // Call the handler with the date when you would next like to be given the opportunity to update your complication content
         print("wc - getNextRequestedUpdateDateWithHandler()")
-//        handler(NSDate.init(timeIntervalSinceNow: 60 * 10));
-        handler(nil)
+        handler(NSDate.init(timeIntervalSinceNow: 60 * 60));
     }
     
     // MARK: - Placeholder Templates
@@ -212,11 +211,13 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     func requestedUpdateDidBegin() {
         print("wc - func requestedUpdateDidBegin()")
-//        test()
+        let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+        delegate.tryAskIOSAppToRegisterVOIPCallback()
     }
     func requestedUpdateBudgetExhausted() {
         print("wc - func requestedUpdateBudgetExhausted()")
-//        test()
+        let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+        delegate.tryAskIOSAppToRegisterVOIPCallback()
     }
     
     func test() {
