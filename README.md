@@ -1,6 +1,6 @@
 ![][demo]
 
-###WatchOS 2.0 Customized Complication for Real-time Air Quality Readings of Major Chinese Cities 苹果表盘实时刷新北上广沈蓉空气质量
+###WatchOS 2.0 Customized Complication for Real-time Air Quality of Major Chinese Cities 苹果表盘实时刷新北上广沈蓉空气质量
 * Real-time PM 2.5 readings for major Chinese cities right on your clock face.
 * Supports Shanghai, Beijing, Guangzhou, Shenyang and Chengdu.
 * Will auto-refresh within 10 minutes when the latest hourly readings are out.
