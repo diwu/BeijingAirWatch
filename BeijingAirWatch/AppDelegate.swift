@@ -30,7 +30,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             if isAm == true {
                 return Int((time?.componentsSeparatedByString(" ")[3])!)
             } else {
-                return Int((time?.componentsSeparatedByString(" ")[3])!)! + 12
+                if Int((time?.componentsSeparatedByString(" ")[3])!)! == 12 {
+                    return 12
+                } else {
+                    return Int((time?.componentsSeparatedByString(" ")[3])!)! + 12
+                }
             }
         } else {
             return nil
