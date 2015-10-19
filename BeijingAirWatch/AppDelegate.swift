@@ -50,10 +50,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         let currHour: Int? = getCurrentHour()
         let dataHour: Int? = getLatestDataHour()
         if currHour != nil && dataHour != nil && currHour! == dataHour! {
-            self.sendLocalNotif("当前时间:\(currHour),数据时间:\(dataHour).暂停刷新", badge: -1)
+            self.sendLocalNotif("OS Time:\(currHour). Data Time:\(dataHour).Pause refreshing.", badge: -1)
             return true
         } else {
-            self.sendLocalNotif("当前时间:\(currHour),数据时间:\(dataHour).继续刷新", badge: -1)
+            self.sendLocalNotif("OS Time:\(currHour). Data Time:\(dataHour).Keep refreshing.", badge: -1)
             return false
         }
     }
@@ -73,7 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                 self.fetchNewData()
 //            })
         }
-        self.sendLocalNotif("\(ret) 尝试注册VOIP回调", badge: -1)
+        self.sendLocalNotif("Trying to register VOIP. Result=\(ret)", badge: -1)
     }
     
     func startWCSession() {
@@ -92,7 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             NSUserDefaults.standardUserDefaults().setObject(city, forKey: "selected_city")
             NSUserDefaults.standardUserDefaults().synchronize()
             print("ios app sourcel url: \(sourceDescription())")
-            sendLocalNotif("更新城市为:\(selectedCity())", badge: -1)
+            sendLocalNotif("Updating City to:\(selectedCity())", badge: -1)
         }
         print("did receive wc session msg (ios app side): \(message)")
         replyHandler(["xxx":"xxx"])
@@ -198,7 +198,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     }
     
     func test(completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
-        sendLocalNotif("\(selectedCity()):尝试获取数据", badge: -1)
+        sendLocalNotif("\(selectedCity()):Fetching new data...", badge: -1)
         let request = createRequest()
         if session == nil {
             session = sharedSessionForIOS()
@@ -223,18 +223,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                     NSUserDefaults.standardUserDefaults().synchronize()
                     print("data loaded: api = \(self.aqi), concentration = \(self.concentration), time = \(tmpTime)")
                     self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration, "t": tmpTime])
-                    self.sendLocalNotif("\(selectedCity()):解析得到新数据，刷新手表", badge: tmpAQI)
+                    self.sendLocalNotif("\(selectedCity()):New data available. Transfering to watch.", badge: tmpAQI)
                     completionHandler?(.NewData)
                     self.properlyEndBgTaskIfThereIsOne()
                     return
                 }
                 if tmpAQI < 1 || tmpConcentration < 1 {
-                    self.sendLocalNotif("\(selectedCity()):解析数据出错", badge: -1)
+                    self.sendLocalNotif("\(selectedCity()):Error when parsing data. Will retry in 10 minutes.", badge: -1)
                 }
                 if tmpAQI == self.aqi && tmpConcentration == self.concentration {
-                    self.sendLocalNotif("\(selectedCity()):数据未变", badge: -1)
+                    self.sendLocalNotif("\(selectedCity()):Source data unchanged.", badge: -1)
                 }
-                self.sendLocalNotif("\(selectedCity()):网络请求因故终止", badge: -1)
+                self.sendLocalNotif("\(selectedCity()):Fetching done for now.", badge: -1)
             }
             self.isLoadingData = false
             completionHandler?(.NoData)
