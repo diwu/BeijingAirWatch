@@ -1,6 +1,6 @@
 ![][demo]
 
-###WatchOS 2.0 Customized Complication for Real-time Air Quality Readings of Major Chinese Cities 苹果手表表盘复杂功能显示国内北上广空气质量实时读数
+###WatchOS 2.0 Customized Complication for Real-time Air Quality Readings of Major Chinese Cities 苹果表盘实时刷新北上广沈蓉空气质量
 * Real-time PM 2.5 readings for major Chinese cities right on your clock face.
 * Supports Shanghai, Beijing, Guangzhou, Shenyang and Chengdu.
 * Will auto-refresh within 10 minutes when the latest hourly readings are out.
@@ -27,7 +27,7 @@
 6. When you see logs appearing in the Xcode console, the installation is done. Hit the stop button.
 
 ###How to Set-up the Complication 如何设置表盘复杂功能
-1. Go to your watch. Force touch to customize. Find the complication named **PM2.5**.
+1. Go to your watch. Force touch to customize. Find the complication named *PM2.5*.
 2. If the reading is not ready yet, you will see *Press to Refresh*. 
 3. Press the complication to see the watch app.
 4. In the watch app, press the *City* button to select your city.
