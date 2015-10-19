@@ -136,7 +136,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             }
         } else if complication.family == .UtilitarianLarge {
             if ret == true {
-                let entry = createTimeLineEntryUtilitarianLarge(firstLine: "\(time!.componentsSeparatedByString(" ")[3]) \(time!.componentsSeparatedByString(" ")[4]), \(concentration)", date: NSDate())
+                let entry = createTimeLineEntryUtilitarianLarge(firstLine: "\(time!.componentsSeparatedByString(" ")[3]) \(time!.componentsSeparatedByString(" ")[4]) \(concentration)", date: NSDate())
                 handler(entry)
             } else {
                 let entry = createTimeLineEntryUtilitarianLarge(firstLine: "Press to Refresh", date: NSDate())
