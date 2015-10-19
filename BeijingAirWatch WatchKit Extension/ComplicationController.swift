@@ -112,7 +112,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
 
         if complication.family == .ModularSmall {
             if ret == true {
-                let entry = createTimeLineEntryModularSmall(firstLine: "\(time!.componentsSeparatedByString(" ")[3]) \(time!.componentsSeparatedByString(" ")[4])", secondLine: "\(concentration)", date: NSDate())
+                let entry = createTimeLineEntryModularSmall(firstLine: "\(time!.componentsSeparatedByString(" ")[3])\(time!.componentsSeparatedByString(" ")[4])", secondLine: "\(concentration)", date: NSDate())
                 handler(entry)
             } else {
                 let entry = createTimeLineEntryModularSmall(firstLine: "?", secondLine: "?", date: NSDate())
