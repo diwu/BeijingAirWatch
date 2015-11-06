@@ -76,7 +76,7 @@
 * 因为数据源是每小时刷新一次。所以我们在刷新时，如果发现当前小时的数据已经取到了，刷新就会暂停。在进入下一个小时后，刷新会再次启动。
 * 如果你重启了手机，VOIP 刷新可能会停止。你可以通过在 Watch App 中点击 *Refresh* 按钮的方式强迫唤醒 VOIP 刷新。
 
-###Enable the Hiddeng Debug Mode 开启隐藏的 Debug 模式
+###Enable the Hidden Debug Mode 开启隐藏的 Debug 模式
 * If you want to dive in and play around, go to the *CommonUtil.swift*, set *DEBUG_LOCAL_NOTIFICATION* to *true*. Delete and reinstall the app, debug information will start popping up from time to time as local notifications.
 * 如果你想深入了解代码每时每刻的工作状况，去 *CommonUtil.swift* 里面，将 *DEBUG_LOCAL_NOTIFICATION* 设为 *true* 。删掉然后重装 app。代码的工作情况将会以本地通知的形式呈现在你眼前。
 
