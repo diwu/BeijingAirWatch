@@ -24,11 +24,6 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         delegate.myOwnComplication = complication
     }
     
-    func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
-        rememberMyOwnComplication(complication: complication)
-        handler(nil)
-    }
-    
     func getSupportedTimeTravelDirections(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimeTravelDirections) -> Void) {
         rememberMyOwnComplication(complication: complication)
         handler([])
@@ -102,7 +97,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         return(entry)
     }
     
-    func getCurrentTimelineEntryForComplication(complication: CLKComplication, withHandler handler: ((CLKComplicationTimelineEntry?) -> Void)) {
+    func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
         // Call the handler with the current timeline entry
         rememberMyOwnComplication(complication: complication)
         print("wc - getCurrentTimelineEntryForComplication()")
