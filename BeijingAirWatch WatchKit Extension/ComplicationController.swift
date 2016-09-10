@@ -15,38 +15,43 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     private var aqi: Int = -1
     private var concentration: Double = -1.0
     private var time: String? = "Invalid"
-    private var session: NSURLSession?
+    private var session: URLSession?
     private var isFromIOSApp: Bool = true
-    private var task: NSURLSessionDataTask?
+    private var task: URLSessionDataTask?
 
     func rememberMyOwnComplication(complication: CLKComplication) {
-        let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+        let delegate = WKExtension.shared().delegate as! ExtensionDelegate
         delegate.myOwnComplication = complication
     }
     
-    func getSupportedTimeTravelDirectionsForComplication(complication: CLKComplication, withHandler handler: (CLKComplicationTimeTravelDirections) -> Void) {
-        rememberMyOwnComplication(complication)
-        handler([.None])
-    }
-    
-    func getTimelineStartDateForComplication(complication: CLKComplication, withHandler handler: (NSDate?) -> Void) {
-        rememberMyOwnComplication(complication)
+    func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
+        rememberMyOwnComplication(complication: complication)
         handler(nil)
     }
     
-    func getTimelineEndDateForComplication(complication: CLKComplication, withHandler handler: (NSDate?) -> Void) {
-        rememberMyOwnComplication(complication)
+    func getSupportedTimeTravelDirections(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimeTravelDirections) -> Void) {
+        rememberMyOwnComplication(complication: complication)
+        handler([])
+    }
+    
+    func getTimelineStartDateForComplication(for complication: CLKComplication, withHandler handler: (NSDate?) -> Void) {
+        rememberMyOwnComplication(complication: complication)
         handler(nil)
     }
     
-    func getPrivacyBehaviorForComplication(complication: CLKComplication, withHandler handler: (CLKComplicationPrivacyBehavior) -> Void) {
-        rememberMyOwnComplication(complication)
-        handler(.ShowOnLockScreen)
+    func getTimelineEndDateForComplication(for complication: CLKComplication, withHandler handler: (NSDate?) -> Void) {
+        rememberMyOwnComplication(complication: complication)
+        handler(nil)
+    }
+    
+    func getPrivacyBehaviorForComplication(for complication: CLKComplication, withHandler handler: (CLKComplicationPrivacyBehavior) -> Void) {
+        rememberMyOwnComplication(complication: complication)
+        handler(.showOnLockScreen)
     }
     
     // MARK: - Timeline Population
     
-    func createTimeLineEntryModularSmall(firstLine firstLine: String, secondLine: String, date: NSDate) -> CLKComplicationTimelineEntry {
+    func createTimeLineEntryModularSmall(firstLine: String, secondLine: String, date: Date) -> CLKComplicationTimelineEntry {
         let template = CLKComplicationTemplateModularSmallStackText()
         template.line1TextProvider = CLKSimpleTextProvider(text: firstLine)
         template.line2TextProvider = CLKSimpleTextProvider(text: secondLine)
@@ -55,11 +60,11 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         return(entry)
     }
     
-    func createTimeLineEntryModularLarge(firstLine firstLine: String, secondLine: String, thirdLine: String, date: NSDate) -> CLKComplicationTimelineEntry {
-        if thirdLine.containsString(",") == true {
+    func createTimeLineEntryModularLarge(firstLine: String, secondLine: String, thirdLine: String, date: Date) -> CLKComplicationTimelineEntry {
+        if thirdLine.contains(",") == true {
             let template = CLKComplicationTemplateModularLargeColumns()
             template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Time")
-            template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(thirdLine.componentsSeparatedByString(" ")[3]):15 \(thirdLine.componentsSeparatedByString(" ")[4])")
+            template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(thirdLine.components(separatedBy:" ")[3]):15 \(thirdLine.components(separatedBy:" ")[4])")
             template.row2Column1TextProvider = CLKSimpleTextProvider(text: "AQI")
             template.row3Column1TextProvider = CLKSimpleTextProvider(text: "PM2.5")
             template.row2Column2TextProvider = CLKSimpleTextProvider(text: firstLine)
@@ -76,21 +81,21 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         }
     }
     
-    func createTimeLineEntryCircularSmall(firstLine firstLine: String, date: NSDate) -> CLKComplicationTimelineEntry {
+    func createTimeLineEntryCircularSmall(firstLine: String, date: Date) -> CLKComplicationTimelineEntry {
         let template = CLKComplicationTemplateCircularSmallSimpleText()
         template.textProvider = CLKSimpleTextProvider(text: firstLine)
         let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
         return(entry)
     }
     
-    func createTimeLineEntryUtilitarianLarge(firstLine firstLine: String, date: NSDate) -> CLKComplicationTimelineEntry {
+    func createTimeLineEntryUtilitarianLarge(firstLine: String, date: Date) -> CLKComplicationTimelineEntry {
         let template = CLKComplicationTemplateUtilitarianLargeFlat()
         template.textProvider = CLKSimpleTextProvider(text: firstLine)
         let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
         return(entry)
     }
     
-    func createTimeLineEntryUtilitarianSmall(firstLine firstLine: String, date: NSDate) -> CLKComplicationTimelineEntry {
+    func createTimeLineEntryUtilitarianSmall(firstLine: String, date: Date) -> CLKComplicationTimelineEntry {
         let template = CLKComplicationTemplateUtilitarianSmallFlat()
         template.textProvider = CLKSimpleTextProvider(text: firstLine)
         let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
@@ -99,93 +104,93 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     func getCurrentTimelineEntryForComplication(complication: CLKComplication, withHandler handler: ((CLKComplicationTimelineEntry?) -> Void)) {
         // Call the handler with the current timeline entry
-        rememberMyOwnComplication(complication)
+        rememberMyOwnComplication(complication: complication)
         print("wc - getCurrentTimelineEntryForComplication()")
         let ret = processDataFromDelegate()
         
         if ret == true {
-            NSUserDefaults.standardUserDefaults().setInteger(self.aqi, forKey: "a")
-            NSUserDefaults.standardUserDefaults().setDouble(self.concentration, forKey: "c")
-            NSUserDefaults.standardUserDefaults().setObject(self.time, forKey: "t")
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.set(self.aqi, forKey: "a")
+            UserDefaults.standard.set(self.concentration, forKey: "c")
+            UserDefaults.standard.set(self.time, forKey: "t")
+            UserDefaults.standard.synchronize()
         }
 
-        if complication.family == .ModularSmall {
+        if complication.family == .modularSmall {
             if ret == true {
-                let entry = createTimeLineEntryModularSmall(firstLine: "\(time!.componentsSeparatedByString(" ")[3])\(time!.componentsSeparatedByString(" ")[4])", secondLine: "\(concentration)", date: NSDate())
+                let entry = createTimeLineEntryModularSmall(firstLine: "\(time!.components(separatedBy:" ")[3])\(time!.components(separatedBy:" ")[4])", secondLine: "\(concentration)", date: Date())
                 handler(entry)
             } else {
-                let entry = createTimeLineEntryModularSmall(firstLine: "?", secondLine: "?", date: NSDate())
+                let entry = createTimeLineEntryModularSmall(firstLine: "?", secondLine: "?", date: Date())
                 handler(entry)
             }
-        } else if complication.family == .ModularLarge {
+        } else if complication.family == .modularLarge {
             if ret == true {
-                let entry = createTimeLineEntryModularLarge(firstLine: "\(aqi)", secondLine: "\(concentration)", thirdLine: time!, date: NSDate())
+                let entry = createTimeLineEntryModularLarge(firstLine: "\(aqi)", secondLine: "\(concentration)", thirdLine: time!, date: Date())
                 handler(entry)
             } else {
-                let entry = createTimeLineEntryModularLarge(firstLine: "?", secondLine: "?", thirdLine: "?", date: NSDate())
+                let entry = createTimeLineEntryModularLarge(firstLine: "?", secondLine: "?", thirdLine: "?", date: Date())
                 handler(entry)
             }
-        } else if complication.family == .CircularSmall {
+        } else if complication.family == .circularSmall {
             if ret == true {
-                let entry = createTimeLineEntryCircularSmall(firstLine: "\(concentration)", date: NSDate())
+                let entry = createTimeLineEntryCircularSmall(firstLine: "\(concentration)", date: Date())
                 handler(entry)
             } else {
-                let entry = createTimeLineEntryCircularSmall(firstLine: "?", date: NSDate())
+                let entry = createTimeLineEntryCircularSmall(firstLine: "?", date: Date())
                 handler(entry)
             }
-        } else if complication.family == .UtilitarianLarge {
+        } else if complication.family == .utilitarianLarge {
             if ret == true {
-                let entry = createTimeLineEntryUtilitarianLarge(firstLine: "\(time!.componentsSeparatedByString(" ")[3]) \(time!.componentsSeparatedByString(" ")[4]) \(concentration)", date: NSDate())
+                let entry = createTimeLineEntryUtilitarianLarge(firstLine: "\(time!.components(separatedBy:" ")[3]) \(time!.components(separatedBy:" ")[4]) \(concentration)", date: Date())
                 handler(entry)
             } else {
-                let entry = createTimeLineEntryUtilitarianLarge(firstLine: "Press to Refresh", date: NSDate())
+                let entry = createTimeLineEntryUtilitarianLarge(firstLine: "Press to Refresh", date: Date())
                 handler(entry)
             }
         } else {
             if ret == true {
-                let entry = createTimeLineEntryUtilitarianSmall(firstLine: "\(concentration)", date: NSDate())
+                let entry = createTimeLineEntryUtilitarianSmall(firstLine: "\(concentration)", date: Date())
                 handler(entry)
             } else {
-                let entry = createTimeLineEntryUtilitarianSmall(firstLine: "?", date: NSDate())
+                let entry = createTimeLineEntryUtilitarianSmall(firstLine: "?", date: Date())
                 handler(entry)
             }
         }
         isFromIOSApp = true
     }
     
-    func getTimelineEntriesForComplication(complication: CLKComplication, beforeDate date: NSDate, limit: Int, withHandler handler: (([CLKComplicationTimelineEntry]?) -> Void)) {
+    func getTimelineEntriesForComplication(complication: CLKComplication, beforeDate date: Date, limit: Int, withHandler handler: (([CLKComplicationTimelineEntry]?) -> Void)) {
         // Call the handler with the timeline entries prior to the given date
-        rememberMyOwnComplication(complication)
+        rememberMyOwnComplication(complication: complication)
         handler(nil)
     }
     
-    func getTimelineEntriesForComplication(complication: CLKComplication, afterDate date: NSDate, limit: Int, withHandler handler: (([CLKComplicationTimelineEntry]?) -> Void)) {
+    func getTimelineEntriesForComplication(complication: CLKComplication, afterDate date: Date, limit: Int, withHandler handler: (([CLKComplicationTimelineEntry]?) -> Void)) {
         // Call the handler with the timeline entries after to the given date
-        rememberMyOwnComplication(complication)
+        rememberMyOwnComplication(complication: complication)
         handler(nil)
     }
     
     // MARK: - Update Scheduling
     
-    func getNextRequestedUpdateDateWithHandler(handler: (NSDate?) -> Void) {
+    func getNextRequestedUpdateDateWithHandler(handler: (Date?) -> Void) {
         // Call the handler with the date when you would next like to be given the opportunity to update your complication content
         print("wc - getNextRequestedUpdateDateWithHandler()")
-        handler(NSDate.init(timeIntervalSinceNow: 60 * 60));
+        handler(Date(timeIntervalSinceNow: 60 * 60));
     }
     
     // MARK: - Placeholder Templates
     
     func getPlaceholderTemplateForComplication(complication: CLKComplication, withHandler handler: (CLKComplicationTemplate?) -> Void) {
         // This method will be called once per supported complication, and the results will be cached
-        rememberMyOwnComplication(complication)
-        if complication.family == .ModularSmall {
+        rememberMyOwnComplication(complication: complication)
+        if complication.family == .modularSmall {
             let template = CLKComplicationTemplateModularSmallStackText()
             template.line1TextProvider = CLKSimpleTextProvider(text: "AQI")
             template.line2TextProvider = CLKSimpleTextProvider(text: "PM2.5")
             template.highlightLine2 = true
             handler(template)
-        } else if complication.family == .ModularLarge {
+        } else if complication.family == .modularLarge {
             let template = CLKComplicationTemplateModularLargeColumns()
             template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Time")
             template.row2Column1TextProvider = CLKSimpleTextProvider(text: "AQI")
@@ -194,11 +199,11 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             template.row2Column2TextProvider = CLKSimpleTextProvider(text: "?")
             template.row3Column2TextProvider = CLKSimpleTextProvider(text: "?")
             handler(template)
-        } else if complication.family == .CircularSmall {
+        } else if complication.family == .circularSmall {
             let template = CLKComplicationTemplateCircularSmallSimpleText()
             template.textProvider = CLKSimpleTextProvider(text: "PM2.5")
             handler(template)
-        } else if complication.family == .UtilitarianLarge {
+        } else if complication.family == .utilitarianLarge {
             let template = CLKComplicationTemplateUtilitarianLargeFlat()
             template.textProvider = CLKSimpleTextProvider(text: "PM2.5")
             handler(template)
@@ -211,19 +216,19 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     func requestedUpdateDidBegin() {
         print("wc - func requestedUpdateDidBegin()")
-        let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+        let delegate = WKExtension.shared().delegate as! ExtensionDelegate
         delegate.tryAskIOSAppToRegisterVOIPCallback()
     }
     func requestedUpdateBudgetExhausted() {
         print("wc - func requestedUpdateBudgetExhausted()")
-        let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+        let delegate = WKExtension.shared().delegate as! ExtensionDelegate
         delegate.tryAskIOSAppToRegisterVOIPCallback()
     }
     
     func test() {
-        self.aqi = NSUserDefaults.standardUserDefaults().integerForKey("a")
-        self.concentration = NSUserDefaults.standardUserDefaults().doubleForKey("c")
-        self.time = NSUserDefaults.standardUserDefaults().stringForKey("t")
+        self.aqi = UserDefaults.standard.integer(forKey: "a")
+        self.concentration = UserDefaults.standard.double(forKey:"c")
+        self.time = UserDefaults.standard.string(forKey:"t")
         if self.time == nil {
             self.time = "Invalid"
         }
@@ -238,25 +243,25 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             session = sessionForWatchExtension()
         }
         self.task?.cancel()
-        self.task = createHttpGetDataTask(session, request: request){
+        self.task = createHttpGetDataTask(session: session, request: request){
             (data, error) -> Void in
             if error != nil {
                 print(error)
             } else {
-                let tmpAQI = parseAQI(data)
-                let tmpConcentration = parseConcentration(data)
-                let tmpTime = parseTime(data)
+                let tmpAQI = parseAQI(data: data)
+                let tmpConcentration = parseConcentration(data: data)
+                let tmpTime = parseTime(data: data)
                 if tmpAQI > 1 && tmpConcentration > 1.0 && (tmpAQI != self.aqi || tmpConcentration != self.concentration || tmpTime != self.time) {
                     self.aqi = tmpAQI
                     self.concentration = tmpConcentration
                     self.time = tmpTime
                     print("wc - data loaded: api = \(self.aqi), concentration = \(self.concentration)， time = \(self.time)")
-                    NSUserDefaults.standardUserDefaults().setInteger(self.aqi, forKey: "a")
-                    NSUserDefaults.standardUserDefaults().setDouble(self.concentration, forKey: "c")
-                    NSUserDefaults.standardUserDefaults().setObject(self.time, forKey: "t")
-                    NSUserDefaults.standardUserDefaults().synchronize()
+                    UserDefaults.standard.set(self.aqi, forKey: "a")
+                    UserDefaults.standard.set(self.concentration, forKey: "c")
+                    UserDefaults.standard.set(self.time, forKey: "t")
+                    UserDefaults.standard.synchronize()
                     self.isFromIOSApp = false
-                    let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+                    let delegate = WKExtension.shared().delegate as! ExtensionDelegate
                     delegate.reloadComplication()
                     return
                 }
@@ -267,7 +272,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     func processDataFromDelegate() -> Bool {
         if isFromIOSApp == true {
-            let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+            let delegate = WKExtension.shared().delegate as! ExtensionDelegate
             if let unwrappedInfo = delegate.wcUserInfo {
                 let tmpA: Int = unwrappedInfo["a"] as! Int
                 let tmpC: Double = unwrappedInfo["c"] as! Double

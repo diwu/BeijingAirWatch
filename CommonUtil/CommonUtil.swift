@@ -22,15 +22,15 @@ enum City: String {
 }
 
 func parseTime(data: String) -> String {
-    let escapedString: String? = data.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
+    let escapedString: String? = data.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
 //    print("data = \(escapedString)")
     if let unwrapped = escapedString {
-        let arr = unwrapped.componentsSeparatedByString("%0D%0A%09%09%09%09%09%09%09%09%3C")
+        let arr = unwrapped.components(separatedBy: "%0D%0A%09%09%09%09%09%09%09%09%3C")
         for s in arr {
-            let subArr = s.componentsSeparatedByString("%3E%0D%0A%09%09%09%09%09%09%09%09%09")
+            let subArr = s.components(separatedBy: "%3E%0D%0A%09%09%09%09%09%09%09%09%09")
             if let tmp = subArr.last {
-                if (tmp.containsString("PM") || tmp.containsString("AM")) && tmp.characters.count <= 40 {
-                    return tmp.stringByRemovingPercentEncoding!
+                if (tmp.contains("PM") || tmp.contains("AM")) && tmp.characters.count <= 40 {
+                    return tmp.removingPercentEncoding!
                 }
             }
         }
@@ -39,15 +39,19 @@ func parseTime(data: String) -> String {
 }
 
 func parseAQI(data: String) -> Int {
-    let escapedString: String? = data.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
+    let escapedString: String? = data.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
     if let unwrapped = escapedString {
-        let arr = unwrapped.componentsSeparatedByString("%20AQI%0D%0A")
+        let arr = unwrapped.components(separatedBy: "%20AQI%0D%0A")
         for s in arr {
-            let subArr = s.componentsSeparatedByString("%09%09%09%09%09%09%09%09%09")
+            let subArr = s.components(separatedBy: "%09%09%09%09%09%09%09%09%09")
             if let tmp = subArr.last {
-                if Int(tmp) > 1 {
-                    return Int(tmp)!
+                guard let intValue = Int(tmp) else {
+                    return -1
                 }
+                guard intValue > 1 else {
+                    return -1
+                }
+                return intValue
             }
         }
     }
@@ -55,51 +59,54 @@ func parseAQI(data: String) -> Int {
 }
 
 func parseConcentration(data: String) -> Double {
-    let escapedString: String? = data.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
+    let escapedString: String? = data.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
     if let unwrapped = escapedString {
-        let arr = unwrapped.componentsSeparatedByString("%20%C3%82%C2%B5g%2Fm%C3%82%C2%B3%20%0D%0A%09%09%09%09%09%09%09%09")
+        let arr = unwrapped.components(separatedBy: "%20%C3%82%C2%B5g%2Fm%C3%82%C2%B3%20%0D%0A%09%09%09%09%09%09%09%09")
         for s in arr {
-            let subArr = s.componentsSeparatedByString("%09%09%09%09%09%09%09%09%09")
+            let subArr = s.components(separatedBy: "%09%09%09%09%09%09%09%09%09")
             if let tmp = subArr.last {
-                if Double(tmp) > 1 {
-                    return Double(tmp)!
+                guard let doubleValue = Double(tmp) else {
+                    return -1.0
                 }
+                guard doubleValue > 1.0 else {
+                    return -1
+                }
+                return doubleValue
             }
         }
     }
     return -1.0
 }
 
-func sharedSessionForIOS() -> NSURLSession {
-    let session = NSURLSession.sharedSession()
+func sharedSessionForIOS() -> URLSession {
+    let session = URLSession.shared
     session.configuration.timeoutIntervalForRequest = TIME_OUT_LIMIT_IOS
     session.configuration.timeoutIntervalForResource = TIME_OUT_LIMIT_IOS
     return session
 }
 
-func sessionForWatchExtension() -> NSURLSession {
-    let session = NSURLSession.sharedSession()
+func sessionForWatchExtension() -> URLSession {
+    let session = URLSession.shared
     session.configuration.timeoutIntervalForRequest = TIME_OUT_LIMIT
     session.configuration.timeoutIntervalForResource = TIME_OUT_LIMIT
     return session
 }
 
-func createHttpGetDataTask(session: NSURLSession?, request: NSURLRequest!, callback: (String, String?) -> Void) -> NSURLSessionDataTask? {
-    let task = session?.dataTaskWithRequest(request){
+func createHttpGetDataTask(session: URLSession?, request: URLRequest!, callback: @escaping (String, String?) -> Void) -> URLSessionDataTask? {
+    let task = session?.dataTask(with: request){
         (data, response, error) -> Void in
         if error != nil {
             callback("", error!.localizedDescription)
         } else {
-            let result = NSString(data: data!, encoding:
-                NSASCIIStringEncoding)!
-            callback(result as String, nil)
+            let result = String(data: data!, encoding: .ascii)!
+            callback(result, nil)
         }
     }
     return task
 }
 
-func createRequest() -> NSURLRequest {
-    return NSMutableURLRequest(URL: NSURL(string: sourceURL(selectedCity()))!)
+func createRequest() -> URLRequest {
+    return URLRequest(url: URL(string: sourceURL(city: selectedCity()))!)
 }
 
 func sourceURL(city: City) -> String {
@@ -118,7 +125,7 @@ func sourceURL(city: City) -> String {
 }
 
 func selectedCity() -> City {
-    let sc: String? = NSUserDefaults.standardUserDefaults().stringForKey("selected_city")
+    let sc: String? = UserDefaults.standard.string(forKey:"selected_city")
     if sc == nil {
         return .Beijing
     } else {
@@ -127,7 +134,7 @@ func selectedCity() -> City {
 }
 
 func sourceDescription() -> String {
-    return "\(selectedCity()): \(sourceURL(selectedCity()))"
+    return "\(selectedCity()): \(sourceURL(city:selectedCity()))"
 }
 
 let CitiesList: [City] = [.Beijing, .Chengdu, .Guangzhou, .Shanghai, .Shenyang]

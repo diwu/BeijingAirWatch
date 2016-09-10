@@ -26,36 +26,36 @@ class CityInterfaceController: WKInterfaceController {
 
             let previousSelectedCity: City = selectedCity()
             
-            NSUserDefaults.standardUserDefaults().setObject(CitiesList[self.selectedIndex].rawValue, forKey: "selected_city")
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.set(CitiesList[self.selectedIndex].rawValue, forKey: "selected_city")
+            UserDefaults.standard.synchronize()
             
-            syncCityToIOSApp(replyHandler: { (reply: [String : AnyObject]) -> Void in
+            syncCityToIOSApp(replyHandler: { (reply: [String : Any]) -> Void in
                 
-                self.popController()
+                self.pop()
                 
-                }, errorHandler: { (error: NSError) -> Void in
+                }, errorHandler: { (error: Error) -> Void in
                     
                 print("watch failed to send city to ios app")
                     
-                    NSUserDefaults.standardUserDefaults().setObject(previousSelectedCity.rawValue, forKey: "selected_city")
-                    NSUserDefaults.standardUserDefaults().synchronize()
+                    UserDefaults.standard.set(previousSelectedCity.rawValue, forKey: "selected_city")
+                    UserDefaults.standard.synchronize()
                     
             })
         }
     }
     
     func startWCSession() {
-        let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+        let delegate = WKExtension.shared().delegate as! ExtensionDelegate
         delegate.startWCSession()
     }
     
-    func syncCityToIOSApp(replyHandler replyHandler: (([String : AnyObject]) -> Void)?, errorHandler: ((NSError) -> Void)?) {
-        let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+    func syncCityToIOSApp(replyHandler: (([String : Any]) -> Void)?, errorHandler: ((Error) -> Void)?) {
+        let delegate = WKExtension.shared().delegate as! ExtensionDelegate
         delegate.sendCityToIOSApp(replyHandler: replyHandler, errorHandler: errorHandler)
     }
     
-    override func awakeWithContext(context: AnyObject?) {
-        super.awakeWithContext(context)
+    override func awake(withContext context: Any?) {
+        super.awake(withContext: context)
         
         // Configure interface objects here.
         var arr = [WKPickerItem]()
@@ -65,7 +65,7 @@ class CityInterfaceController: WKInterfaceController {
             arr.append(item)
         }
         cityPicker.setItems(arr)
-        selectedIndex = CitiesList.indexOf(selectedCity())!
+        selectedIndex = CitiesList.index(of:selectedCity())!
         cityPicker.setSelectedItemIndex(selectedIndex)
     }
     

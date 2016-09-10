@@ -20,11 +20,11 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        if delegate.wcSession?.complicationEnabled == true {
-            delegate.test({ (result: UIBackgroundFetchResult) -> Void in
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        if delegate.wcSession?.isComplicationEnabled == true {
+            delegate.test(completionHandler: { (result: UIBackgroundFetchResult) -> Void in
                 
             })
         }

@@ -19,21 +19,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     private var concentration: Double = -1.0
     private var time: String? = "Invalid"
     var wcSession: WCSession?
-    private var session: NSURLSession?
+    private var session: URLSession?
     private var bgTaskID: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
-    private var task: NSURLSessionDataTask?
+    private var task: URLSessionDataTask?
     private var gregorianCal: NSCalendar?
     
     func getLatestDataHour() -> Int? {
-        if time != nil && time?.containsString(",") == true {
-            let isAm = (time?.componentsSeparatedByString(" ")[4] == "AM")
+        if time != nil && time?.contains(",") == true {
+            let isAm = (time?.components(separatedBy:" ")[4] == "AM")
             if isAm == true {
-                return Int((time?.componentsSeparatedByString(" ")[3])!)
+                return Int((time?.components(separatedBy:" ")[3])!)
             } else {
-                if Int((time?.componentsSeparatedByString(" ")[3])!)! == 12 {
+                if Int((time?.components(separatedBy:" ")[3])!)! == 12 {
                     return 12
                 } else {
-                    return Int((time?.componentsSeparatedByString(" ")[3])!)! + 12
+                    return Int((time?.components(separatedBy:" ")[3])!)! + 12
                 }
             }
         } else {
@@ -42,11 +42,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     }
     
     func getCurrentHour() -> Int? {
-        let date: NSDate = NSDate.init()
+        let date: Date = Date()
         if gregorianCal == nil {
-            gregorianCal = NSCalendar.init(calendarIdentifier: NSCalendarIdentifierGregorian)
+            gregorianCal = NSCalendar.init(calendarIdentifier: NSCalendar.Identifier.gregorian)
         }
-        let comps: NSDateComponents? = gregorianCal?.componentsInTimeZone(NSTimeZone.init(abbreviation: "HKT")!, fromDate: date)
+        let comps: DateComponents? = gregorianCal?.components(in: TimeZone.init(abbreviation: "HKT")!, from: date)
         return comps?.hour
     }
     
@@ -54,22 +54,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         let currHour: Int? = getCurrentHour()
         let dataHour: Int? = getLatestDataHour()
         if currHour != nil && dataHour != nil && currHour! == dataHour! {
-            self.sendLocalNotif("OS Time:\(currHour). Data Time:\(dataHour).Pause refreshing.", badge: -1)
+            self.sendLocalNotif(text: "OS Time:\(currHour). Data Time:\(dataHour).Pause refreshing.", badge: -1)
             return true
         } else {
-            self.sendLocalNotif("OS Time:\(currHour). Data Time:\(dataHour).Keep refreshing.", badge: -1)
+            self.sendLocalNotif(text: "OS Time:\(currHour). Data Time:\(dataHour).Keep refreshing.", badge: -1)
             return false
         }
     }
     
     func registerBackgroundVOIPCallback() {
-        let ret = UIApplication.sharedApplication().setKeepAliveTimeout(600) { () -> Void in
+        let ret = UIApplication.shared.setKeepAliveTimeout(600) { () -> Void in
             NSLog("voip called...")
             self.properlyEndBgTaskIfThereIsOne()
             if self.alreadyFetchedLatestData() == true {
                 return
             }
-            self.bgTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+            self.bgTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                 self.properlyEndBgTaskIfThereIsOne()
             })
 //            let interval: dispatch_time_t = UInt64(TIME_OUT_LIMIT_IOS) * NSEC_PER_SEC
@@ -77,49 +77,61 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                 self.fetchNewData()
 //            })
         }
-        self.sendLocalNotif("Trying to register VOIP. Result=\(ret)", badge: -1)
+        self.sendLocalNotif(text: "Trying to register VOIP. Result=\(ret)", badge: -1)
     }
     
     func startWCSession() {
         if (WCSession.isSupported() && wcSession == nil) {
-            wcSession = WCSession.defaultSession()
+            wcSession = WCSession.default()
             wcSession?.delegate = self
-            wcSession?.activateSession()
+            wcSession?.activate()
         } else if (WCSession.isSupported() && wcSession != nil) {
-            wcSession?.activateSession()
+            wcSession?.activate()
         }
     }
     
-    func session(session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        
+    }
+    
+    func sessionDidBecomeInactive(_ session: WCSession) {
+        
+    }
+    
+    func sessionDidDeactivate(_ session: WCSession) {
+        
+    }
+    
+    func session(session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : Any]) -> Void) {
         if message["selected_city"] != nil {
             let city: String = message["selected_city"] as! String
-            NSUserDefaults.standardUserDefaults().setObject(city, forKey: "selected_city")
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.set(city, forKey: "selected_city")
+            UserDefaults.standard.synchronize()
             print("ios app sourcel url: \(sourceDescription())")
-            sendLocalNotif("Updating City to:\(selectedCity())", badge: -1)
+            sendLocalNotif(text: "Updating City to:\(selectedCity())", badge: -1)
         }
         print("did receive wc session msg (ios app side): \(message)")
         replyHandler(["xxx":"xxx"])
         registerBackgroundVOIPCallback()
     }
     
-    func session(session: WCSession, didFinishUserInfoTransfer userInfoTransfer: WCSessionUserInfoTransfer, error: NSError?) {
+    func session(session: WCSession, didFinishUserInfoTransfer userInfoTransfer: WCSessionUserInfoTransfer, error: Error?) {
         if error != nil {
-            let userInfo : [String : AnyObject]? = userInfoTransfer.userInfo
+            let userInfo : [String : Any]? = userInfoTransfer.userInfo
             if let unwrapped = userInfo {
                 let tmpTime : String? = unwrapped["t"] as! String?
                 if let unwrappedTime = tmpTime {
                     if self.time != nil && self.time! == unwrappedTime {
-                        sendLocalNotif("Transfer failed. Valid. \(self.time)", badge: -1)
+                        sendLocalNotif(text: "Transfer failed. Valid. \(self.time)", badge: -1)
                         self.wcSession?.transferCurrentComplicationUserInfo(unwrapped)
                         return
                     }
                 }
             }
-            sendLocalNotif("Transfer failed. Invalid. \(self.time)", badge: -1)
+            sendLocalNotif(text: "Transfer failed. Invalid. \(self.time)", badge: -1)
             userInfoTransfer.cancel()
         } else {
-            sendLocalNotif("Transfer done. \(self.time)", badge: -1)
+            sendLocalNotif(text: "Transfer done. \(self.time)", badge: -1)
         }
     }
     
@@ -127,8 +139,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     func session(session: WCSession, didReceiveUserInfo userInfo: [String : AnyObject]) {
         if userInfo["selected_city"] != nil {
             let city: String = userInfo["selected_city"] as! String
-            NSUserDefaults.standardUserDefaults().setObject(city, forKey: "selected_city")
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.setObject(city, forKey: "selected_city")
+            UserDefaults.standard.synchronize()
         }
         print("did receive info (ios app side): \(userInfo)")
         print("ios app sourcel url: \(sourceDescription())")
@@ -137,23 +149,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        UIApplication.sharedApplication().setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+        UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
 
         startWCSession()
         
-        if NSUserDefaults.standardUserDefaults().integerForKey("a") > 1 {
-            aqi = NSUserDefaults.standardUserDefaults().integerForKey("a")
+        if UserDefaults.standard.integer(forKey: "a") > 1 {
+            aqi = UserDefaults.standard.integer(forKey: "a")
         }
-        if NSUserDefaults.standardUserDefaults().doubleForKey("c") > 1.0 {
-            concentration = NSUserDefaults.standardUserDefaults().doubleForKey("c")
+        if UserDefaults.standard.double(forKey: "c") > 1.0 {
+            concentration = UserDefaults.standard.double(forKey: "c")
         }
-        if NSUserDefaults.standardUserDefaults().stringForKey("t") != nil {
-            time = NSUserDefaults.standardUserDefaults().stringForKey("t")
+        if UserDefaults.standard.string(forKey: "t") != nil {
+            time = UserDefaults.standard.string(forKey: "t")
         }
         
         if DEBUG_LOCAL_NOTIFICATION == true {
+            /*
             let settings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Alert, UIUserNotificationType.Badge,UIUserNotificationType.Sound], categories: nil)
             application.registerUserNotificationSettings(settings)
+ */
         }
 
         return true
@@ -171,10 +185,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
 */
     
     func fetchNewData() {
-        print("called... complication enabled = \(wcSession?.complicationEnabled)");
+        print("called... complication enabled = \(wcSession?.isComplicationEnabled)");
         startWCSession()
         
-        test(nil)
+        test(completionHandler: nil)
 
         /*
         if wcSession?.complicationEnabled == true {
@@ -188,12 +202,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     
     func properlyEndBgTaskIfThereIsOne() {
         if self.bgTaskID != UIBackgroundTaskInvalid {
-            UIApplication.sharedApplication().endBackgroundTask(self.bgTaskID)
+            UIApplication.shared.endBackgroundTask(self.bgTaskID)
             self.bgTaskID = UIBackgroundTaskInvalid
         }
     }
     
     func sendLocalNotif(text: String, badge: Int) {
+        /*
         if DEBUG_LOCAL_NOTIFICATION == true {
             let notif = UILocalNotification()
             notif.fireDate = NSDate.init(timeIntervalSinceNow: 1)
@@ -203,51 +218,52 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             if badge > 0 {
                 notif.applicationIconBadgeNumber = badge
             }
-            UIApplication.sharedApplication().scheduleLocalNotification(notif)
+            UIApplication.shared.scheduleLocalNotification(notif)
         }
+ */
     }
     
     func test(completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
-        sendLocalNotif("\(selectedCity()):Fetching new data...", badge: -1)
+        sendLocalNotif(text: "\(selectedCity()):Fetching new data...", badge: -1)
         let request = createRequest()
         if session == nil {
             session = sharedSessionForIOS()
         }
         self.task?.cancel()
-        self.task = createHttpGetDataTask(session, request: request){
+        self.task = createHttpGetDataTask(session: session, request: request){
             (data, error) -> Void in
             if error != nil {
                 print(error)
-                self.sendLocalNotif("\(selectedCity()):Failed to fetch latest data. Will retry in 10 minutes.", badge: -1)
+                self.sendLocalNotif(text: "\(selectedCity()):Failed to fetch latest data. Will retry in 10 minutes.", badge: -1)
             } else {
-                let tmpAQI = parseAQI(data)
-                let tmpConcentration = parseConcentration(data)
-                let tmpTime = parseTime(data)
+                let tmpAQI = parseAQI(data: data)
+                let tmpConcentration = parseConcentration(data: data)
+                let tmpTime = parseTime(data: data)
                 if tmpAQI > 1 && tmpConcentration > 1.0 && (tmpAQI != self.aqi || tmpConcentration != self.concentration || tmpTime != self.time) {
                     self.aqi = tmpAQI
                     self.concentration = tmpConcentration
                     self.time = tmpTime
-                    NSUserDefaults.standardUserDefaults().setInteger(self.aqi, forKey: "a")
-                    NSUserDefaults.standardUserDefaults().setDouble(self.concentration, forKey: "c")
-                    NSUserDefaults.standardUserDefaults().setObject(self.time, forKey: "t")
-                    NSUserDefaults.standardUserDefaults().synchronize()
+                    UserDefaults.standard.set(self.aqi, forKey: "a")
+                    UserDefaults.standard.set(self.concentration, forKey: "c")
+                    UserDefaults.standard.set(self.time, forKey: "t")
+                    UserDefaults.standard.synchronize()
                     print("data loaded: api = \(self.aqi), concentration = \(self.concentration), time = \(tmpTime)")
                     self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration, "t": tmpTime])
-                    self.sendLocalNotif("\(selectedCity()):New data available. Transfering to watch.", badge: tmpAQI)
-                    completionHandler?(.NewData)
+                    self.sendLocalNotif(text: "\(selectedCity()):New data available. Transfering to watch.", badge: tmpAQI)
+                    completionHandler?(.newData)
                     self.properlyEndBgTaskIfThereIsOne()
                     return
                 }
                 if tmpAQI < 1 || tmpConcentration < 1 {
-                    self.sendLocalNotif("\(selectedCity()):Error when parsing data. Will retry in 10 minutes.", badge: -1)
+                    self.sendLocalNotif(text: "\(selectedCity()):Error when parsing data. Will retry in 10 minutes.", badge: -1)
                 }
                 if tmpAQI == self.aqi && tmpConcentration == self.concentration {
-                    self.sendLocalNotif("\(selectedCity()):Source data unchanged.", badge: -1)
+                    self.sendLocalNotif(text: "\(selectedCity()):Source data unchanged.", badge: -1)
                 }
-                self.sendLocalNotif("\(selectedCity()):Fetching done for now.", badge: -1)
+                self.sendLocalNotif(text: "\(selectedCity()):Fetching done for now.", badge: -1)
             }
             self.isLoadingData = false
-            completionHandler?(.NoData)
+            completionHandler?(.noData)
             self.properlyEndBgTaskIfThereIsOne()
         }
         self.task?.resume()

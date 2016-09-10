@@ -21,20 +21,20 @@ class InterfaceController: WKInterfaceController {
     private var aqi: Int = -1
     private var concentration: Double = -1.0
     private var time: String? = "Invalid"
-    private var session: NSURLSession?
+    private var session: URLSession?
     private var previousCity: City = .Beijing
-    private var task: NSURLSessionDataTask?
+    private var task: URLSessionDataTask?
     
     @IBAction func cityButtonPressed() {
 
     }
     @IBAction func refreshButtonPressed() {
         test()
-        let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+        let delegate = WKExtension.shared().delegate as! ExtensionDelegate
         delegate.tryAskIOSAppToRegisterVOIPCallback()
     }
-    override func awakeWithContext(context: AnyObject?) {
-        super.awakeWithContext(context)
+    override func awake(withContext context: Any?) {
+        super.awake(withContext: context)
         
         // Configure interface objects here.
     }
@@ -57,7 +57,7 @@ class InterfaceController: WKInterfaceController {
         if let unwrapped = task {
             unwrapped.cancel()
             task = nil
-            toggleAllButtons(true)
+            toggleAllButtons(enable: true)
         }
     }
     
@@ -80,10 +80,10 @@ class InterfaceController: WKInterfaceController {
 
     func test() {
         sourceLabel.setText(sourceDescription())
-        toggleAllButtons(false)
-        self.aqi = NSUserDefaults.standardUserDefaults().integerForKey("a")
-        self.concentration = NSUserDefaults.standardUserDefaults().doubleForKey("c")
-        self.time = NSUserDefaults.standardUserDefaults().stringForKey("t")
+        toggleAllButtons(enable: false)
+        self.aqi = UserDefaults.standard.integer(forKey: "a")
+        self.concentration = UserDefaults.standard.double(forKey:"c")
+        self.time = UserDefaults.standard.string(forKey:"t")
         if self.time == nil {
             self.time = "Invalid"
         }
@@ -99,29 +99,29 @@ class InterfaceController: WKInterfaceController {
             session = sessionForWatchExtension()
         }
         self.task?.cancel()
-        self.task = createHttpGetDataTask(session, request: request){
+        self.task = createHttpGetDataTask(session: session, request: request){
             (data, error) -> Void in
             if error != nil {
                 print(error)
             } else {
-                let tmpAQI = parseAQI(data)
-                let tmpConcentration = parseConcentration(data)
-                let tmpTime = parseTime(data)
-                if tmpAQI > 1 && tmpConcentration > 1.0 && tmpTime.containsString(",") {
+                let tmpAQI = parseAQI(data: data)
+                let tmpConcentration = parseConcentration(data: data)
+                let tmpTime = parseTime(data: data)
+                if tmpAQI > 1 && tmpConcentration > 1.0 && tmpTime.contains(",") {
                     self.aqi = tmpAQI
                     self.concentration = tmpConcentration
                     self.time = tmpTime
                     print("wc - data loaded (by Interface Controller): api = \(self.aqi), concentration = \(self.concentration)， time = \(self.time)")
                     self.populateLabels()
-                    let delegate = WKExtension.sharedExtension().delegate as! ExtensionDelegate
+                    let delegate = WKExtension.shared().delegate as! ExtensionDelegate
                     delegate.wcUserInfo = ["a": self.aqi, "c": self.concentration, "t": self.time!]
                     delegate.reloadComplication()
                     self.refreshButton.setTitle("Refresh")
-                    self.toggleAllButtons(true)
+                    self.toggleAllButtons(enable: true)
                     return
                 }
             }
-            self.toggleAllButtons(true)
+            self.toggleAllButtons(enable: true)
         }
         self.task?.resume()
     }

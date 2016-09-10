@@ -11,43 +11,53 @@ import WatchConnectivity
 import ClockKit
 
 class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
+    /** Called when the session has completed activation. If session state is WCSessionActivationStateNotActivated there will be an error with more details. */
+    @available(watchOS 2.2, *)
+    public func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        
+    }
+
 
     var wcSession: WCSession?
-    var wcUserInfo: [String: AnyObject]?
+    var wcUserInfo: [String: Any]?
     var myOwnComplication: CLKComplication?
     
     func tryAskIOSAppToRegisterVOIPCallback() {
-        wcSession?.sendMessage(["xxx":"xxx"], replyHandler: { (reply: [String: AnyObject]) -> Void in
+        wcSession?.sendMessage(["xxx":"xxx"], replyHandler: { (reply: [String : Any]) in
             
-            }, errorHandler: { (error: NSError) -> Void in
+            }, errorHandler: { (error: Error) in
                 
         })
     }
     
     func startWCSession() {
         if (WCSession.isSupported() && wcSession == nil) {
-            wcSession = WCSession.defaultSession()
+            wcSession = WCSession.default()
             wcSession?.delegate = self
-            wcSession?.activateSession()
+            wcSession?.activate()
             tryAskIOSAppToRegisterVOIPCallback()
         } else if (WCSession.isSupported() && wcSession != nil) {
-            wcSession?.activateSession()
+            wcSession?.activate()
         }
     }
     
     func reloadComplication() {
-        if myOwnComplication == nil {
+        if let cmpl = myOwnComplication {
             let complicationServer = CLKComplicationServer.sharedInstance()
-            for complication in complicationServer.activeComplications {
-                complicationServer.reloadTimelineForComplication(complication)
-            }
+            complicationServer.reloadTimeline(for: cmpl)
         } else {
             let complicationServer = CLKComplicationServer.sharedInstance()
-            complicationServer.reloadTimelineForComplication(myOwnComplication)
+            guard let cmpls = complicationServer.activeComplications else {
+                return
+            }
+            for complication in cmpls {
+                complicationServer.reloadTimeline(for: complication)
+            }
         }
     }
     
-    func session(session: WCSession, didReceiveUserInfo userInfo: [String : AnyObject]) {
+    
+    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
         print("did receive info: \(userInfo)")
         if userInfo["a"] != nil {
             wcUserInfo = userInfo
@@ -55,7 +65,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
         }
     }
     
-    func sendCityToIOSApp(replyHandler replyHandler: (([String : AnyObject]) -> Void)?, errorHandler: ((NSError) -> Void)?) {
+    func sendCityToIOSApp(replyHandler: (([String : Any]) -> Void)?, errorHandler: ((Error) -> Void)?) {
 //        wcSession?.transferUserInfo(["selected_city": selectedCity().rawValue])
         //     public func sendMessage(message: [String : AnyObject], replyHandler: (([String : AnyObject]) -> Void)?, errorHandler: ((NSError) -> Void)?)
 
