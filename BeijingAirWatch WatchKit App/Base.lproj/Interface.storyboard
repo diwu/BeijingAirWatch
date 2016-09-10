@@ -59,7 +59,7 @@
                             <items>
                                 <picker height="100" alignment="left" focusStyle="stack" indicatorMode="shownWhileFocused" id="zj4-ur-Ksa">
                                     <connections>
-                                        <action selector="cityDidSelected:" destination="iRs-Ja-Upi" id="COW-Dt-Xsm"/>
+                                        <action selector="cityDidSelectedWithValue:" destination="iRs-Ja-Upi" id="znw-vu-NEl"/>
                                     </connections>
                                 </picker>
                                 <button width="1" alignment="left" title="Confirm" id="qM1-s1-Vsc">
@@ -74,6 +74,7 @@
                     </items>
                     <connections>
                         <outlet property="cityPicker" destination="zj4-ur-Ksa" id="WDG-5f-kj7"/>
+                        <outlet property="confirmCityButton" destination="qM1-s1-Vsc" id="cs4-2e-dTi"/>
                     </connections>
                 </controller>
             </objects>
