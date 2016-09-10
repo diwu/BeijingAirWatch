@@ -46,10 +46,10 @@ func parseAQI(data: String) -> Int {
             let subArr = s.components(separatedBy: "%09%09%09%09%09%09%09%09%09")
             if let tmp = subArr.last {
                 guard let intValue = Int(tmp) else {
-                    return -1
+                    continue
                 }
                 guard intValue > 1 else {
-                    return -1
+                    continue
                 }
                 return intValue
             }
