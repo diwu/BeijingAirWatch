@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="9058" systemVersion="15A284" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9048"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="9019"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="11077"/>
     </dependencies>
     <scenes>
         <!--Interface Controller-->
@@ -18,15 +18,15 @@
                                 <group width="1" alignment="left" id="aTG-sG-nuz">
                                     <items>
                                         <button width="0.5" alignment="left" title="City" id="mhq-iC-R0f">
-                                            <color key="backgroundColor" red="0.60000002384185791" green="0.40000000596046448" blue="0.20000000298023224" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="backgroundColor" red="0.60000002384185791" green="0.40000000596046448" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <connections>
                                                 <action selector="cityButtonPressed" destination="AgC-eL-Hgc" id="UKK-pa-FlQ"/>
                                                 <segue destination="iRs-Ja-Upi" kind="push" id="w3v-8Z-tEg"/>
                                             </connections>
                                         </button>
                                         <button width="0.5" alignment="right" title="Refresh" id="yL1-WP-a7c">
-                                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <connections>
                                                 <action selector="refreshButtonPressed" destination="AgC-eL-Hgc" id="1b1-UV-vE5"/>
                                             </connections>
@@ -62,12 +62,11 @@
                                         <action selector="cityDidSelected:" destination="iRs-Ja-Upi" id="COW-Dt-Xsm"/>
                                     </connections>
                                 </picker>
-                                <button width="1" alignment="left" verticalAlignment="bottom" title="--" id="njB-nM-xlH">
+                                <button width="1" alignment="left" title="Confirm" id="qM1-s1-Vsc">
                                     <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                     <connections>
-                                        <action selector="confirmCityButtonPressed" destination="iRs-Ja-Upi" id="qbt-cm-xq5"/>
+                                        <action selector="confirmCityButtonPressed" destination="iRs-Ja-Upi" id="11Q-Wk-uu1"/>
                                     </connections>
                                 </button>
                             </items>
@@ -75,7 +74,6 @@
                     </items>
                     <connections>
                         <outlet property="cityPicker" destination="zj4-ur-Ksa" id="WDG-5f-kj7"/>
-                        <outlet property="confirmCityButton" destination="njB-nM-xlH" id="efb-PP-X9Q"/>
                     </connections>
                 </controller>
             </objects>
