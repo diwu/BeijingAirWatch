@@ -154,13 +154,13 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         isFromIOSApp = true
     }
     
-    func getTimelineEntriesForComplication(complication: CLKComplication, beforeDate date: Date, limit: Int, withHandler handler: (([CLKComplicationTimelineEntry]?) -> Void)) {
+    func getTimelineEntries(for complication: CLKComplication, before date: Date, limit: Int, withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
         // Call the handler with the timeline entries prior to the given date
         rememberMyOwnComplication(complication: complication)
         handler(nil)
     }
     
-    func getTimelineEntriesForComplication(complication: CLKComplication, afterDate date: Date, limit: Int, withHandler handler: (([CLKComplicationTimelineEntry]?) -> Void)) {
+    func getTimelineEntries(for complication: CLKComplication, after date: Date, limit: Int, withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
         // Call the handler with the timeline entries after to the given date
         rememberMyOwnComplication(complication: complication)
         handler(nil)
@@ -168,7 +168,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     // MARK: - Update Scheduling
     
-    func getNextRequestedUpdateDateWithHandler(handler: (Date?) -> Void) {
+    func getNextRequestedUpdateDate(handler: @escaping (Date?) -> Void) {
         // Call the handler with the date when you would next like to be given the opportunity to update your complication content
         print("wc - getNextRequestedUpdateDateWithHandler()")
         handler(Date(timeIntervalSinceNow: 60 * 60));
@@ -176,7 +176,8 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     // MARK: - Placeholder Templates
     
-    func getPlaceholderTemplateForComplication(complication: CLKComplication, withHandler handler: (CLKComplicationTemplate?) -> Void) {
+
+    func getPlaceholderTemplate(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTemplate?) -> Void) {
         // This method will be called once per supported complication, and the results will be cached
         rememberMyOwnComplication(complication: complication)
         if complication.family == .modularSmall {
