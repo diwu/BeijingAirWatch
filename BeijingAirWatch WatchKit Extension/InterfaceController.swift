@@ -37,11 +37,13 @@ class InterfaceController: WKInterfaceController {
     
     func didReceiveNotification(notif: Notification) {
         print("InterfaceController did receive notification")
+        defer {
+            populateLabels()
+        }
         guard let _ = AirQuality() else {
             return
         }
         print("Air Quality did construct")
-        populateLabels()
     }
     
     override func awake(withContext context: Any?) {

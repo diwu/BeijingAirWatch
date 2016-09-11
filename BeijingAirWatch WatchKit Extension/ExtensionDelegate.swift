@@ -57,6 +57,9 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
             let concentration = parseConcentration(data: dataStr)
             let time = parseTime(data: dataStr)
             print("parse result \(aqi), \(concentration), \(time)")
+            defer {
+                NotificationCenter.default.post(name: Notification.Name(LATEST_DATA_READY_NOTIFICATION_NAME), object: nil)
+            }
             guard let airQuality = AirQuality(aqi: parseAQI(data: dataStr), concentration: parseConcentration(data: dataStr), time: parseTime(data: dataStr)) else {
                 AirQuality.cleanDisk()
                 reloadComplication()
@@ -64,7 +67,6 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
             }
             airQuality.saveToDisk()
             self.reloadComplication()
-            NotificationCenter.default.post(name: Notification.Name(LATEST_DATA_READY_NOTIFICATION_NAME), object: nil)
             print("get valid data!")
             reloadComplication()
         } catch {
