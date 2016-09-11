@@ -58,12 +58,15 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
             let time = parseTime(data: dataStr)
             print("parse result \(aqi), \(concentration), \(time)")
             guard let airQuality = AirQuality(aqi: parseAQI(data: dataStr), concentration: parseConcentration(data: dataStr), time: parseTime(data: dataStr)) else {
+                AirQuality.cleanDisk()
+                reloadComplication()
                 return
             }
             airQuality.saveToDisk()
             self.reloadComplication()
             NotificationCenter.default.post(name: Notification.Name(LATEST_DATA_READY_NOTIFICATION_NAME), object: nil)
             print("get valid data!")
+            reloadComplication()
         } catch {
             print("download data invalid")
         }
@@ -94,17 +97,13 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
     }
     
     func reloadComplication() {
-        if let cmpl = myOwnComplication {
-            let complicationServer = CLKComplicationServer.sharedInstance()
-            complicationServer.reloadTimeline(for: cmpl)
-        } else {
-            let complicationServer = CLKComplicationServer.sharedInstance()
-            guard let cmpls = complicationServer.activeComplications else {
-                return
-            }
-            for complication in cmpls {
-                complicationServer.reloadTimeline(for: complication)
-            }
+        let complicationServer = CLKComplicationServer.sharedInstance()
+        guard let cmpls = complicationServer.activeComplications else {
+            return
+        }
+        print("reload every complication")
+        for complication in cmpls {
+            complicationServer.reloadTimeline(for: complication)
         }
     }
     

@@ -20,6 +20,12 @@ struct AirQuality {
         UserDefaults.standard.set(time, forKey: "t")
         UserDefaults.standard.synchronize()
     }
+    static func cleanDisk() {
+        UserDefaults.standard.set(nil, forKey: "a")
+        UserDefaults.standard.set(nil, forKey: "c")
+        UserDefaults.standard.set(nil, forKey: "t")
+        UserDefaults.standard.synchronize()
+    }
     init?() {
         guard let a = UserDefaults.standard.value(forKey: "a") as? Int else {
             return nil

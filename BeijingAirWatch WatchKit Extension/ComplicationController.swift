@@ -10,14 +10,6 @@ import ClockKit
 import WatchKit
 
 class ComplicationController: NSObject, CLKComplicationDataSource {
-    
-    // MARK: - Timeline Configuration
-    private var aqi: Int = -1
-    private var concentration: Double = -1.0
-    private var time: String? = "Invalid"
-    private var session: URLSession?
-    private var isFromIOSApp: Bool = true
-    private var task: URLSessionDataTask?
 
     func rememberMyOwnComplication(complication: CLKComplication) {
         let delegate = WKExtension.shared().delegate as! ExtensionDelegate
@@ -101,13 +93,17 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         // Call the handler with the current timeline entry
         rememberMyOwnComplication(complication: complication)
         print("wc - getCurrentTimelineEntryForComplication()")
-        let ret = processDataFromDelegate()
         
-        if ret == true {
-            UserDefaults.standard.set(self.aqi, forKey: "a")
-            UserDefaults.standard.set(self.concentration, forKey: "c")
-            UserDefaults.standard.set(self.time, forKey: "t")
-            UserDefaults.standard.synchronize()
+        var ret = false
+        var time: String? = nil
+        var concentration = -1.0
+        var aqi = -1
+        
+        if let airQuality = AirQuality() {
+            ret = true
+            time = airQuality.time
+            concentration = airQuality.concentration
+            aqi = airQuality.aqi
         }
 
         if complication.family == .modularSmall {
@@ -151,7 +147,6 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                 handler(entry)
             }
         }
-        isFromIOSApp = true
     }
     
     func getTimelineEntries(for complication: CLKComplication, before date: Date, limit: Int, withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
@@ -219,70 +214,5 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         print("wc - func requestedUpdateBudgetExhausted()")
         let delegate = WKExtension.shared().delegate as! ExtensionDelegate
         delegate.tryAskIOSAppToRegisterVOIPCallback()
-    }
-    
-    func test() {
-        self.aqi = UserDefaults.standard.integer(forKey: "a")
-        self.concentration = UserDefaults.standard.double(forKey:"c")
-        self.time = UserDefaults.standard.string(forKey:"t")
-        if self.time == nil {
-            self.time = "Invalid"
-        }
-        if self.aqi <= 1 {
-            self.aqi = -1
-        }
-        if self.concentration <= 1.0 {
-            self.concentration = -1.0
-        }
-        let request = createRequest()
-        if session == nil {
-            session = sessionForWatchExtension()
-        }
-        self.task?.cancel()
-        self.task = createHttpGetDataTask(session: session, request: request){
-            (data, error) -> Void in
-            if error != nil {
-                print(error)
-            } else {
-                let tmpAQI = parseAQI(data: data)
-                let tmpConcentration = parseConcentration(data: data)
-                let tmpTime = parseTime(data: data)
-                if tmpAQI > 1 && tmpConcentration > 1.0 && (tmpAQI != self.aqi || tmpConcentration != self.concentration || tmpTime != self.time) {
-                    self.aqi = tmpAQI
-                    self.concentration = tmpConcentration
-                    self.time = tmpTime
-                    print("wc - data loaded: api = \(self.aqi), concentration = \(self.concentration)， time = \(self.time)")
-                    UserDefaults.standard.set(self.aqi, forKey: "a")
-                    UserDefaults.standard.set(self.concentration, forKey: "c")
-                    UserDefaults.standard.set(self.time, forKey: "t")
-                    UserDefaults.standard.synchronize()
-                    self.isFromIOSApp = false
-                    let delegate = WKExtension.shared().delegate as! ExtensionDelegate
-                    delegate.reloadComplication()
-                    return
-                }
-            }
-        }
-        self.task?.resume()
-    }
-    
-    func processDataFromDelegate() -> Bool {
-        if isFromIOSApp == true {
-            let delegate = WKExtension.shared().delegate as! ExtensionDelegate
-            if let unwrappedInfo = delegate.wcUserInfo {
-                let tmpA: Int = unwrappedInfo["a"] as! Int
-                let tmpC: Double = unwrappedInfo["c"] as! Double
-                let tmpT: String = unwrappedInfo["t"] as! String
-                if tmpA > 1 && tmpC > 1 {
-                    aqi = tmpA
-                    concentration = tmpC
-                    time = tmpT
-                    return true;
-                }
-            }
-            return false
-        } else {
-            return true
-        }
     }
 }
