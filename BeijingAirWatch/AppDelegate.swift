@@ -86,12 +86,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     
 
     func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
-        if message["selected_city"] != nil {
-            let city: String = message["selected_city"] as! String
+        if let city = message["selected_city"] as? String {
             UserDefaults.standard.set(city, forKey: "selected_city")
             UserDefaults.standard.synchronize()
             print("ios app sourcel url: \(sourceDescription())")
             sendLocalNotif(text: "Updating City to:\(selectedCity())", badge: -1)
+        } else if let bg = message["bg_handler"] as? String {
+            sendLocalNotif(text: "Bg handler:\(bg)", badge: -1)
         }
         print("did receive wc session msg (ios app side): \(message)")
         replyHandler(["xxx":"xxx"])
