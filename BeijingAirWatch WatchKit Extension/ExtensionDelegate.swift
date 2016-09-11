@@ -55,9 +55,17 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         }
     }
     
+    private var downloadTask: URLSessionDownloadTask?
+    
     func scheduleDownloadTask() {
+        if let t = downloadTask {
+            showCustomizedAlert("prev task cancelled")
+            t.cancel()
+        }
         let task = session.downloadTask(with: createRequest())
         task.resume()
+        downloadTask = task
+        showCustomizedAlert("download begins")
     }
     
     private func scheduleBgRefresh() {
