@@ -10,6 +10,8 @@ import WatchKit
 import WatchConnectivity
 import ClockKit
 
+public let LATEST_DATA_READY_NOTIFICATION_NAME = "LATEST_DATA_READY_NOTIFICATION_NAME"
+
 class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSessionDownloadDelegate {
     /** Called when the session has completed activation. If session state is WCSessionActivationStateNotActivated there will be an error with more details. */
     @available(watchOS 2.2, *)
@@ -31,7 +33,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
     
     private let SESSION_ID = "beijingairid"
     
-    private func scheduleDownloadTask() {
+    func scheduleDownloadTask() {
         let session = URLSession(configuration: URLSessionConfiguration.background(withIdentifier: SESSION_ID), delegate: self, delegateQueue: OperationQueue.main)
         
         let task = session.downloadTask(with: createRequest())
@@ -60,6 +62,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
             }
             airQuality.saveToDisk()
             self.reloadComplication()
+            NotificationCenter.default.post(name: Notification.Name(LATEST_DATA_READY_NOTIFICATION_NAME), object: nil)
             print("get valid data!")
         } catch {
             print("download data invalid")

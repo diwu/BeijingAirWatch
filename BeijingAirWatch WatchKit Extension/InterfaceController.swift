@@ -29,13 +29,25 @@ class InterfaceController: WKInterfaceController {
 
     }
     @IBAction func refreshButtonPressed() {
-        test()
-        let delegate = WKExtension.shared().delegate as! ExtensionDelegate
-        delegate.tryAskIOSAppToRegisterVOIPCallback()
+        guard let delegate = WKExtension.shared().delegate as? ExtensionDelegate else {
+            return
+        }
+        delegate.scheduleDownloadTask()
     }
+    
+    func didReceiveNotification(notif: Notification) {
+        print("InterfaceController did receive notification")
+        guard let airQuality = AirQuality() else {
+            return
+        }
+        print("Air Quality did construct")
+    }
+    
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         print("-----> InterfaceController awake")
+        let action = #selector(InterfaceController.didReceiveNotification(notif:))
+        NotificationCenter.default.addObserver(self, selector: action, name: Notification.Name(LATEST_DATA_READY_NOTIFICATION_NAME), object: nil)
     }
     
     override func willActivate() {
