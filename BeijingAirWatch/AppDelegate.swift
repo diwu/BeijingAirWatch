@@ -62,24 +62,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         }
     }
     
-    func registerBackgroundVOIPCallback() {
-        let ret = UIApplication.shared.setKeepAliveTimeout(600) { () -> Void in
-            NSLog("voip called...")
-            self.properlyEndBgTaskIfThereIsOne()
-            if self.alreadyFetchedLatestData() == true {
-                return
-            }
-            self.bgTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
-                self.properlyEndBgTaskIfThereIsOne()
-            })
-//            let interval: dispatch_time_t = UInt64(TIME_OUT_LIMIT_IOS) * NSEC_PER_SEC
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(interval)), dispatch_get_main_queue(), { () -> Void in
-                self.fetchNewData()
-//            })
-        }
-        self.sendLocalNotif(text: "Trying to register VOIP. Result=\(ret)", badge: -1)
-    }
-    
     func startWCSession() {
         if (WCSession.isSupported() && wcSession == nil) {
             wcSession = WCSession.default()
@@ -113,7 +95,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         }
         print("did receive wc session msg (ios app side): \(message)")
         replyHandler(["xxx":"xxx"])
-        registerBackgroundVOIPCallback()
     }
     
     func session(_ session: WCSession, didFinish userInfoTransfer: WCSessionUserInfoTransfer, error: Error?) {
@@ -283,7 +264,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         print("ios app did become active")
-        registerBackgroundVOIPCallback()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
