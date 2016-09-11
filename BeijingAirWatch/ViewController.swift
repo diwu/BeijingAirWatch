@@ -22,12 +22,6 @@ class ViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let delegate = UIApplication.shared.delegate as! AppDelegate
-        if delegate.wcSession?.isComplicationEnabled == true {
-            delegate.test(completionHandler: { (result: UIBackgroundFetchResult) -> Void in
-                
-            })
-        }
     }
 
 }

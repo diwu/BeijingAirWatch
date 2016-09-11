@@ -153,33 +153,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         return true
     }
     
-    /*
-    func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-
-        self.sendLocalNotif("Bg fetch API wakes up the app.", badge: -1)
-
-        registerBackgroundVOIPCallback()
-
-        completionHandler(.NoData)
-    }
-*/
-    
-    func fetchNewData() {
-        print("called... complication enabled = \(wcSession?.isComplicationEnabled)");
-        startWCSession()
-        
-        test(completionHandler: nil)
-
-        /*
-        if wcSession?.complicationEnabled == true {
-            test(nil)
-        } else {
-            sendLocalNotif("\(selectedCity()):未激活，不刷新", badge: -1)
-            properlyEndBgTaskIfThereIsOne()
-        }
-*/
-    }
-    
     func properlyEndBgTaskIfThereIsOne() {
         if self.bgTaskID != UIBackgroundTaskInvalid {
             UIApplication.shared.endBackgroundTask(self.bgTaskID)
@@ -199,52 +172,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             }
             UIApplication.shared.scheduleLocalNotification(notif)
         }
-    }
-    
-    func test(completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
-        sendLocalNotif(text: "\(selectedCity()):Fetching new data...", badge: -1)
-        let request = createRequest()
-        if session == nil {
-            session = sharedSessionForIOS()
-        }
-        self.task?.cancel()
-        self.task = createHttpGetDataTask(session: session, request: request){
-            (data, error) -> Void in
-            if error != nil {
-                print(error)
-                self.sendLocalNotif(text: "\(selectedCity()):Failed to fetch latest data. Will retry in 10 minutes.", badge: -1)
-            } else {
-                let tmpAQI = parseAQI(data: data)
-                let tmpConcentration = parseConcentration(data: data)
-                let tmpTime = parseTime(data: data)
-                if tmpAQI > 1 && tmpConcentration > 1.0 && (tmpAQI != self.aqi || tmpConcentration != self.concentration || tmpTime != self.time) {
-                    self.aqi = tmpAQI
-                    self.concentration = tmpConcentration
-                    self.time = tmpTime
-                    UserDefaults.standard.set(self.aqi, forKey: "a")
-                    UserDefaults.standard.set(self.concentration, forKey: "c")
-                    UserDefaults.standard.set(self.time, forKey: "t")
-                    UserDefaults.standard.synchronize()
-                    print("data loaded: api = \(self.aqi), concentration = \(self.concentration), time = \(tmpTime)")
-                    self.wcSession?.transferCurrentComplicationUserInfo(["a": tmpAQI, "c": tmpConcentration, "t": tmpTime])
-                    self.sendLocalNotif(text: "\(selectedCity()):New data available. Transfering to watch.", badge: tmpAQI)
-                    completionHandler?(.newData)
-                    self.properlyEndBgTaskIfThereIsOne()
-                    return
-                }
-                if tmpAQI < 1 || tmpConcentration < 1 {
-                    self.sendLocalNotif(text: "\(selectedCity()):Error when parsing data. Will retry in 10 minutes.", badge: -1)
-                }
-                if tmpAQI == self.aqi && tmpConcentration == self.concentration {
-                    self.sendLocalNotif(text: "\(selectedCity()):Source data unchanged.", badge: -1)
-                }
-                self.sendLocalNotif(text: "\(selectedCity()):Fetching done for now.", badge: -1)
-            }
-            self.isLoadingData = false
-            completionHandler?(.noData)
-            self.properlyEndBgTaskIfThereIsOne()
-        }
-        self.task?.resume()
     }
     
     func applicationWillResignActive(_ application: UIApplication) {
