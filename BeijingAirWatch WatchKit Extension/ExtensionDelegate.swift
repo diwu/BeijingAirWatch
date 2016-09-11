@@ -16,6 +16,23 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
     public func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         
     }
+    
+    func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
+        print("handle called")
+        for task in backgroundTasks {
+            if task is WKApplicationRefreshBackgroundTask {
+                print("handle WKApplicationRefreshBackgroundTask")
+                scheduleBgRefresh()
+                task.setTaskCompleted()
+            }
+        }
+    }
+    
+    private func scheduleBgRefresh() {
+        print("schedule bg refres")
+        WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: Date(timeIntervalSinceNow:10), userInfo: nil, scheduledCompletion: { (error: Error?) in
+        })
+    }
 
 
     var wcSession: WCSession?
@@ -76,6 +93,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
         // Perform any final initialization of your application.
         print("did launch")
         startWCSession()
+        scheduleBgRefresh()
     }
 
     func applicationDidBecomeActive() {
