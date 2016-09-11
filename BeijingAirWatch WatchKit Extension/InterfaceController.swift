@@ -37,10 +37,11 @@ class InterfaceController: WKInterfaceController {
     
     func didReceiveNotification(notif: Notification) {
         print("InterfaceController did receive notification")
-        guard let airQuality = AirQuality() else {
+        guard let _ = AirQuality() else {
             return
         }
         print("Air Quality did construct")
+        populateLabels()
     }
     
     override func awake(withContext context: Any?) {
@@ -75,15 +76,15 @@ class InterfaceController: WKInterfaceController {
     }
     
     func populateLabels() {
-        if self.aqi <= 1 {
+        guard let airQuality = AirQuality() else {
             timeLabel.setText("--")
             aqiLabel.setText("--")
             concentrationLabel.setText("--")
-        } else {
-            timeLabel.setText(time)
-            aqiLabel.setText("AQI: \(aqi)")
-            concentrationLabel.setText("PM2.5: \(concentration)")
+            return
         }
+        timeLabel.setText(airQuality.time)
+        aqiLabel.setText("AQI: \(airQuality.aqi)")
+        concentrationLabel.setText("PM2.5: \(airQuality.concentration)")
     }
     
     func toggleAllButtons(enable: Bool) {
