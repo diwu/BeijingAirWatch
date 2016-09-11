@@ -139,3 +139,17 @@ func sourceDescription() -> String {
 
 let CitiesList: [City] = [.Beijing, .Chengdu, .Guangzhou, .Shanghai, .Shenyang]
 
+func currentHour() -> Int {
+    let date = Date()
+    let gregorianCal = Calendar(identifier: .gregorian)
+    let comps = gregorianCal.dateComponents(in: TimeZone(abbreviation: "HKT")!, from: date)
+    return comps.hour!
+}
+
+func currentMinute() -> Int {
+    let date = Date()
+    let gregorianCal = Calendar(identifier: .gregorian)
+    let comps = gregorianCal.dateComponents(in: TimeZone(abbreviation: "HKT")!, from: date)
+    return comps.minute!
+}
+

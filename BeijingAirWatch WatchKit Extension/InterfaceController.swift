@@ -33,6 +33,7 @@ class InterfaceController: WKInterfaceController {
             return
         }
         delegate.scheduleDownloadTask()
+        delegate.showCustomizedAlert("refresh pressed")
     }
     
     func didReceiveNotification(notif: Notification) {

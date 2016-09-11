@@ -32,7 +32,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         }
     }
     
-    private func showCustomizedAlert(_ msg: String) {
+    func showCustomizedAlert(_ msg: String) {
         wcSession?.sendMessage(["bg_handler": msg], replyHandler: { (replayHandler: [String : Any]) in
             
             }, errorHandler: { (error: Error) in
@@ -68,9 +68,20 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         showCustomizedAlert("download begins")
     }
     
+    private func nextRefreshDateSinceNow() -> Date {
+        let m = currentMinute()
+        var deltaMinute = 0
+        if m >= 20 && m <= 30 {
+            deltaMinute = 10
+        } else {
+            deltaMinute = (60 - m) + 20
+        }
+        return Date(timeIntervalSinceNow: Double(deltaMinute) * 60.0)
+    }
+    
     private func scheduleBgRefresh() {
         print("schedule bg refres")
-        WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: Date(timeIntervalSinceNow:30 * 60), userInfo: nil, scheduledCompletion: { (error: Error?) in
+        WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefreshDateSinceNow(), userInfo: nil, scheduledCompletion: { (error: Error?) in
         })
     }
     
