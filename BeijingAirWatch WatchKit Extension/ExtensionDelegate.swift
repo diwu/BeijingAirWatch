@@ -86,7 +86,11 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        showCustomizedAlert("task complete")
+        if let _ = error {
+            showCustomizedAlert("task complete w/ error")
+        } else {
+            showCustomizedAlert("task complete no error")
+        }
     }
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
