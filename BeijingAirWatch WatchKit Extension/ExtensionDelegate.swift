@@ -26,6 +26,11 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
                 print("handle WKApplicationRefreshBackgroundTask")
                 scheduleBgRefresh()
                 scheduleDownloadTask()
+                wcSession?.sendMessage(["bg_handler": "application"], replyHandler: { (replayHandler: [String : Any]) in
+                    
+                    }, errorHandler: { (error: Error) in
+                        
+                })
             }
             task.setTaskCompleted()
         }
@@ -42,7 +47,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
     
     private func scheduleBgRefresh() {
         print("schedule bg refres")
-        WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: Date(timeIntervalSinceNow:10), userInfo: nil, scheduledCompletion: { (error: Error?) in
+        WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: Date(timeIntervalSinceNow:30 * 60), userInfo: nil, scheduledCompletion: { (error: Error?) in
         })
     }
     
