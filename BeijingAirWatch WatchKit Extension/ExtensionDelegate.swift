@@ -10,7 +10,7 @@ import WatchKit
 import WatchConnectivity
 import ClockKit
 
-class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
+class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSessionDownloadDelegate {
     /** Called when the session has completed activation. If session state is WCSessionActivationStateNotActivated there will be an error with more details. */
     @available(watchOS 2.2, *)
     public func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
@@ -23,15 +23,47 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
             if task is WKApplicationRefreshBackgroundTask {
                 print("handle WKApplicationRefreshBackgroundTask")
                 scheduleBgRefresh()
-                task.setTaskCompleted()
+                scheduleDownloadTask()
             }
+            task.setTaskCompleted()
         }
+    }
+    
+    private let SESSION_ID = "beijingairid"
+    
+    private func scheduleDownloadTask() {
+        let session = URLSession(configuration: URLSessionConfiguration.background(withIdentifier: SESSION_ID), delegate: self, delegateQueue: OperationQueue.main)
+        
+        let task = session.downloadTask(with: createRequest())
+        task.resume()
     }
     
     private func scheduleBgRefresh() {
         print("schedule bg refres")
         WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: Date(timeIntervalSinceNow:10), userInfo: nil, scheduledCompletion: { (error: Error?) in
         })
+    }
+    
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        print("download task did finish, url = \(location)")
+        do {
+            let data = try Data(contentsOf: location)
+            guard let dataStr = String(data: data, encoding: .ascii) else {
+                return
+            }
+            let aqi = parseAQI(data: dataStr)
+            let concentration = parseConcentration(data: dataStr)
+            let time = parseTime(data: dataStr)
+            print("parse result \(aqi), \(concentration), \(time)")
+            guard let airQuality = AirQuality(aqi: parseAQI(data: dataStr), concentration: parseConcentration(data: dataStr), time: parseTime(data: dataStr)) else {
+                return
+            }
+            airQuality.saveToDisk()
+            self.reloadComplication()
+            print("get valid data!")
+        } catch {
+            print("download data invalid")
+        }
     }
 
 
@@ -94,6 +126,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
         print("did launch")
         startWCSession()
         scheduleBgRefresh()
+        scheduleDownloadTask()
     }
 
     func applicationDidBecomeActive() {
