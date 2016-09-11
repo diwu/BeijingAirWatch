@@ -46,12 +46,19 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
     
     private var session: URLSession {
         get {
+            /*
+            let newSession = URLSession(configuration: URLSessionConfiguration.background(withIdentifier: SESSION_ID), delegate: self, delegateQueue: OperationQueue.main)
+            internalSession = newSession
+            return newSession
+ */
+            
             guard let s = internalSession else {
                 let newSession = URLSession(configuration: URLSessionConfiguration.background(withIdentifier: SESSION_ID), delegate: self, delegateQueue: OperationQueue.main)
                 internalSession = newSession
                 return newSession
             }
             return s
+ 
         }
     }
     
@@ -86,7 +93,8 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        if let _ = error {
+        if let e = error {
+            print("url session error = \(e)")
             showCustomizedAlert("task complete w/ error")
         } else {
             showCustomizedAlert("task complete no error")
