@@ -26,21 +26,36 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
                 print("handle WKApplicationRefreshBackgroundTask")
                 scheduleBgRefresh()
                 scheduleDownloadTask()
-                wcSession?.sendMessage(["bg_handler": "application"], replyHandler: { (replayHandler: [String : Any]) in
-                    
-                    }, errorHandler: { (error: Error) in
-                        
-                })
+                showCustomizedAlert("application")
             }
             task.setTaskCompleted()
         }
     }
     
+    private func showCustomizedAlert(_ msg: String) {
+        wcSession?.sendMessage(["bg_handler": msg], replyHandler: { (replayHandler: [String : Any]) in
+            
+            }, errorHandler: { (error: Error) in
+                
+        })
+    }
+    
     private let SESSION_ID = "beijingairid"
     
+    private var internalSession: URLSession?
+    
+    private var session: URLSession {
+        get {
+            guard let s = internalSession else {
+                let newSession = URLSession(configuration: URLSessionConfiguration.background(withIdentifier: SESSION_ID), delegate: self, delegateQueue: OperationQueue.main)
+                internalSession = newSession
+                return newSession
+            }
+            return s
+        }
+    }
+    
     func scheduleDownloadTask() {
-        let session = URLSession(configuration: URLSessionConfiguration.background(withIdentifier: SESSION_ID), delegate: self, delegateQueue: OperationQueue.main)
-        
         let task = session.downloadTask(with: createRequest())
         task.resume()
     }
@@ -51,7 +66,12 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         })
     }
     
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        showCustomizedAlert("task complete")
+    }
+    
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        showCustomizedAlert("data downloaded")
         print("download task did finish, url = \(location)")
         do {
             let data = try Data(contentsOf: location)
@@ -71,9 +91,9 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
                 return
             }
             airQuality.saveToDisk()
-            self.reloadComplication()
             print("get valid data!")
             reloadComplication()
+            showCustomizedAlert("cmpl reloaded")
         } catch {
             print("download data invalid")
         }
