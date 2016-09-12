@@ -63,6 +63,7 @@ class InterfaceController: WKInterfaceController {
         }
         if previousCity != selectedCity() {
             refreshButtonPressed()
+            sourceLabel.setText("Current city: \(selectedCity().rawValue)")
         }
     }
 
