@@ -24,7 +24,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         for task in backgroundTasks {
             if task is WKApplicationRefreshBackgroundTask {
                 print("handle WKApplicationRefreshBackgroundTask")
-                scheduleBgRefresh()
+                scheduleBgRefresh(style: .smart)
                 scheduleDownloadTask()
                 showCustomizedAlert("application")
             }
@@ -78,18 +78,36 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
     private func nextRefreshDateSinceNow() -> Date {
         let m = currentMinute()
         var deltaMinute = 0
-        if m >= 20 && m <= 30 {
+        if m >= 18 && m <= 30 {
             deltaMinute = 10
         } else {
-            deltaMinute = (60 - m) + 20
+            deltaMinute = (60 - m) + 18
         }
         return Date(timeIntervalSinceNow: Double(deltaMinute) * 60.0)
     }
     
-    private func scheduleBgRefresh() {
+    enum ScheduleStyle {
+        case smart
+        case nextHour
+    }
+    
+    private func nextRefreshDateInNextHour() -> Date {
+        let m = currentMinute()
+        var deltaMinute = 0
+        deltaMinute = (60 - m) + 18
+        return Date(timeIntervalSinceNow: Double(deltaMinute) * 60.0)
+    }
+    
+    private func scheduleBgRefresh(style: ScheduleStyle) {
         print("schedule bg refres")
-        WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefreshDateSinceNow(), userInfo: nil, scheduledCompletion: { (error: Error?) in
-        })
+        switch style {
+        case .smart:
+            WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefreshDateSinceNow(), userInfo: nil, scheduledCompletion: { (error: Error?) in
+            })
+        default:
+            WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefreshDateInNextHour(), userInfo: nil, scheduledCompletion: { (error: Error?) in
+            })
+        }
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
@@ -125,6 +143,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
             print("get valid data!")
             reloadComplication()
             showCustomizedAlert("cmpl reloaded")
+            scheduleBgRefresh(style: .nextHour)
         } catch {
             print("download data invalid")
         }
@@ -185,7 +204,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         // Perform any final initialization of your application.
         print("did launch")
         startWCSession()
-        scheduleBgRefresh()
+        scheduleBgRefresh(style: .smart)
         scheduleDownloadTask()
     }
 
