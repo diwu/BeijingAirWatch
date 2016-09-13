@@ -138,11 +138,15 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
             })
         case .inOneMinute:
             WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefreshDateIn1Minute(), userInfo: nil, scheduledCompletion: { (error: Error?) in
-                self.showCustomizedAlert("schedule error one min")
+                if let _ = error {
+                    self.showCustomizedAlert("schedule error one min")
+                }
             })
         default:
             WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefreshDateInNextHour(), userInfo: nil, scheduledCompletion: { (error: Error?) in
-                self.showCustomizedAlert("schedule error next hour")
+                if let _ = error {
+                    self.showCustomizedAlert("schedule error next hour")
+                }
             })
         }
     }
