@@ -24,12 +24,22 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         showCustomizedAlert("handle called")
         for task in backgroundTasks {
             if task is WKApplicationRefreshBackgroundTask {
+                showCustomizedAlert("refresh task handled")
                 print("handle WKApplicationRefreshBackgroundTask")
-                scheduleBgRefresh(style: .smart)
                 scheduleDownloadTask()
-                showCustomizedAlert("application")
+                scheduleBgRefresh(style: .inOneMinute)
+                task.setTaskCompleted()
+            } else if let t = task as? WKURLSessionRefreshBackgroundTask {
+                _ = createAndHoldSession(task: t)
+                showCustomizedAlert("trying to handle session task")
+            } else {
+                showCustomizedAlert("snapshot task handled")
+                if let t = task as? WKSnapshotRefreshBackgroundTask {
+                    t.setTaskCompleted(restoredDefaultState: false, estimatedSnapshotExpiration: Date.distantFuture, userInfo: nil)
+                } else {
+                    task.setTaskCompleted()
+                }
             }
-            task.setTaskCompleted()
         }
     }
     
@@ -45,20 +55,29 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
     
     private var internalSession: URLSession?
     
+    private var internalSessionTask: WKURLSessionRefreshBackgroundTask?
+    
+    private func createAndHoldSession(task: WKURLSessionRefreshBackgroundTask?) -> URLSession {
+        let newSession = URLSession(configuration: URLSessionConfiguration.background(withIdentifier: SESSION_ID), delegate: self, delegateQueue: OperationQueue.main)
+        internalSession = newSession
+        return newSession
+    }
+    
     private var session: URLSession {
         get {
-            /*
-            let newSession = URLSession(configuration: URLSessionConfiguration.background(withIdentifier: SESSION_ID), delegate: self, delegateQueue: OperationQueue.main)
-            internalSession = newSession
-            return newSession
- */
             
+            
+            return createAndHoldSession(task: nil)
+ 
+            
+            /*
             guard let s = internalSession else {
                 let newSession = URLSession(configuration: URLSessionConfiguration.background(withIdentifier: SESSION_ID), delegate: self, delegateQueue: OperationQueue.main)
                 internalSession = newSession
                 return newSession
             }
             return s
+ */
  
         }
     }
@@ -91,6 +110,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
     enum ScheduleStyle {
         case smart
         case nextHour
+        case inOneMinute
     }
     
     private func nextRefreshDateInNextHour() -> Date {
@@ -101,14 +121,28 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         return Date(timeIntervalSinceNow: Double(deltaMinute) * 60.0)
     }
     
+    private func nextRefreshDateIn1Minute() -> Date {
+        let deltaMinute = 2
+        showCustomizedAlert("schedule refresh in \(deltaMinute) minutes")
+        return Date(timeIntervalSinceNow: Double(deltaMinute) * 60.0)
+    }
+    
     private func scheduleBgRefresh(style: ScheduleStyle) {
         print("schedule bg refres")
         switch style {
         case .smart:
             WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefreshDateSinceNow(), userInfo: nil, scheduledCompletion: { (error: Error?) in
+                if let _ = error {
+                    self.showCustomizedAlert("schedule error smart")
+                }
+            })
+        case .inOneMinute:
+            WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefreshDateIn1Minute(), userInfo: nil, scheduledCompletion: { (error: Error?) in
+                self.showCustomizedAlert("schedule error one min")
             })
         default:
             WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefreshDateInNextHour(), userInfo: nil, scheduledCompletion: { (error: Error?) in
+                self.showCustomizedAlert("schedule error next hour")
             })
         }
     }
@@ -119,6 +153,12 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
             showCustomizedAlert("task complete w/ error")
         } else {
             showCustomizedAlert("task complete no error")
+        }
+        if let t = internalSessionTask {
+            showCustomizedAlert("set wk bg session task completed")
+            t.setTaskCompleted()
+        } else {
+            showCustomizedAlert("no session task around")
         }
     }
     
@@ -209,8 +249,9 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
     func applicationDidFinishLaunching() {
         // Perform any final initialization of your application.
         print("did launch")
+        showCustomizedAlert("did launch")
         startWCSession()
-        scheduleBgRefresh(style: .smart)
+        scheduleBgRefresh(style: .inOneMinute)
         scheduleDownloadTask()
     }
 
