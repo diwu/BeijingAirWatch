@@ -21,6 +21,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
     
     func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
         print("handle called")
+        showCustomizedAlert("handle called")
         for task in backgroundTasks {
             if task is WKApplicationRefreshBackgroundTask {
                 print("handle WKApplicationRefreshBackgroundTask")
@@ -83,6 +84,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         } else {
             deltaMinute = (60 - m) + 18
         }
+        showCustomizedAlert("schedule refresh in \(deltaMinute) minutes")
         return Date(timeIntervalSinceNow: Double(deltaMinute) * 60.0)
     }
     
@@ -95,6 +97,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         let m = currentMinute()
         var deltaMinute = 0
         deltaMinute = (60 - m) + 18
+        showCustomizedAlert("schedule refresh in \(deltaMinute) minutes")
         return Date(timeIntervalSinceNow: Double(deltaMinute) * 60.0)
     }
     
@@ -125,6 +128,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         do {
             let data = try Data(contentsOf: location)
             guard let dataStr = String(data: data, encoding: .ascii) else {
+                showCustomizedAlert("data decoding error")
                 return
             }
             let aqi = parseAQI(data: dataStr)
@@ -137,6 +141,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
             guard let airQuality = AirQuality(aqi: parseAQI(data: dataStr), concentration: parseConcentration(data: dataStr), time: parseTime(data: dataStr)) else {
                 AirQuality.cleanDisk()
                 reloadComplication()
+                showCustomizedAlert("data format error")
                 return
             }
             airQuality.saveToDisk()
@@ -146,6 +151,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
             scheduleBgRefresh(style: .nextHour)
         } catch {
             print("download data invalid")
+            showCustomizedAlert("data invalid")
         }
     }
 
