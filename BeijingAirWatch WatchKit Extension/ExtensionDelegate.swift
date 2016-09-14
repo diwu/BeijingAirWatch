@@ -24,11 +24,14 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         showCustomizedAlert("handle called")
         for task in backgroundTasks {
             if task is WKApplicationRefreshBackgroundTask {
-                showCustomizedAlert("refresh task handled")
+                showCustomizedAlert("refresh task called")
                 print("handle WKApplicationRefreshBackgroundTask")
                 scheduleDownloadTask()
-                scheduleBgRefresh(style: .inOneMinute)
-                task.setTaskCompleted()
+                scheduleBgRefresh(style: .nextHour)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                    self.showCustomizedAlert("refresh task set completed")
+                    task.setTaskCompleted()
+                }
             } else if let t = task as? WKURLSessionRefreshBackgroundTask {
                 _ = createAndHoldSession(task: t)
                 showCustomizedAlert("trying to handle session task")
@@ -192,7 +195,6 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
             print("get valid data!")
             reloadComplication()
             showCustomizedAlert("cmpl reloaded")
-            scheduleBgRefresh(style: .nextHour)
         } catch {
             print("download data invalid")
             showCustomizedAlert("data invalid")
