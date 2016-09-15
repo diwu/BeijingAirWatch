@@ -48,7 +48,7 @@ func parseAQI(data: String) -> Int {
                 guard let intValue = Int(tmp) else {
                     continue
                 }
-                guard intValue > 1 else {
+                guard intValue >= 0 else {
                     continue
                 }
                 return intValue
@@ -68,7 +68,7 @@ func parseConcentration(data: String) -> Double {
                 guard let doubleValue = Double(tmp) else {
                     return -1.0
                 }
-                guard doubleValue > 1.0 else {
+                guard doubleValue >= 0.0 else {
                     return -1
                 }
                 return doubleValue

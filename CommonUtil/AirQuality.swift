@@ -39,10 +39,10 @@ struct AirQuality {
         self.init(aqi: a, concentration: c, time: t)
     }
     init?(aqi a: Int, concentration c: Double, time t: String) {
-        guard a > 1 else {
+        guard a >= 0 else {
             return nil
         }
-        guard c > 1.0 else {
+        guard c >= 0.0 else {
             return nil
         }
         guard t != timePlaceholder else {
