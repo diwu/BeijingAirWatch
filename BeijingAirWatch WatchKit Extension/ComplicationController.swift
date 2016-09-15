@@ -124,7 +124,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             }
         } else if complication.family == .circularSmall {
             if ret == true {
-                let entry = createTimeLineEntryCircularSmall(firstLine: "\(concentration)", date: Date())
+                let entry = createTimeLineEntryCircularSmall(firstLine: "\(time!.components(separatedBy:" ")[3])|\(Int(concentration))", date: Date())
                 handler(entry)
             } else {
                 let entry = createTimeLineEntryCircularSmall(firstLine: "?", date: Date())
@@ -140,7 +140,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             }
         } else {
             if ret == true {
-                let entry = createTimeLineEntryUtilitarianSmall(firstLine: "\(concentration)", date: Date())
+                let entry = createTimeLineEntryUtilitarianSmall(firstLine: "\(time!.components(separatedBy:" ")[3])|\(Int(concentration))", date: Date())
                 handler(entry)
             } else {
                 let entry = createTimeLineEntryUtilitarianSmall(firstLine: "?", date: Date())
