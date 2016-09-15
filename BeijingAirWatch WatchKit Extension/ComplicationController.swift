@@ -68,9 +68,10 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         }
     }
     
-    func createTimeLineEntryCircularSmall(firstLine: String, date: Date) -> CLKComplicationTimelineEntry {
-        let template = CLKComplicationTemplateCircularSmallSimpleText()
-        template.textProvider = CLKSimpleTextProvider(text: firstLine)
+    func createTimeLineEntryCircularSmall(firstLine: String, secondLine: String, date: Date) -> CLKComplicationTimelineEntry {
+        let template = CLKComplicationTemplateCircularSmallStackText()
+        template.line1TextProvider = CLKSimpleTextProvider(text: firstLine)
+        template.line2TextProvider = CLKSimpleTextProvider(text: secondLine)
         let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
         return(entry)
     }
@@ -133,10 +134,10 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             }
         case .circularSmall:
             if ret == true {
-                let entry = createTimeLineEntryCircularSmall(firstLine: "\(time!.components(separatedBy:" ")[3])|\(Int(concentration))", date: Date())
+                let entry = createTimeLineEntryCircularSmall(firstLine: "\(time!.components(separatedBy:" ")[3])\(time!.components(separatedBy:" ")[4])", secondLine: "\(concentration)", date: Date())
                 handler(entry)
             } else {
-                let entry = createTimeLineEntryCircularSmall(firstLine: "?", date: Date())
+                let entry = createTimeLineEntryCircularSmall(firstLine: "?", secondLine: "?", date: Date())
                 handler(entry)
             }
         case .utilitarianLarge:
@@ -210,8 +211,9 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             template.row3Column2TextProvider = CLKSimpleTextProvider(text: "?")
             aTemplate = template
         case .circularSmall:
-            let template = CLKComplicationTemplateCircularSmallSimpleText()
-            template.textProvider = CLKSimpleTextProvider(text: "PM2.5")
+            let template = CLKComplicationTemplateCircularSmallStackText()
+            template.line1TextProvider = CLKSimpleTextProvider(text: "?")
+            template.line2TextProvider = CLKSimpleTextProvider(text: "?")
             aTemplate = template
         case .utilitarianSmallFlat:
             let template = CLKComplicationTemplateUtilitarianSmallFlat()
