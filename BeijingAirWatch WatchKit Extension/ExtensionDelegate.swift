@@ -36,6 +36,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
                 _ = createAndHoldSession(task: t)
                 showCustomizedAlert("trying to handle session task")
             } else {
+                _ = createAndHoldSession(task: nil)
                 showCustomizedAlert("snapshot task handled")
                 if let t = task as? WKSnapshotRefreshBackgroundTask {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
@@ -64,6 +65,9 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
     private var internalSessionTask: WKURLSessionRefreshBackgroundTask?
     
     private func createAndHoldSession(task: WKURLSessionRefreshBackgroundTask?) -> URLSession {
+        if let t = task {
+            internalSessionTask = t
+        }
         let newSession = URLSession(configuration: URLSessionConfiguration.background(withIdentifier: SESSION_ID), delegate: self, delegateQueue: OperationQueue.main)
         internalSession = newSession
         return newSession

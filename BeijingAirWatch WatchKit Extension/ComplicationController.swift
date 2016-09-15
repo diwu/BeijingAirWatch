@@ -52,17 +52,20 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             let template = CLKComplicationTemplateModularLargeColumns()
             template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Time")
             template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(thirdLine.components(separatedBy:" ")[3]):15 \(thirdLine.components(separatedBy:" ")[4])")
-            template.row2Column1TextProvider = CLKSimpleTextProvider(text: "AQI")
+            template.row2Column1TextProvider = CLKSimpleTextProvider(text: "City")
             template.row3Column1TextProvider = CLKSimpleTextProvider(text: "PM2.5")
             template.row2Column2TextProvider = CLKSimpleTextProvider(text: firstLine)
             template.row3Column2TextProvider = CLKSimpleTextProvider(text: "\(secondLine) µg/m³")
             let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
             return(entry)
         } else {
-            let template = CLKComplicationTemplateModularLargeStandardBody()
-            template.headerTextProvider = CLKSimpleTextProvider(text: "Real-time PM2.5")
-            template.body1TextProvider = CLKSimpleTextProvider(text: "Press to select city")
-            template.body2TextProvider = CLKSimpleTextProvider(text: "& start auto-refresh.")
+            let template = CLKComplicationTemplateModularLargeColumns()
+            template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Time")
+            template.row1Column2TextProvider = CLKSimpleTextProvider(text: "?")
+            template.row2Column1TextProvider = CLKSimpleTextProvider(text: "City")
+            template.row3Column1TextProvider = CLKSimpleTextProvider(text: "PM2.5")
+            template.row2Column2TextProvider = CLKSimpleTextProvider(text: "?")
+            template.row3Column2TextProvider = CLKSimpleTextProvider(text: "?")
             let entry = CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
             return(entry)
         }
@@ -126,7 +129,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             }
         case .modularLarge:
             if ret == true {
-                let entry = createTimeLineEntryModularLarge(firstLine: "\(aqi)", secondLine: "\(concentration)", thirdLine: time!, date: Date())
+                let entry = createTimeLineEntryModularLarge(firstLine: "\(selectedCity().rawValue)", secondLine: "\(concentration)", thirdLine: time!, date: Date())
                 handler(entry)
             } else {
                 let entry = createTimeLineEntryModularLarge(firstLine: "?", secondLine: "?", thirdLine: "?", date: Date())
@@ -145,7 +148,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                 let entry = createTimeLineEntryUtilitarianLarge(firstLine: "\(time!.components(separatedBy:" ")[3]) \(time!.components(separatedBy:" ")[4]) \(concentration)", date: Date())
                 handler(entry)
             } else {
-                let entry = createTimeLineEntryUtilitarianLarge(firstLine: "Press to Refresh", date: Date())
+                let entry = createTimeLineEntryUtilitarianLarge(firstLine: "?", date: Date())
                 handler(entry)
             }
         case .utilitarianSmall, .utilitarianSmallFlat:
@@ -197,14 +200,14 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         switch complication.family {
         case .modularSmall:
             let template = CLKComplicationTemplateModularSmallStackText()
-            template.line1TextProvider = CLKSimpleTextProvider(text: "AQI")
+            template.line1TextProvider = CLKSimpleTextProvider(text: "City")
             template.line2TextProvider = CLKSimpleTextProvider(text: "PM2.5")
             template.highlightLine2 = true
             aTemplate = template
         case .modularLarge:
             let template = CLKComplicationTemplateModularLargeColumns()
             template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Time")
-            template.row2Column1TextProvider = CLKSimpleTextProvider(text: "AQI")
+            template.row2Column1TextProvider = CLKSimpleTextProvider(text: "City")
             template.row3Column1TextProvider = CLKSimpleTextProvider(text: "PM2.5")
             template.row1Column2TextProvider = CLKSimpleTextProvider(text: "?")
             template.row2Column2TextProvider = CLKSimpleTextProvider(text: "?")
