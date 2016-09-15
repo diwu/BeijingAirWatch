@@ -38,7 +38,10 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
             } else {
                 showCustomizedAlert("snapshot task handled")
                 if let t = task as? WKSnapshotRefreshBackgroundTask {
-                    t.setTaskCompleted(restoredDefaultState: false, estimatedSnapshotExpiration: Date.distantFuture, userInfo: nil)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                        self.showCustomizedAlert("refresh task set completed")
+                        t.setTaskCompleted(restoredDefaultState: false, estimatedSnapshotExpiration: Date.distantFuture, userInfo: nil)
+                    }
                 } else {
                     task.setTaskCompleted()
                 }
