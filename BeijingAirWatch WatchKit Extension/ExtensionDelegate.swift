@@ -114,18 +114,31 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         case smart
         case nextHour
         case inOneMinute
+        case inFiveMinutes
     }
+    
+    private let magicNumber: Int = 19
     
     private func nextRefreshDateInNextHour() -> Date {
         let m = currentMinute()
         var deltaMinute = 0
-        deltaMinute = (60 - m) + 18
+        if m <= 18 {
+            deltaMinute = magicNumber - m
+        } else {
+            deltaMinute = (60 - m) + magicNumber
+        }
         showCustomizedAlert("schedule refresh in \(deltaMinute) minutes")
         return Date(timeIntervalSinceNow: Double(deltaMinute) * 60.0)
     }
     
     private func nextRefreshDateIn1Minute() -> Date {
         let deltaMinute = 2
+        showCustomizedAlert("schedule refresh in \(deltaMinute) minutes")
+        return Date(timeIntervalSinceNow: Double(deltaMinute) * 60.0)
+    }
+    
+    private func nextRefreshDateInFiveMinutes() -> Date {
+        let deltaMinute = 5
         showCustomizedAlert("schedule refresh in \(deltaMinute) minutes")
         return Date(timeIntervalSinceNow: Double(deltaMinute) * 60.0)
     }
@@ -145,6 +158,12 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
                     self.showCustomizedAlert("schedule error one min")
                 }
             })
+        case .inFiveMinutes:
+            WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefreshDateInFiveMinutes(), userInfo: nil, scheduledCompletion: { (error: Error?) in
+                if let _ = error {
+                    self.showCustomizedAlert("schedule error five min")
+                }
+            })
         default:
             WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefreshDateInNextHour(), userInfo: nil, scheduledCompletion: { (error: Error?) in
                 if let _ = error {
@@ -158,8 +177,10 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         if let e = error {
             print("url session error = \(e)")
             showCustomizedAlert("task complete w/ error")
+            scheduleBgRefresh(style: .inFiveMinutes)
         } else {
             showCustomizedAlert("task complete no error")
+            scheduleBgRefresh(style: .nextHour)
         }
         if let t = internalSessionTask {
             showCustomizedAlert("set wk bg session task completed")
@@ -176,6 +197,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
             let data = try Data(contentsOf: location)
             guard let dataStr = String(data: data, encoding: .ascii) else {
                 showCustomizedAlert("data decoding error")
+                scheduleBgRefresh(style: .inFiveMinutes)
                 return
             }
             let aqi = parseAQI(data: dataStr)
@@ -198,6 +220,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         } catch {
             print("download data invalid")
             showCustomizedAlert("data invalid")
+            scheduleBgRefresh(style: .inFiveMinutes)
         }
     }
 
