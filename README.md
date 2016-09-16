@@ -1,17 +1,19 @@
 ![][demo]
 
-###WatchOS 2.0 Complication of Real-time Air Quality for Major Chinese Cities 苹果表盘实时刷新北上广沈蓉空气质量
+###WatchOS 3.0 Complication of Real-time Air Quality for Major Chinese Cities 苹果表盘实时刷新北上广沈蓉空气质量
 * Real-time PM 2.5 readings for major Chinese cities right on your clock face.
 * All five major Chinese cities included: Shanghai, Beijing, Guangzhou, Shenyang and Chengdu.
-* Closely tracks the latest data with a maximum delay of 10 minutes.
-* A clean and consice complication widget that fits perfectly on your every clock face.
+* Closely tracks the latest data with a maximum delay of 30 minutes.
+* A clean and consice complication widget that fits perfectly on your every WatchOS 3.0 clock face.
+* Written with and compiled against the latest Swift 3.0 SDK.
 
 []()
 
 * 在你的苹果手表表盘上追踪最新空气污染数据。
 * 支持城市: 上海、北京、广州、沈阳和成都。
-* 实时后台刷新，最大延迟小于10分钟。
-* 精美 complication 视图，适配所有表盘。
+* 实时后台刷新，最大延迟小于30分钟。
+* 精美 complication 视图，适配 WatchOS 3.0 所有表盘。
+* 使用最新 Swift 3.0 编写。
 
 ###Don't Take Clean Air for Granted 空气质量与健康息息相关
 
@@ -49,9 +51,7 @@
 4. In the watch app, press the *City* button to select your city.
 5. Also in the watch app, press the *Refresh* button to force-start the initial refresh. 
 6. When the watch app is done refreshing, you will find meaningful data displayed right above the refresh and city buttons.
-7. If the refresh takes too long to finish, try kill the app and start all over. 
-8. When the refresh is done, hit the digital crown to go back to the clock face. 
-9. It's possible that when back to the clock face, you are still seeing the *Press to Refresh*  (or *??*) text instead of the air quality reading. If that's the case, force touch to switch to another clock face that doesn't have this complication, and then switch back. By now you should see the correct reading.
+7. When the refresh is done, hit the digital crown to go back to the clock face.
 
 []()
 
@@ -61,20 +61,9 @@
 4. 在 Watch App 中，点击 *City* 按钮选择城市。
 5. 仍然在 Watch App 中，点击 *Refresh* 按钮触发第一次强制刷新。
 6. 如果刷新成功，你会在按钮上方看到最新的空气污染数据。
-7. 如果刷新缓慢，试试杀掉 app，从头开始。
-8. 刷新成功以后，按压电子旋钮回到表盘。
-9. 刷新成功并回到表盘时，你仍然可能看到不正常的 *Press to Refresh* 字样（或者 *??* 字样）。这是由于表盘 UI 刷新延迟造成的。你可以通过在多个不同表盘间来回切换的办法，强迫 WatchOS 刷新表盘。
+7. 刷新成功以后，按压电子旋钮回到表盘。
 
-###Auto-refresh is Implemented Using VOIP 后台自动刷新实现机制
-* This app implements auto-refresh using the VOIP method. The minimum refresh interval is 10 minutes.
-* The refresh will pause as soon as the current hour's readings are fetched. The refresh will resume automatically in the next hour.
-* After you reboot your iPhone, you may need to use the watch app's refresh button to restart the companion iOS app's VOIP auto-refresh callback. 
-
-[]()
-
-* 后台自动刷新采用了 VOIP 接口实现。刷新的频率为 10 分钟一次。
-* 因为数据源是每小时刷新一次。所以我们在刷新时，如果发现当前小时的数据已经取到了，刷新就会暂停。在进入下一个小时后，刷新会再次启动。
-* 如果你重启了手机，VOIP 刷新可能会停止。你可以通过在 Watch App 中点击 *Refresh* 按钮的方式强迫唤醒 VOIP 刷新。
+###Auto-refresh is Implemented Using WKRefreshBackgroundTask 后台自动刷新使用 WKRefreshBackgroundTask 实现
 
 ###Enable the Hidden Debug Mode 开启隐藏的 Debug 模式
 * If you want to dive in and play around, go to the *CommonUtil.swift*, set *DEBUG_LOCAL_NOTIFICATION* to *true*. Delete and reinstall the app, debug information will start popping up from time to time as local notifications.
@@ -83,5 +72,5 @@
 
 
 [beijing_aqi]: https://raw.githubusercontent.com/diwu/ui-markdown-store/master/aqi_3.jpg
-[demo]: https://raw.githubusercontent.com/diwu/ui-markdown-store/master/watch_face_demo_3.jpg
+[demo]: https://github.com/diwu/ui-markdown-store/blob/master/watch_demo_4.jpg?raw=true
 [source]: http://www.stateair.net/web/post/1/4.html
