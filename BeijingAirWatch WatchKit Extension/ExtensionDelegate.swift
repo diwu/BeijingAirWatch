@@ -19,6 +19,8 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         
     }
     
+    private var sessionWentThrough: Bool = false
+    
     func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
         print("handle called")
         showCustomizedAlert("handle called")
@@ -28,8 +30,14 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
                 print("handle WKApplicationRefreshBackgroundTask")
                 scheduleDownloadTask()
                 scheduleBgRefresh(style: .nextHour)
+                sessionWentThrough = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                    self.showCustomizedAlert("refresh task set completed")
+                    if self.sessionWentThrough == true {
+                        self.showCustomizedAlert("session ok. bg task set completed")
+                    } else {
+                        self.showCustomizedAlert("session frozen. will retry in 5 mins")
+                        self.scheduleBgRefresh(style: .inFiveMinutes)
+                    }
                     task.setTaskCompleted()
                 }
             } else if let t = task as? WKURLSessionRefreshBackgroundTask {
@@ -122,14 +130,27 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
         case nextHour
         case inOneMinute
         case inFiveMinutes
+        case nextHalfHour
     }
     
     private let magicNumber: Int = 19
     
+    private func nextRefreshDateInNextHalfHour() -> Date {
+        let m = currentMinute()
+        var deltaMinute = 0
+        if m <= magicNumber || m + 30 - 60 >= magicNumber {
+            deltaMinute = magicNumber - m
+        } else {
+            deltaMinute = 30
+        }
+        showCustomizedAlert("schedule refresh in \(deltaMinute) minutes")
+        return Date(timeIntervalSinceNow: Double(deltaMinute) * 60.0)
+    }
+    
     private func nextRefreshDateInNextHour() -> Date {
         let m = currentMinute()
         var deltaMinute = 0
-        if m <= 18 {
+        if m <= magicNumber {
             deltaMinute = magicNumber - m
         } else {
             deltaMinute = (60 - m) + magicNumber
@@ -171,8 +192,14 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
                     self.showCustomizedAlert("schedule error five min")
                 }
             })
-        default:
+        case .nextHour:
             WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefreshDateInNextHour(), userInfo: nil, scheduledCompletion: { (error: Error?) in
+                if let _ = error {
+                    self.showCustomizedAlert("schedule error next hour")
+                }
+            })
+        case .nextHalfHour:
+            WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefreshDateInNextHalfHour(), userInfo: nil, scheduledCompletion: { (error: Error?) in
                 if let _ = error {
                     self.showCustomizedAlert("schedule error next hour")
                 }
@@ -181,6 +208,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate, URLSe
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        sessionWentThrough = true
         if let e = error {
             print("url session error = \(e)")
             showCustomizedAlert("task complete w/ error")
