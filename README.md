@@ -1,6 +1,6 @@
 ![][demo]
 
-###WatchOS 3.0 Complication of Real-time Air Quality for Major Chinese Cities 苹果表盘实时刷新北上广沈蓉空气质量
+### WatchOS 3.0 Complication of Real-time Air Quality for Major Chinese Cities 苹果表盘实时刷新北上广沈蓉空气质量
 * Real-time PM 2.5 readings for major Chinese cities right on your clock face.
 * All five major Chinese cities included: Shanghai, Beijing, Guangzhou, Shenyang and Chengdu.
 * Closely tracks the latest data with a maximum delay of 30 minutes.
@@ -15,18 +15,18 @@
 * 精美 complication 视图，适配 WatchOS 3.0 所有表盘。
 * 使用最新 Swift 3.0 编写。
 
-###Don't Take Clean Air for Granted 空气质量与健康息息相关
+### Don't Take Clean Air for Granted 空气质量与健康息息相关
 
 ![][beijing_aqi]
 
-###Where the Data Come from? 数据源
+### Where the Data Come from? 数据源
 * [http://shanghai.usembassy-china.org.cn/airmonitor.html](http://shanghai.usembassy-china.org.cn/airmonitor.html)
 * [http://beijing.usembassy-china.org.cn/070109air.html](http://beijing.usembassy-china.org.cn/070109air.html)
 * [http://guangzhou.usembassy-china.org.cn/guangzhou-air-quality-monitor.html](http://guangzhou.usembassy-china.org.cn/guangzhou-air-quality-monitor.html)
 * [http://www.stateair.net/web/post/1/5.html](http://www.stateair.net/web/post/1/5.html)
 * [http://chengdu.usembassy-china.org.cn/air-quality-monitor4.html](http://chengdu.usembassy-china.org.cn/air-quality-monitor4.html)
 
-###How to Install 如何安装
+### How to Install 如何安装
 1. Make sure you have an iPhone paired with an Apple Watch.
 2. Connect your iPhone to your Mac computer.
 3. Clone the project.
@@ -44,7 +44,7 @@
 6. 当 Xcode 控制台开始打印日志时，说明安装已经完成。点击停止按钮。
 
 
-###How to Set-up the Complication 如何设置表盘 Complication
+### How to Set-up the Complication 如何设置表盘 Complication
 1. Go to your watch. Force touch to customize. Find the complication named *PM2.5*.
 2. If the reading is not ready yet, you will see *Press to Refresh* (or *??* if the comllication style you choose is a smaller one.). 
 3. Press the complication to see the watch app.
@@ -63,9 +63,9 @@
 6. 如果刷新成功，你会在按钮上方看到最新的空气污染数据。
 7. 刷新成功以后，按压电子旋钮回到表盘。
 
-###Auto-refresh is Implemented Using WKRefreshBackgroundTask 后台自动刷新使用 WKRefreshBackgroundTask 实现
+### Auto-refresh is Implemented Using WKRefreshBackgroundTask 后台自动刷新使用 WKRefreshBackgroundTask 实现
 
-###Enable the Hidden Debug Mode 开启隐藏的 Debug 模式
+### Enable the Hidden Debug Mode 开启隐藏的 Debug 模式
 * If you want to dive in and play around, go to the *CommonUtil.swift*, set *DEBUG_LOCAL_NOTIFICATION* to *true*. Delete and reinstall the app, debug information will start popping up from time to time as local notifications.
 * 如果你想深入了解代码每时每刻的工作状况，去 *CommonUtil.swift* 里面，将 *DEBUG_LOCAL_NOTIFICATION* 设为 *true* 。删掉然后重装 app。代码的工作情况将会以本地通知的形式呈现在你眼前。
 
